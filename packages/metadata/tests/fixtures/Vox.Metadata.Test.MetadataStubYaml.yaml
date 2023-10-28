@@ -1,0 +1,15 @@
+class:
+  - Vox\Metadata\Test\Stub\TestAnnotation
+
+properties:
+  name:
+    Vox\Metadata\Test\Stub\TestAnnotation:
+      name: 'power'
+      test: 'more'
+
+  overriden:
+    - Vox\Metadata\Test\Stub\TestAnnotation
+
+methods:
+  getId:
+    - Vox\Metadata\Test\Stub\TestAnnotation

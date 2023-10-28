@@ -1,0 +1,5 @@
+app:
+  bar:
+    value: 10
+
+value: 20

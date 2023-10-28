@@ -1,0 +1,58 @@
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd"
+        bootstrap="tests/bootstrap.php"
+>
+    <php>
+        <ini name="xdebug.collect_params" value="0" />
+    </php>
+    <testsuites>
+        <testsuite name="metadata">
+            <directory>packages/metadata/tests</directory>
+        </testsuite>
+
+        <testsuite name="data">
+            <directory>packages/data/tests</directory>
+        </testsuite>
+
+        <testsuite name="cache">
+            <directory>packages/cache/tests</directory>
+        </testsuite>
+
+        <testsuite name="event">
+            <directory>packages/event/tests</directory>
+        </testsuite>
+
+        <testsuite name="php-beans">
+            <directory>packages/php-beans/tests</directory>
+        </testsuite>
+
+        <testsuite name="framework">
+            <directory>packages/framework/tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+            <exclude>
+                <directory>**/src/Test</directory>
+                <file>**/src/Application.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+    
+    <logging>
+        <!-- and this is where your report will be written -->
+        <log type="coverage-html" target="./build/coverage"/>
+        <log type="coverage-clover" target="./build/log/clover.xml"/>
+    </logging>
+
+    <listeners>
+        <listener class="Vox\Framework\Test\TestListener" file="packages/framework/src/Test/TestCase.php">
+
+        </listener>
+    </listeners>
+
+</phpunit>
+

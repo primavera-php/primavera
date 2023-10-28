@@ -1,0 +1,28 @@
+{
+    "name": "vox/framework",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jhonatan Teixeira",
+            "email": "jhonatan.teixeira@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Vox\\Framework\\": "src\\"
+        }
+    },
+    "require": {
+        "php": ">=8.1",
+        "vox/php-beans": "^1.1",
+        "slim/slim": "^4",
+        "slim/psr7": "^1.4",
+        "vox/data": "^1.0",
+        "guzzlehttp/guzzle": "^7.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4",
+        "phpspec/prophecy": "^1.13"
+    }
+}

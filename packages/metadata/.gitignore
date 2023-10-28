@@ -1,0 +1,6 @@
+nbproject
+.idea
+.vscode
+vendor
+build
+.phpunit.result.cache
