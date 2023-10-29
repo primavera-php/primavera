@@ -16,9 +16,15 @@ use Vox\Framework\Application;
 use Vox\Framework\Test\Stereotype\Mock;
 use Vox\Metadata\Factory\MetadataFactory;
 use Vox\Metadata\Factory\MetadataFactoryFactory;
+use Vox\Metadata\PropertyMetadata;
+use Vox\Metadata\MethodMetadata;
+use PhpBeans\Metadata\ParamMetadata;
 
 class TestListener implements \PHPUnit\Framework\TestListener
 {
+    /**
+     * @var ?MetadataFactory<ClassMetadata<PropertyMetadata, MethodMetadata<ParamMetadata>>>
+     */
     private ?MetadataFactory $metadataFactory = null;
     private ?Prophet $prophet = null;
     private ?Application $application = null;

@@ -43,7 +43,7 @@ class RequestBodyResolver implements ParamResolverInterface
 
         if ($requestBody = $methodMetadata->getAnnotation(RequestBody::class)) {
             $argName = $requestBody->argName ?? $argName;
-        } elseif ($annotatedParams = array_filter($paramsMetadata, fn($p) => $p->reflection->getAttributes(RequestBody::class))) {
+        } elseif ($annotatedParams = array_filter($paramsMetadata, fn($p) => $p->getReflection()->getAttributes(RequestBody::class))) {
             if (count($annotatedParams) > 1) {
                 throw new \LogicException("only one RequestBody allowed for method {$controllerMetadata->name}::{$methodMetadata->name}");
             }

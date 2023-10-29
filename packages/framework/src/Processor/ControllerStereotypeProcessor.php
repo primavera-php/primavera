@@ -21,7 +21,6 @@ use Vox\Framework\Stereotype\Post;
 use Vox\Framework\Stereotype\PreDispatch;
 use Vox\Framework\Stereotype\Put;
 use Vox\Framework\Stereotype\UseMiddleware;
-use Vox\Framework\Collection\CallbackPriorityQueue;
 use Vox\Metadata\MethodMetadata;
 
 class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
@@ -86,7 +85,7 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
         ];
 
         /* @var $methodMetadata MethodMetadata */
-        foreach ($controllerMetadata->methodMetadata as $methodMetadata) {
+        foreach ($controllerMetadata->getMethodMetadata() as $methodMetadata) {
             $method = null;
             $methodName = null;
 
@@ -103,7 +102,7 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
             }
 
             $path = $this->parsePath($config, $method);
-            $action = $methodMetadata->reflection->getClosure($stereotype);
+            $action = $methodMetadata->getReflection()->getClosure($stereotype);
             $container = $this->getContainer();
 
             $routeAction = function ($request, $response, $args) use ($controllerMetadata, $methodMetadata, $action,
@@ -111,7 +110,7 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
                 $params = $args;
 
                 /* @var $resolver ParamResolverInterface */
-                foreach ($container->getBeansByComponent(ParamResolverInterface::class) as $resolver) {
+                foreach ($container->getComponentsByStereotype(ParamResolverInterface::class) as $resolver) {
                     $params = array_merge(
                         $params,
                         $resolver->resolve($controllerMetadata, $methodMetadata, $request, $args)
@@ -124,7 +123,7 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
 
                 $actionParams = [];
 
-                foreach ($methodMetadata->params as $param) {
+                foreach ($methodMetadata->getParams() as $param) {
                     $actionParams[$param->name] ??= $params[$param->name] ?? null;
                 }
 

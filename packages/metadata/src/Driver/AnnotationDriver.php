@@ -7,6 +7,7 @@ use ReflectionClass;
 use Vox\Metadata\ClassMetadata;
 use Vox\Metadata\ClassMetadataInterface;
 use Vox\Metadata\MethodMetadata;
+use Vox\Metadata\MethodMetadataInterface;
 use Vox\Metadata\PropertyMetadata;
 use Vox\Metadata\Reader\ReaderInterface;
 
@@ -14,6 +15,10 @@ use Vox\Metadata\Reader\ReaderInterface;
  * Driver to create classes metadata using annotations, depends on doctrine's annotation reader
  * 
  * @author Jhonatan Teixeira <jhonatan.teixeira@gmail.com>
+ * 
+ * @template T of ClassMetadataInterface<P,M>
+ * @template P of PropertyMetadata
+ * @template M of MethodMetadataInterface
  */
 class AnnotationDriver implements DriverInterface
 {
@@ -21,6 +26,11 @@ class AnnotationDriver implements DriverInterface
     private ReflectionClass $propertyMetadataClass;
     private ReflectionClass $methodMetadataClass;
     
+    /**
+     * @param class-string<T> $classMetadataClassName
+     * @param class-string<P> $propertyMetadataClassName
+     * @param class-string<M> $methodMetadataClassName
+     */
     public function __construct(
         private ReaderInterface $annotationReader,
         string $classMetadataClassName = ClassMetadata::class,
@@ -32,6 +42,9 @@ class AnnotationDriver implements DriverInterface
         $this->methodMetadataClass = new ReflectionClass($methodMetadataClassName);
     }
     
+    /**
+     * @return T
+     */
     public function loadMetadataForClass(ReflectionClass $class): ClassMetadataInterface
     {
         if ($class->implementsInterface(AccessInterceptorValueHolderInterface::class)) {

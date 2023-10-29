@@ -67,7 +67,7 @@ class IdentifiedDataBag implements \ArrayAccess, \IteratorAggregate
         } elseif (is_scalar($value) || is_array($value)) {
             $this->storeData($offset, $value);
         } else {
-            throw new ContainerException("cannot store this king of data on the container: " . gettype($value));
+            throw new ContainerException("cannot store this kind of data on the container: " . gettype($value));
         }
     }
 

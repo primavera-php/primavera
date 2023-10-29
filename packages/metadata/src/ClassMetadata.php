@@ -47,9 +47,9 @@ class ClassMetadata implements ClassMetadataInterface
         return $this->reflection ??= new \ReflectionClass($this->name);
     }
 
-    public function addMethodMetadata(MethodMetadata $methodMetadata)
+    public function addMethodMetadata(MethodMetadataInterface $methodMetadata)
     {
-        $this->methodMetadata[$methodMetadata->name] = $methodMetadata;
+        $this->methodMetadata[$methodMetadata->getName()] = $methodMetadata;
     }
 
     public function addPropertyMetadata(PropertyMetadata $propertyMetadata)

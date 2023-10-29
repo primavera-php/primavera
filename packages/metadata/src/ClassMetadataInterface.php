@@ -2,21 +2,25 @@
 
 namespace Vox\Metadata;
 
+/**
+ * @template P
+ * @template M
+ */
 interface ClassMetadataInterface extends MetadataInterface
 {
-    public function addMethodMetadata(MethodMetadata $methodMetadata);
+    public function addMethodMetadata(MethodMetadataInterface $methodMetadata);
     
     public function addPropertyMetadata(PropertyMetadata $propertyMetadata);
 
     public function merge(ClassMetadataInterface $object): void;
 
     /**
-     * @return MethodMetadata[]
+     * @return M[]
      */
     public function getMethodMetadata(): array;
 
     /**
-     * @return PropertyMetadata[]
+     * @return P[]
      */
     public function getPropertyMetadata(): array;
 

@@ -5,7 +5,14 @@ namespace Vox\Metadata\Factory;
 use Psr\SimpleCache\CacheInterface;
 use Vox\Metadata\ClassMetadataInterface;
 use Vox\Metadata\Driver\DriverInterface;
+use Vox\Metadata\PropertyMetadata;
+use Vox\Metadata\MethodMetadataInterface;
 
+/**
+ * @template T of ClassMetadataInterface<P, M>
+ * @template P of PropertyMetadata
+ * @template M of MethodMetadataInterface
+ */
 class MetadataFactory implements MetadataFactoryInterface
 {
     /**
@@ -15,11 +22,17 @@ class MetadataFactory implements MetadataFactoryInterface
 
     private $cachePrefix = 'metadata.';
 
+    /**
+     * @param DriverInterface<T> $name
+     */
     public function __construct(
         private DriverInterface $driver,
         private ?CacheInterface $cache = null,
     ) {}
-
+        
+    /**
+     * @return T
+     */
     public function getMetadataForClass(string $className): ClassMetadataInterface
     {
         $cacheKey = $this->getCacheKey($className);

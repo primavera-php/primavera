@@ -16,7 +16,7 @@ use Vox\Metadata\ClassMetadataInterface;
 use Vox\Metadata\Factory\MetadataFactoryInterface;
 use Vox\Metadata\MethodMetadata;
 use Vox\Metadata\MethodMetadataInterface;
-use Vox\Metadata\ParamMetadata;
+use PhpBeans\Metadata\ParamMetadata;
 
 class Container implements ContainerInterface, \IteratorAggregate
 {
@@ -151,12 +151,33 @@ class Container implements ContainerInterface, \IteratorAggregate
         return $this->beans[$id] = $bean;
     }
 
+    /**
+     * @param ParamMetadata[] $params
+     */
+    protected function resolveParams(array $params)
+    {
+        return array_map(
+            function (ParamMetadata $p) {
+                try {
+                    return $this->get($p->getId());
+                } catch (NotFoundContainerException $e) {
+                    if ($p->getReflection()->isOptional()) {
+                        return $p->getReflection()->getDefaultValue();
+                    }
+
+                    throw $e;
+                }
+            },
+            $params
+        );
+    }
+
     private function newIntanceFromMetadata(string $id)
     {
         $params = ($metadata = $this->metadatas[$id])->getConstructorParams();
 
         return $metadata->getReflection()
-            ->newInstanceArgs(array_map(fn($p) => $this->get($p->getId()), $params));
+            ->newInstanceArgs($this->resolveParams($params));
     }
 
     private function newIntanceFromMethodMetadata(string $id)
@@ -165,7 +186,7 @@ class Container implements ContainerInterface, \IteratorAggregate
 
         return $metadata->invoke(
             $this->get($metadata->getClass()),
-            ...array_map(fn(ParamMetadata $p) => $this->get($p->getId()), $params)
+            ...$this->resolveParams($params)
         );
     }
 
@@ -185,8 +206,10 @@ class Container implements ContainerInterface, \IteratorAggregate
     public function getMetadadasByStereotype(string $stereotype): array
     {
         return $this->metadatas->filter(
-            fn(ClassMetadata $m) => $m->hasAnnotation($stereotype) || in_array($stereotype, $m->getHierarchy()
-        ));
+            fn(ClassMetadata $m) => $m->hasAnnotation($stereotype) 
+                || in_array($stereotype, $m->getHierarchy())
+                || $m->isInstanceOf($stereotype)
+        );
     }
 
     public function getComponentsByStereotype(string $stereotype): \Generator

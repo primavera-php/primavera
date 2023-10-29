@@ -28,7 +28,7 @@ class ControllerTest extends TestCase
     {
         $containerBuilder->withCache(
             (new Factory())
-                ->createSimpleCache(Factory::PROVIDER_DOCTRINE, Factory::TYPE_FILE, 'build/cache')
+                ->createSimpleCache(Factory::PROVIDER_SYMFONY, Factory::TYPE_FILE, '', 0, 'build/cache')
         );
     }
 
