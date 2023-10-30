@@ -3,6 +3,7 @@
 namespace Vox\PersistenceTests\Repository;
 
 use Doctrine\DBAL\Connection;
+use PhpBeans\Container\Container;
 use PhpBeans\Factory\ContainerBuilder;
 use Vox\Data\ObjectHydrator;
 use Vox\Persistence\Stereotype\Repository;
@@ -11,6 +12,7 @@ use Vox\PersistenceTests\Entity\Users;
 
 class UsersRepositoryTest extends DbTestCase
 {
+    private Container $container;
 
     protected function setUp(): void
     {
@@ -19,23 +21,24 @@ class UsersRepositoryTest extends DbTestCase
         $this->connection->insert('users', ['name' => 'Bruce Dickinson', 'email' => 'brune@email.com', 'type' => 'singer']);
         $this->connection->insert('users', ['name' => 'Lars Ulrich', 'email' => 'lars@email.com', 'type' => 'drummer']);
         $this->connection->insert('users', ['name' => 'Dave Grohl', 'email' => 'dave@email.com', 'type' => 'singer']);
-    }
 
-    public function testShouldGetRepositoryAndFindData()
-    {
         $builder = new ContainerBuilder(true);
 
         $builder->withAppNamespaces()
             ->withNamespaces('Vox\\PersistenceTests\\')
             ->withStereotypes(Repository::class)
-            ->withBeans([Connection::class => $this->connection])
+            ->withConfigFile(__DIR__ . '/../application.yaml')
             ->withComponents(ObjectHydrator::class)
         ;
 
-        $container = $builder->build();
+        $this->container = $builder->build();
 
+    }
+
+    public function testShouldGetRepositoryAndFindData()
+    {
         /* @var $repo \Vox\PersistenceTests\Repository\UsersRepository */
-        $repo = $container->get(UsersRepository::class);
+        $repo = $this->container->get(UsersRepository::class);
 
         $bruce = $repo->findById(1);
         $lars = $repo->findOneByName('Lars Ulrich');
@@ -48,4 +51,12 @@ class UsersRepositoryTest extends DbTestCase
         $this->assertEquals('Bruce Dickinson', $singers[0]->name);
         $this->assertEquals('Dave Grohl', $singers[1]->name);
     }
+
+    protected function tearDown(): void
+    {
+        $this->container->get(Connection::class)->close();
+
+        parent::tearDown();
+    }
+
 }

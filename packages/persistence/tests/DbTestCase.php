@@ -4,7 +4,6 @@ namespace Vox\PersistenceTests;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Schema;
-// use Doctrine\DBAL\Tools\DsnParser;
 use PHPUnit\Framework\TestCase;
 
 class DbTestCase extends TestCase

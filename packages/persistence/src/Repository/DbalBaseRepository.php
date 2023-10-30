@@ -5,7 +5,11 @@ namespace Vox\Persistence\Repository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Vox\Data\ObjectHydratorInterface;
+use Vox\Persistence\Persister\PersisterInterface;
 
+/**
+ * @template T
+ */
 abstract class DbalBaseRepository implements RepositoryInterface
 {
     protected $connection;
@@ -18,6 +22,9 @@ abstract class DbalBaseRepository implements RepositoryInterface
         $this->hydrator = $hydrator;
     }
 
+    /**
+     * @return \Traversable<int, T>
+     */
     public function find(...$criteria): \Traversable
     {
         $qb = $this->connection->createQueryBuilder()
@@ -27,6 +34,9 @@ abstract class DbalBaseRepository implements RepositoryInterface
         return $this->fetchMany($qb->where(...$criteria));
     }
 
+    /**
+     * @return T
+     */
     public function findById($id)
     {
         return $this->fetchOne(
@@ -38,6 +48,9 @@ abstract class DbalBaseRepository implements RepositoryInterface
         );
     }
 
+    /**
+     * @return T
+     */
     public function findOne(...$criteria)
     {
         return $this->fetchOne(
@@ -108,4 +121,6 @@ abstract class DbalBaseRepository implements RepositoryInterface
                 throw new \InvalidArgumentException("unknown operation {$operation}");
         }
     }
+
+
 }
