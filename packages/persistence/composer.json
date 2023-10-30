@@ -19,7 +19,7 @@
     "require": {
         "php": ">=8.1",
         "vox/php-beans": "^1.1",
-        "doctrine/dbal": "^3.6",
+        "doctrine/dbal": "^3.5",
         "vox/data": "^1.0"
     },
     "require-dev": {

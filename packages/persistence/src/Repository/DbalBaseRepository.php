@@ -48,7 +48,7 @@ abstract class DbalBaseRepository implements RepositoryInterface
         );
     }
 
-    protected function fetchMany(QueryBuilder $qb): \Traversable
+    protected function fetchMany(QueryBuilder $qb): \Generator
     {
         $result = $qb->executeQuery();
 

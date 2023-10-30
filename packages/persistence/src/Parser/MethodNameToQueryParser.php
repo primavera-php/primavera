@@ -12,10 +12,6 @@ use Vox\Persistence\Annotation\OrderBy;
 use Vox\Persistence\Annotation\Query;
 use Vox\Persistence\Parser\MethodNameToQueryLexer as Lexer;
 
-/**
- * @Component
- * @IgnoreScanner
- */
 #[Component]
 #[IgnoreScanner]
 class MethodNameToQueryParser implements ParserInterface
@@ -117,92 +113,6 @@ class MethodNameToQueryParser implements ParserInterface
 
             $result[] = ['limit' => $limit];
         }
-
-
-//        while($lexer->lookahead) {
-//            $lexer->moveNext();
-//            $token = $lexer->token;
-//
-//            if (!$lastToken && $token['type'] !== self::SYNTAX_ROOT) {
-//                throw new \CompileError("invalid start operator {$token['value']}");
-//            }
-//
-//            if ($lastToken && !in_array($token['type'], self::SYNTAX[$lastToken['type']])) {
-//                throw new \CompileError("{$token['value']} cannot be used after {$lastToken['value']}");
-//            }
-//
-//            if ($token['type'] === self::SYNTAX_ROOT) {
-//                $exprs[] = ['operation' => $token['value']];
-//            }
-//
-//            if ($token['type'] == Lexer::T_FIELD) {
-//                $paramWalker->next();
-//
-//                $logical = $lastToken && $lastToken['type'] === Lexer::T_LOGICAL
-//                    ? strtolower($lastToken['value'])
-//                    : 'and';
-//
-//                $operator = 'eq';
-//                $nextToken = $lexer->lookahead;
-//
-//                if ($nextToken && $nextToken['type'] === Lexer::T_OPERATOR) {
-//                    $operator = lcfirst($nextToken['value']);
-//                }
-//
-//                if ($lastToken && $lastToken['type'] === Lexer::T_FIELD) {
-//                    array_pop($exprs);
-//                    $token['value'] = "{$lastToken['value']}{$token['value']}";
-//                    $paramWalker->previous();
-//                }
-//
-//                $exp = $this->expressionFactory
-//                    ->createExpression($token, $operator, $context, $paramWalker->getParam());
-//
-//                if ($lastToken && $lastToken['type'] === Lexer::T_AGGREGATE) {
-//                    $logical = strtolower($lastToken['value']);
-//                    $exp = $this->expressionFactory
-//                        ->createAggregateExpression($token, $context, $paramWalker->getParam());
-//                    $paramWalker->previous();
-//                }
-//
-//                $exprs[] = [$logical => $exp];
-//            }
-//
-//            if ($token['type'] === Lexer::T_LIMIT) {
-//                $paramWalker->next();
-//
-//                $exprs[] = [
-//                    strtolower($token['value']) => $this->expressionFactory
-//                        ->createLimitExpression($token, $context, $paramWalker->getParam())
-//                ];
-//            }
-//
-//            // possible bug here, when camelcase fields are interpreted as 2 fields by the lexer
-//            if ($token->type === Lexer::T_ORDER) {
-//                $logical = 'orderby';
-//
-//                $lexer->moveNext();
-//                $fields = [];
-//
-//                while ($lexer->lookahead->type === Lexer::T_FIELD) {
-//                    $lexer->moveNext();
-//
-//                    $field = $lexer->token->value;
-//                    $direction = 'asc';
-//
-//                    if ($lexer->lookahead->type === Lexer::T_DIRECTION) {
-//                        $lexer->moveNext();
-//                        $direction = strtolower($lexer->token->value);
-//                    }
-//
-//                    $fields[$field] = $direction;
-//                }
-//
-//                $exprs = [$logical => $fields];
-//            }
-//
-//            $lastToken = $token;
-//        }
 
         return $result;
     }

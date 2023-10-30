@@ -3,10 +3,10 @@
 namespace Vox\PersistenceTests\Config;
 
 use PhpBeans\Annotation\Configuration;
-use Vox\Persistence\Stereotype\DbalPersistence;
+use Vox\Persistence\Stereotype\EnableDbalPersistence;
 
 #[Configuration]
-#[DbalPersistence]
+#[EnableDbalPersistence]
 class TestConfiguration
 {
 

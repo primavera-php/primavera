@@ -29,7 +29,7 @@ class MethodNameToQueryParserTest extends DbTestCase
     {
         $metadata = $this->metadataReader->getMetadataForClass(LexTestInterface::class);
 
-        $methodMetadata = $metadata->methodMetadata[$method];
+        $methodMetadata = $metadata->getMethodMetadata()[$method];
 
         $parser = new MethodNameToQueryParser(new DbalExpressionFactory($this->connection, new SimpleSqlParser($this->connection)));
 

@@ -6,6 +6,7 @@ use Laminas\Code\Generator\ClassGenerator;
 use Laminas\Code\Generator\MethodGenerator;
 use Laminas\Code\Reflection\MethodReflection;
 use PhpBeans\Annotation\IgnoreScanner;
+use PhpBeans\Bean\AbstractInterfaceImplementor;
 use PhpBeans\Metadata\ClassMetadata;
 use Vox\Metadata\MethodMetadata;
 use Vox\Persistence\Annotation\Table;
@@ -13,11 +14,8 @@ use Vox\Persistence\Parser\ParserInterface;
 use Vox\Persistence\Repository\DbalBaseRepository;
 use Vox\Persistence\Stereotype\Repository;
 
-/**
- * @IgnoreScanner
- */
 #[IgnoreScanner]
-class DbalRepositoryImplementor extends \PhpBeans\Bean\AbstractInterfaceImplementor
+class DbalRepositoryImplementor extends AbstractInterfaceImplementor
 {
     private ParserInterface $parser;
 
@@ -26,7 +24,7 @@ class DbalRepositoryImplementor extends \PhpBeans\Bean\AbstractInterfaceImplemen
         $this->parser = $parser;
     }
 
-    public function getBehaviorName(): string
+    public function getStereotypeName(): string
     {
         return Repository::class;
     }

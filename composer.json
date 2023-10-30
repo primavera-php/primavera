@@ -26,7 +26,7 @@
     "require": {
         "doctrine/annotations": "^1",
         "doctrine/cache": "^1",
-        "doctrine/dbal": "^3.6",
+        "doctrine/dbal": "~3.5.0",
         "friendsofphp/proxy-manager-lts": "^1",
         "guzzlehttp/guzzle": "^7.3",
         "monolog/monolog": "^2.2",

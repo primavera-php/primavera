@@ -164,7 +164,7 @@ class TokenWalker implements WalkerInterface
 
     /**
      * @param iterable<Token> $tokens
-     * @return scalar
+     * @return scalar[]
      */
     public function getValues(iterable $tokens)
     {
