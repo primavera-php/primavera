@@ -12,9 +12,6 @@ env:
     # 1. for Github split
     GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
-    # 2. for Gitlab split
-    GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-
 jobs:
     packages_split:
         runs-on: ubuntu-latest
@@ -32,7 +29,9 @@ jobs:
             -   uses: actions/checkout@v2
 
             - name: Safe Directories
-              run: "git config --global --add safe.directory '*'"
+              run: |
+                git config --global --add safe.directory /github/workspace
+                git config --global --add safe.directory /tmp/monorepo_split/build_directory
 
             -
                 # if: "startsWith(github.ref, 'refs/tags/')"
