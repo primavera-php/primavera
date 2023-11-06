@@ -1,20 +1,20 @@
 <?php
 
-namespace Vox\Framework;
+namespace Primavera\Framework;
 
 use Primavera\Container\Container\Container;
 use Primavera\Container\Factory\ContainerBuilder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
-use Vox\Framework\Stereotype\Controller;
-use Vox\Framework\Stereotype\ErrorHandler;
-use Vox\Framework\Stereotype\Formatter;
-use Vox\Framework\Stereotype\Interceptor;
-use Vox\Framework\Stereotype\Middleware;
-use Vox\Framework\Stereotype\ParamResolverInterface;
-use Vox\Framework\Stereotype\PreDispatch;
-use Vox\Framework\Stereotype\Service;
+use Primavera\Framework\Stereotype\Controller;
+use Primavera\Framework\Stereotype\ErrorHandler;
+use Primavera\Framework\Stereotype\Formatter;
+use Primavera\Framework\Stereotype\Interceptor;
+use Primavera\Framework\Stereotype\Middleware;
+use Primavera\Framework\Stereotype\ParamResolverInterface;
+use Primavera\Framework\Stereotype\PreDispatch;
+use Primavera\Framework\Stereotype\Service;
 
 class Application
 {

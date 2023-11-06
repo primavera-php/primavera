@@ -1,8 +1,8 @@
 <?php
 
-namespace Vox\Persistence\Repository;
+namespace Primavera\Persistence\Repository;
 
-use Vox\Persistence\Database\TableInterface;
+use Primavera\Persistence\Database\TableInterface;
 
 interface RepositoryInterface extends TableInterface
 {

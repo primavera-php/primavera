@@ -1,9 +1,9 @@
 <?php
 
-namespace Vox\PersistenceTests\Parser;
+namespace Primavera\PersistenceTests\Parser;
 
-use Vox\Persistence\Parser\SimpleSqlParser;
-use Vox\PersistenceTests\DbTestCase;
+use Primavera\Persistence\Parser\SimpleSqlParser;
+use Primavera\PersistenceTests\DbTestCase;
 
 class SimpleSqlParserTest extends DbTestCase
 {

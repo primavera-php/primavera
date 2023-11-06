@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Vox\Framework\Stereotype;
+namespace Primavera\Framework\Stereotype;
 
 
 use Primavera\Container\Metadata\ClassMetadata;
 use Psr\Http\Message\ServerRequestInterface;
-use Vox\Metadata\MethodMetadata;
+use Primavera\Metadata\MethodMetadata;
 
 interface ParamResolverInterface
 {

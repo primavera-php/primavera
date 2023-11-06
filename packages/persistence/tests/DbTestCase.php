@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\PersistenceTests;
+namespace Primavera\PersistenceTests;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Schema;

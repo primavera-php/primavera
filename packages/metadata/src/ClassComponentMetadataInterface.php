@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Metadata;
+namespace Primavera\Metadata;
 
 interface ClassComponentMetadataInterface extends MetadataInterface, TypedComponentMetadataInterface
 {

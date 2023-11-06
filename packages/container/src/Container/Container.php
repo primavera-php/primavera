@@ -10,12 +10,12 @@ use Primavera\Container\Metadata\ClassMetadata;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
-use Vox\Event\EventDispatcher;
-use Vox\Log\Logger;
-use Vox\Metadata\ClassMetadataInterface;
-use Vox\Metadata\Factory\MetadataFactoryInterface;
-use Vox\Metadata\MethodMetadata;
-use Vox\Metadata\MethodMetadataInterface;
+use Primavera\Event\EventDispatcher;
+use Primavera\Log\Logger;
+use Primavera\Metadata\ClassMetadataInterface;
+use Primavera\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Metadata\MethodMetadata;
+use Primavera\Metadata\MethodMetadataInterface;
 use Primavera\Container\Metadata\ParamMetadata;
 
 class Container implements ContainerInterface, \IteratorAggregate

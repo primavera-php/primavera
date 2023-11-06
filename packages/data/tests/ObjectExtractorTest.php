@@ -1,11 +1,11 @@
 <?php
 
-namespace Vox\Data;
+namespace Primavera\Data;
 
 use PHPUnit\Framework\TestCase;
-use Vox\Data\Mapping\Bindings;
-use Vox\Data\Mapping\Exclude;
-use Vox\Metadata\Factory\MetadataFactoryFactory;
+use Primavera\Data\Mapping\Bindings;
+use Primavera\Data\Mapping\Exclude;
+use Primavera\Metadata\Factory\MetadataFactoryFactory;
 
 class ObjectExtractorTest extends TestCase
 {

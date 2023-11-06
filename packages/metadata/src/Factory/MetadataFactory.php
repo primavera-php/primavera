@@ -1,12 +1,12 @@
 <?php
 
-namespace Vox\Metadata\Factory;
+namespace Primavera\Metadata\Factory;
 
 use Psr\SimpleCache\CacheInterface;
-use Vox\Metadata\ClassMetadataInterface;
-use Vox\Metadata\Driver\DriverInterface;
-use Vox\Metadata\PropertyMetadata;
-use Vox\Metadata\MethodMetadataInterface;
+use Primavera\Metadata\ClassMetadataInterface;
+use Primavera\Metadata\Driver\DriverInterface;
+use Primavera\Metadata\PropertyMetadata;
+use Primavera\Metadata\MethodMetadataInterface;
 
 /**
  * @template T of ClassMetadataInterface<P, M>
@@ -16,7 +16,7 @@ use Vox\Metadata\MethodMetadataInterface;
 class MetadataFactory implements MetadataFactoryInterface
 {
     /**
-     * @var \Vox\Metadata\ClassMetadata[]
+     * @var \Primavera\Metadata\ClassMetadata[]
      */
     private array $metadatas = [];
 

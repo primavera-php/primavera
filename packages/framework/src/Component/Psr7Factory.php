@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Vox\Framework\Component;
+namespace Primavera\Framework\Component;
 
 use Primavera\Container\Annotation\Component;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Factory\StreamFactory;
-use Vox\Data\Serializer;
+use Primavera\Data\Serializer;
 
 /**
  * @Component()

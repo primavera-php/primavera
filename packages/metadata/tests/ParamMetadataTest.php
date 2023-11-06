@@ -1,10 +1,10 @@
 <?php
 
-namespace Vox\Metadata\Test;
+namespace Primavera\Metadata\Test;
 
 use PHPUnit\Framework\TestCase;
-use Vox\Metadata\FunctionMetadata;
-use Vox\Metadata\ParamMetadata;
+use Primavera\Metadata\FunctionMetadata;
+use Primavera\Metadata\ParamMetadata;
 
 function testFunction(string $param1) {
 
@@ -13,7 +13,7 @@ function testFunction(string $param1) {
 class ParamMetadataTest extends TestCase
 {
     public function testShouldAcceptFunctionOrCallable() {
-        $paramMetadata = (new FunctionMetadata(new \ReflectionFunction('Vox\Metadata\Test\testFunction')))
+        $paramMetadata = (new FunctionMetadata(new \ReflectionFunction('Primavera\Metadata\Test\testFunction')))
             ->params[0];
 
         $this->assertEquals('string', $paramMetadata->type);

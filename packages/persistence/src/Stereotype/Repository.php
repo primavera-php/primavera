@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Persistence\Stereotype;
+namespace Primavera\Persistence\Stereotype;
 
 use Doctrine\Common\Annotations\Annotation\Required;
 

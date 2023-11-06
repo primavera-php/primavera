@@ -1,11 +1,11 @@
 <?php
 
-namespace Vox\Persistence\Parser;
+namespace Primavera\Persistence\Parser;
 
 use Doctrine\Common\Lexer\AbstractLexer;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
-use Vox\Metadata\MethodMetadata;
+use Primavera\Metadata\MethodMetadata;
 
 class MethodNameToQueryLexer extends AbstractLexer
 {

@@ -7,7 +7,7 @@ use Primavera\Container\Factory\ContainerBuilder;
 use Primavera\Container\Scanner\ComponentScanner;
 use Shared\Annotation\GeneratedClass;
 use Shared\Annotation\TestImport;
-use Vox\Cache\Factory;
+use Primavera\Cache\Factory;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Metadata\Reader;
+namespace Primavera\Metadata\Reader;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\IndexedReader;

@@ -1,12 +1,12 @@
 <?php
 
-namespace Vox\Cache;
+namespace Primavera\Cache;
 
 use PHPUnit\Framework\TestCase;
 use Predis\Client;
 use Predis\Configuration\OptionsInterface;
 use Symfony\Component\Cache\Psr16Cache;
-use Vox\Cache\Bridge\DoctrineCacheBridge;
+use Primavera\Cache\Bridge\DoctrineCacheBridge;
 
 class FactoryTest extends TestCase
 {

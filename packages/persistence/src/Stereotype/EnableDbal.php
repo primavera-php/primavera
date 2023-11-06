@@ -1,9 +1,9 @@
 <?php
 
-namespace Vox\Persistence\Stereotype;
+namespace Primavera\Persistence\Stereotype;
 
 use Primavera\Container\Annotation\Imports;
-use Vox\Persistence\Config\DbalConfiguration;
+use Primavera\Persistence\Config\DbalConfiguration;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
 #[Imports([DbalConfiguration::class])]

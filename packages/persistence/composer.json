@@ -10,7 +10,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Vox\\Persistence\\": "src\\"
+            "Primavera\\Persistence\\": "src\\"
         },
         "files": [
             "src/helpers.php"

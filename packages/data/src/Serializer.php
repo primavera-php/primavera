@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Vox\Data;
+namespace Primavera\Data;
 
 
 use http\Exception\InvalidArgumentException;
-use Vox\Data\Formatter\FormatAwareInterface;
-use Vox\Data\Formatter\FromFormatInterface;
-use Vox\Data\Formatter\ToFormatInterface;
+use Primavera\Data\Formatter\FormatAwareInterface;
+use Primavera\Data\Formatter\FromFormatInterface;
+use Primavera\Data\Formatter\ToFormatInterface;
 
 class Serializer
 {

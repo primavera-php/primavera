@@ -1,15 +1,15 @@
 <?php
 
-namespace Vox\Data;
+namespace Primavera\Data;
 
 use DateTime;
-use Vox\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Metadata\Factory\MetadataFactoryInterface;
 use RuntimeException;
-use Vox\Data\Mapping\Bindings;
-use Vox\Data\Mapping\Discriminator;
-use Vox\Data\Mapping\Exclude;
-use Vox\Metadata\ClassMetadata;
-use Vox\Metadata\PropertyMetadata;
+use Primavera\Data\Mapping\Bindings;
+use Primavera\Data\Mapping\Discriminator;
+use Primavera\Data\Mapping\Exclude;
+use Primavera\Metadata\ClassMetadata;
+use Primavera\Metadata\PropertyMetadata;
 
 /**
  * Hydrates objects based on its metadata information, uses data mapping

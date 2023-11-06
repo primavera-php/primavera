@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Metadata\Reader;
+namespace Primavera\Metadata\Reader;
 use Symfony\Component\Yaml\Parser;
 
 class YamlReader implements ReaderInterface

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Event;
+namespace Primavera\Event;
 
 use PHPUnit\Framework\TestCase;
 

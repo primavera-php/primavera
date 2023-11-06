@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Persistence\Config;
+namespace Primavera\Persistence\Config;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;

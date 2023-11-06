@@ -1,14 +1,14 @@
 <?php
 
-namespace Vox\PersistenceTests\Repository;
+namespace Primavera\PersistenceTests\Repository;
 
 use Doctrine\DBAL\Connection;
 use Primavera\Container\Container\Container;
 use Primavera\Container\Factory\ContainerBuilder;
-use Vox\Data\ObjectHydrator;
-use Vox\Persistence\Stereotype\Repository;
-use Vox\PersistenceTests\DbTestCase;
-use Vox\PersistenceTests\Entity\Users;
+use Primavera\Data\ObjectHydrator;
+use Primavera\Persistence\Stereotype\Repository;
+use Primavera\PersistenceTests\DbTestCase;
+use Primavera\PersistenceTests\Entity\Users;
 
 class UsersRepositoryTest extends DbTestCase
 {
@@ -25,7 +25,7 @@ class UsersRepositoryTest extends DbTestCase
         $builder = new ContainerBuilder(true);
 
         $builder->withAppNamespaces()
-            ->withNamespaces('Vox\\PersistenceTests\\')
+            ->withNamespaces('Primavera\\PersistenceTests\\')
             ->withStereotypes(Repository::class)
             ->withConfigFile(__DIR__ . '/../application.yaml')
             ->withComponents(ObjectHydrator::class)
@@ -37,7 +37,7 @@ class UsersRepositoryTest extends DbTestCase
 
     public function testShouldGetRepositoryAndFindData()
     {
-        /* @var $repo \Vox\PersistenceTests\Repository\UsersRepository */
+        /* @var $repo \Primavera\PersistenceTests\Repository\UsersRepository */
         $repo = $this->container->get(UsersRepository::class);
 
         $bruce = $repo->findById(1);

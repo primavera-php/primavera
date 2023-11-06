@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vox\Framework\Test\Stereotype;
+namespace Primavera\Framework\Test\Stereotype;
 
 /**
  * @Annotation

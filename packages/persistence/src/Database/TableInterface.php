@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Persistence\Database;
+namespace Primavera\Persistence\Database;
 
 interface TableInterface
 {

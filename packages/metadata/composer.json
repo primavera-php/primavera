@@ -3,12 +3,12 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Vox\\Metadata\\": "src\\"
+            "Primavera\\Metadata\\": "src\\"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Vox\\Metadata\\Test\\": "tests\\"
+            "Primavera\\Metadata\\Test\\": "tests\\"
         }
     },
     "require": {

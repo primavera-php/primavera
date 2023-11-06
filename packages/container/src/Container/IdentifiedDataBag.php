@@ -2,11 +2,11 @@
 
 namespace Primavera\Container\Container;
 
-use Vox\Metadata\ClassComponentMetadataInterface;
-use Vox\Metadata\ClassMetadataInterface;
-use Vox\Metadata\Factory\MetadataFactoryInterface;
-use Vox\Metadata\MetadataInterface;
-use Vox\Metadata\TypedComponentMetadataInterface;
+use Primavera\Metadata\ClassComponentMetadataInterface;
+use Primavera\Metadata\ClassMetadataInterface;
+use Primavera\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Metadata\MetadataInterface;
+use Primavera\Metadata\TypedComponentMetadataInterface;
 
 /**
  * @template T

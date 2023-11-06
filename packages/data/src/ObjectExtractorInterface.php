@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vox\Data;
+namespace Primavera\Data;
 
 
 interface ObjectExtractorInterface

@@ -9,7 +9,7 @@ use Primavera\Container\Bean\AbstractInterfaceImplementor;
 use Primavera\Container\Metadata\ClassMetadata;
 use Shared\Annotation\GeneratedClass;
 use Shared\Stub\BarComponent;
-use Vox\Metadata\MethodMetadata;
+use Primavera\Metadata\MethodMetadata;
 
 class InterfaceGenerator extends AbstractInterfaceImplementor
 {

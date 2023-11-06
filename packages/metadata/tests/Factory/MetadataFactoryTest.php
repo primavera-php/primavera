@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Vox\Metadata\Test\Factory;
+namespace Primavera\Metadata\Test\Factory;
 
 use PHPUnit\Framework\TestCase;
-use Vox\Metadata\ClassMetadata;
-use Vox\Metadata\Factory\MetadataFactoryFactory;
-use Vox\Metadata\MethodMetadata;
-use Vox\Metadata\Test\Stub\TestAnnotation;
+use Primavera\Metadata\ClassMetadata;
+use Primavera\Metadata\Factory\MetadataFactoryFactory;
+use Primavera\Metadata\MethodMetadata;
+use Primavera\Metadata\Test\Stub\TestAnnotation;
 
 class MetadataFactoryTest extends TestCase
 {

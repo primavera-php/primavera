@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Vox\Framework\Processor;
+namespace Primavera\Framework\Processor;
 
 
 use Primavera\Container\Processor\AbstractStereotypeProcessor;
 use Slim\App;
-use Vox\Framework\Stereotype\Middleware;
+use Primavera\Framework\Stereotype\Middleware;
 
 class MiddlewareStereotypeProcessor extends AbstractStereotypeProcessor
 {

@@ -58,7 +58,7 @@
     </logging>
 
     <listeners>
-        <listener class="Vox\Framework\Test\TestListener" file="packages/framework/src/Test/TestCase.php">
+        <listener class="Primavera\Framework\Test\TestListener" file="packages/framework/src/Test/TestCase.php">
 
         </listener>
     </listeners>

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Cache\Bridge;
+namespace Primavera\Cache\Bridge;
 
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;

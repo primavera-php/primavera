@@ -1,10 +1,10 @@
 <?php
 
-namespace Vox\Data;
+namespace Primavera\Data;
 
 use PHPUnit\Framework\TestCase;
-use Vox\Data\Formatter\JsonFormatter;
-use Vox\Metadata\Factory\MetadataFactoryFactory;
+use Primavera\Data\Formatter\JsonFormatter;
+use Primavera\Metadata\Factory\MetadataFactoryFactory;
 
 class SerializerTest extends TestCase
 {

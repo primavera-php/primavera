@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vox\Framework\Container;
+namespace Primavera\Framework\Container;
 
 
 use Primavera\Container\Container\Container;

@@ -1,12 +1,12 @@
 <?php
 
-namespace Vox\PersistenceTests\Repository;
+namespace Primavera\PersistenceTests\Repository;
 
-use Vox\Persistence\Annotation\Query;
-use Vox\Persistence\Annotation\Table;
-use Vox\Persistence\Repository\RepositoryInterface;
-use Vox\Persistence\Stereotype\Repository;
-use Vox\PersistenceTests\Entity\Users;
+use Primavera\Persistence\Annotation\Query;
+use Primavera\Persistence\Annotation\Table;
+use Primavera\Persistence\Repository\RepositoryInterface;
+use Primavera\Persistence\Stereotype\Repository;
+use Primavera\PersistenceTests\Entity\Users;
 
 #[Repository(Users::class)]
 #[Table('users')]

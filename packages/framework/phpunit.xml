@@ -23,7 +23,7 @@
         <log type="coverage-clover" target="./build/log/clover.xml"/>
     </logging>
     <listeners>
-        <listener class="Vox\Framework\Test\TestListener" file="src/Test/TestCase.php">
+        <listener class="Primavera\Framework\Test\TestListener" file="src/Test/TestCase.php">
 
         </listener>
     </listeners>

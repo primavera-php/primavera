@@ -1,16 +1,16 @@
 <?php
 
 
-namespace Vox\Framework\Tests\Controller;
+namespace Primavera\Framework\Tests\Controller;
 
 use Primavera\Container\Factory\ContainerBuilder;
 use Primavera\Container\Annotation\Autowired;
 use Prophecy\Prophecy\ObjectProphecy;
 use Slim\Psr7\Factory\ServerRequestFactory;
-use Vox\Cache\Factory;
-use Vox\Framework\Application;
-use Vox\Framework\Test\Stereotype\Mock;
-use Vox\Framework\Test\TestCase;
+use Primavera\Cache\Factory;
+use Primavera\Framework\Application;
+use Primavera\Framework\Test\Stereotype\Mock;
+use Primavera\Framework\Test\TestCase;
 
 class ControllerTest extends TestCase
 {
@@ -21,7 +21,7 @@ class ControllerTest extends TestCase
     private ObjectProphecy $mockableService;
     
     public function setupApplication(Application $application) {
-        $application->addNamespaces('Vox\Framework\Tests\\');
+        $application->addNamespaces('Primavera\Framework\Tests\\');
     }
 
     public function configureBuilder(ContainerBuilder $containerBuilder)

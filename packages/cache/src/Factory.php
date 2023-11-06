@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Cache;
+namespace Primavera\Cache;
 
 use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
@@ -14,7 +14,7 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\MemcachedAdapter;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
 use Symfony\Component\Cache\Psr16Cache;
-use Vox\Cache\Bridge\DoctrineCacheBridge;
+use Primavera\Cache\Bridge\DoctrineCacheBridge;
 
 class Factory
 {

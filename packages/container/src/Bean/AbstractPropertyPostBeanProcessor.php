@@ -6,7 +6,7 @@ namespace Primavera\Container\Bean;
 
 use Primavera\Container\Container\Container;
 use Primavera\Container\Metadata\ClassMetadata;
-use Vox\Metadata\PropertyMetadata;
+use Primavera\Metadata\PropertyMetadata;
 
 abstract class AbstractPropertyPostBeanProcessor
 {

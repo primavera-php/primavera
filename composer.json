@@ -14,13 +14,13 @@
         ],
         "psr-4": {
             "Primavera\\Container\\": "packages/container/src\\",
-            "Vox\\Cache\\": "packages/cache/src\\",
-            "Vox\\Data\\": "packages/data/src\\",
-            "Vox\\Event\\": "packages/event/src\\",
-            "Vox\\Framework\\": "packages/framework/src\\",
-            "Vox\\Log\\": "packages/logger/src\\",
-            "Vox\\Metadata\\": "packages/metadata/src\\",
-            "Vox\\Persistence\\": "packages/persistence/src\\"
+            "Primavera\\Cache\\": "packages/cache/src\\",
+            "Primavera\\Data\\": "packages/data/src\\",
+            "Primavera\\Event\\": "packages/event/src\\",
+            "Primavera\\Framework\\": "packages/framework/src\\",
+            "Primavera\\Log\\": "packages/logger/src\\",
+            "Primavera\\Metadata\\": "packages/metadata/src\\",
+            "Primavera\\Persistence\\": "packages/persistence/src\\"
         }
     },
     "require": {
@@ -55,7 +55,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Vox\\Metadata\\Test\\": "packages/metadata/tests\\"
+            "Primavera\\Metadata\\Test\\": "packages/metadata/tests\\"
         }
     },
     "replace": {

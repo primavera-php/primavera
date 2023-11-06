@@ -1,10 +1,10 @@
 <?php
 
-namespace Vox\Persistence\Parser;
+namespace Primavera\Persistence\Parser;
 
 use Doctrine\Common\Lexer\Token;
-use Vox\Metadata\MethodMetadata;
-use Vox\Metadata\ParamMetadata;
+use Primavera\Metadata\MethodMetadata;
+use Primavera\Metadata\ParamMetadata;
 
 interface ExpressionFactoryInterface
 {

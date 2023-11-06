@@ -1,13 +1,13 @@
 <?php
 
-namespace Vox\Persistence\Config;
+namespace Primavera\Persistence\Config;
 
 use Doctrine\DBAL\Connection;
-use Vox\Persistence\BeanProcessor\DbalRepositoryImplementor;
-use Vox\Persistence\Parser\DbalExpressionFactory;
+use Primavera\Persistence\BeanProcessor\DbalRepositoryImplementor;
+use Primavera\Persistence\Parser\DbalExpressionFactory;
 use Primavera\Container\Annotation\Bean;
-use Vox\Persistence\Parser\ParserInterface;
-use Vox\Persistence\Parser\SimpleSqlParser;
+use Primavera\Persistence\Parser\ParserInterface;
+use Primavera\Persistence\Parser\SimpleSqlParser;
 
 class DbalPersistenceConfiguration
 {

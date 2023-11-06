@@ -1,15 +1,15 @@
 <?php
 
-namespace Vox\Framework\Configuration;
+namespace Primavera\Framework\Configuration;
 
-use Vox\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Metadata\Factory\MetadataFactoryInterface;
 use Primavera\Container\Annotation\Bean;
 use Primavera\Container\Annotation\Configuration;
-use Vox\Data\ObjectExtractor;
-use Vox\Data\ObjectExtractorInterface;
-use Vox\Data\ObjectHydrator;
-use Vox\Data\ObjectHydratorInterface;
-use Vox\Data\Serializer;
+use Primavera\Data\ObjectExtractor;
+use Primavera\Data\ObjectExtractorInterface;
+use Primavera\Data\ObjectHydrator;
+use Primavera\Data\ObjectHydratorInterface;
+use Primavera\Data\Serializer;
 
 #[Configuration]
 class SerializerConfiguration

@@ -1,15 +1,15 @@
 <?php
 
-namespace Vox\Metadata\Factory;
+namespace Primavera\Metadata\Factory;
 
-use Vox\Metadata\Cache\PsrSimpleCacheAdapter;
-use Vox\Metadata\ClassMetadata;
-use Vox\Metadata\Driver\AnnotationDriver;
-use Vox\Metadata\Driver\DriverInterface;
-use Vox\Metadata\MethodMetadata;
-use Vox\Metadata\PropertyMetadata;
-use Vox\Metadata\Reader\AttributeReader;
-use Vox\Metadata\Reader\YamlReader;
+use Primavera\Metadata\Cache\PsrSimpleCacheAdapter;
+use Primavera\Metadata\ClassMetadata;
+use Primavera\Metadata\Driver\AnnotationDriver;
+use Primavera\Metadata\Driver\DriverInterface;
+use Primavera\Metadata\MethodMetadata;
+use Primavera\Metadata\PropertyMetadata;
+use Primavera\Metadata\Reader\AttributeReader;
+use Primavera\Metadata\Reader\YamlReader;
 use Psr\SimpleCache\CacheInterface;
 
 class MetadataFactoryFactory implements MetadataFactoryFactoryInterface

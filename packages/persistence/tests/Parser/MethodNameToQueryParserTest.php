@@ -1,15 +1,15 @@
 <?php
 
-namespace Vox\PersistenceTests\Parser;
+namespace Primavera\PersistenceTests\Parser;
 
-use Vox\Metadata\Factory\MetadataFactoryFactory;
-use Vox\Persistence\Parser\DbalExpressionFactory;
-use Vox\Persistence\Parser\MethodNameToQueryParser;
-use Vox\Persistence\Parser\SimpleSqlParser;
-use Vox\PersistenceTests\DbTestCase;
-use Vox\Persistence\Annotation\GroupBy;
-use Vox\Persistence\Annotation\OrderBy;
-use Vox\Persistence\Annotation\Limit;
+use Primavera\Metadata\Factory\MetadataFactoryFactory;
+use Primavera\Persistence\Parser\DbalExpressionFactory;
+use Primavera\Persistence\Parser\MethodNameToQueryParser;
+use Primavera\Persistence\Parser\SimpleSqlParser;
+use Primavera\PersistenceTests\DbTestCase;
+use Primavera\Persistence\Annotation\GroupBy;
+use Primavera\Persistence\Annotation\OrderBy;
+use Primavera\Persistence\Annotation\Limit;
 
 class MethodNameToQueryParserTest extends DbTestCase
 {

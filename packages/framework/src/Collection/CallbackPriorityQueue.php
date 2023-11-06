@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vox\Framework\Collection;
+namespace Primavera\Framework\Collection;
 
 
 class CallbackPriorityQueue extends \SplHeap

@@ -3,7 +3,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Vox\\Data\\": "src\\"
+            "Primavera\\Data\\": "src\\"
         }
     },
     "require": {

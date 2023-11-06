@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Data\Mapping;
+namespace Primavera\Data\Mapping;
 
 /**
  * marks a single property as excluded from the normalization or denormalization proccess

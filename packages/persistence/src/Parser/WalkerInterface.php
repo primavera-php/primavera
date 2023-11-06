@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Persistence\Parser;
+namespace Primavera\Persistence\Parser;
 
 interface WalkerInterface
 {

@@ -1,15 +1,15 @@
 <?php
 
-namespace Vox\Metadata\Driver;
+namespace Primavera\Metadata\Driver;
 
 use ProxyManager\Proxy\AccessInterceptorValueHolderInterface;
 use ReflectionClass;
-use Vox\Metadata\ClassMetadata;
-use Vox\Metadata\ClassMetadataInterface;
-use Vox\Metadata\MethodMetadata;
-use Vox\Metadata\MethodMetadataInterface;
-use Vox\Metadata\PropertyMetadata;
-use Vox\Metadata\Reader\ReaderInterface;
+use Primavera\Metadata\ClassMetadata;
+use Primavera\Metadata\ClassMetadataInterface;
+use Primavera\Metadata\MethodMetadata;
+use Primavera\Metadata\MethodMetadataInterface;
+use Primavera\Metadata\PropertyMetadata;
+use Primavera\Metadata\Reader\ReaderInterface;
 
 /**
  * Driver to create classes metadata using annotations, depends on doctrine's annotation reader

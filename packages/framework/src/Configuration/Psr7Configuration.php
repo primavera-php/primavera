@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Framework\Configuration;
+namespace Primavera\Framework\Configuration;
 
 use Primavera\Container\Annotation\Bean;
 use Primavera\Container\Annotation\Configuration;

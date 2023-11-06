@@ -5,7 +5,7 @@ namespace Primavera\Container\Bean;
 
 
 use Primavera\Container\Container\Container;
-use Vox\Metadata\PropertyMetadata;
+use Primavera\Metadata\PropertyMetadata;
 
 trait ValueProcessorTrait
 {

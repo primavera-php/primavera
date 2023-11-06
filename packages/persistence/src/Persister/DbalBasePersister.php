@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Persistence\Persister;
+namespace Primavera\Persistence\Persister;
 
 use Doctrine\DBAL\Connection;
 

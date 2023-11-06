@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Data\Mapping;
+namespace Primavera\Data\Mapping;
 
 /**
  * polimorfism discriminator

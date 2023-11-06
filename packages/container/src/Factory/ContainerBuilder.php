@@ -12,10 +12,10 @@ use Primavera\Container\Scanner\ComponentScanner;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Yaml\Yaml;
-use Vox\Event\EventDispatcher;
-use Vox\Metadata\Cache\PsrSimpleCacheAdapter;
-use Vox\Metadata\Factory\MetadataFactoryFactory;
-use Vox\Metadata\MethodMetadata;
+use Primavera\Event\EventDispatcher;
+use Primavera\Metadata\Cache\PsrSimpleCacheAdapter;
+use Primavera\Metadata\Factory\MetadataFactoryFactory;
+use Primavera\Metadata\MethodMetadata;
 
 class ContainerBuilder
 {

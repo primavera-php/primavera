@@ -1,17 +1,17 @@
 <?php
 
 
-namespace Vox\Framework\Test;
+namespace Primavera\Framework\Test;
 
 
 use Primavera\Container\Factory\ContainerBuilder;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Prophecy\Prophet;
 use Psr\Http\Message\ResponseInterface;
-use Vox\Framework\Application;
-use Vox\Framework\Component\Http\HttpClient;
-use Vox\Framework\Component\Http\HttpClientInterface;
-use Vox\Framework\Test\Http\HttpTestHandler;
+use Primavera\Framework\Application;
+use Primavera\Framework\Component\Http\HttpClient;
+use Primavera\Framework\Component\Http\HttpClientInterface;
+use Primavera\Framework\Test\Http\HttpTestHandler;
 
 class TestCase extends BaseTestCase implements HttpClientInterface
 {

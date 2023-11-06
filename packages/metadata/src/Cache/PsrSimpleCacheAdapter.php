@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Vox\Metadata\Cache;
+namespace Primavera\Metadata\Cache;
 
 
 use Metadata\Cache\CacheInterface;
-use Vox\Metadata\ClassMetadata;
+use Primavera\Metadata\ClassMetadata;
 use Psr\SimpleCache\CacheInterface as PsrCacheInterface;
 
 class PsrSimpleCacheAdapter implements CacheInterface

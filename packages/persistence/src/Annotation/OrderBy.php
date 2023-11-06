@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Persistence\Annotation;
+namespace Primavera\Persistence\Annotation;
 
 /**
  * @Annotation

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Framework\Component\Http;
+namespace Primavera\Framework\Component\Http;
 
 interface HttpClientAsyncInterface {
     public function postAsync(string $path, $body, array $headers = []);

@@ -5,7 +5,7 @@ namespace ScannedTest\Bean;
 
 
 use example\shared\Stub\IgnoredClass;
-use Vox\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Metadata\Factory\MetadataFactoryInterface;
 use Primavera\Container\Cache\ContainerCacheGenerator;
 use Primavera\Container\Container\NotFoundContainerException;
 use Primavera\Container\Factory\ContainerBuilder;
@@ -16,7 +16,7 @@ use Shared\Stub\BeanComponent;
 use Shared\Stub\FooComponent;
 use Shared\Stub\TestImportService;
 use PHPUnit\Framework\TestCase;
-use Vox\Cache\Factory;
+use Primavera\Cache\Factory;
 
 class ScannedBeanRegistererTest extends TestCase
 {

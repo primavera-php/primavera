@@ -1,9 +1,9 @@
 <?php
 
-namespace Vox\Data;
+namespace Primavera\Data;
 
-use Vox\Metadata\Factory\MetadataFactoryInterface;
-use Vox\Metadata\ClassMetadata;
+use Primavera\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Metadata\ClassMetadata;
 
 /**
  * transfer data from one object to another
@@ -45,7 +45,7 @@ class DataTransferGateway implements DataTransferGatewayInterface
         $metadataFrom = $this->getObjectMetadata($fromObject);
         $metadataTo   = $this->getObjectMetadata($toObject);
         
-        /* @var $propertyMetadata \Vox\Metadata\PropertyMetadata */
+        /* @var $propertyMetadata \Primavera\Metadata\PropertyMetadata */
         foreach ($metadataFrom->propertyMetadata as $propertyMetadata) {
             $bindings = $propertyMetadata->getAnnotation(Mapping\Bindings::class);
             $target   = $bindings->target ?? $propertyMetadata->name;
@@ -70,7 +70,7 @@ class DataTransferGateway implements DataTransferGatewayInterface
         $toObject     = $this->objectGraphBuilder->buildObjectGraph($toObject);
         $metadataTo   = $this->getObjectMetadata($toObject);
         
-        /* @var $propertyMetadata \Vox\Metadata\PropertyMetadata */
+        /* @var $propertyMetadata \Primavera\Metadata\PropertyMetadata */
         foreach ($metadataTo->propertyMetadata as $propertyMetadata) {
             $bindings = $propertyMetadata->getAnnotation(Mapping\Bindings::class);
             $source   = $bindings->source ?? $propertyMetadata->name;

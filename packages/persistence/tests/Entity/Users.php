@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\PersistenceTests\Entity;
+namespace Primavera\PersistenceTests\Entity;
 
 
 class Users

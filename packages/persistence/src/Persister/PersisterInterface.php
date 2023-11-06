@@ -1,8 +1,8 @@
 <?php
 
-namespace Vox\Persistence\Persister;
+namespace Primavera\Persistence\Persister;
 
-use Vox\Persistence\Database\TableInterface;
+use Primavera\Persistence\Database\TableInterface;
 
 interface PersisterInterface extends TableInterface
 {

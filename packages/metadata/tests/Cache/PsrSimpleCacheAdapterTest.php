@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Vox\Metadata\Test\Cache;
+namespace Primavera\Metadata\Test\Cache;
 
 use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\CacheInterface;
-use Vox\Metadata\Cache\PsrSimpleCacheAdapter;
-use Vox\Metadata\ClassMetadata;
-use Vox\Metadata\Factory\MetadataFactoryFactory;
+use Primavera\Metadata\Cache\PsrSimpleCacheAdapter;
+use Primavera\Metadata\ClassMetadata;
+use Primavera\Metadata\Factory\MetadataFactoryFactory;
 
 class PsrSimpleCacheAdapterTest extends TestCase
 {

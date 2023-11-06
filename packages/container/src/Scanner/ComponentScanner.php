@@ -2,13 +2,13 @@
 
 namespace Primavera\Container\Scanner;
 
-use Vox\Metadata\Factory\MetadataFactory;
+use Primavera\Metadata\Factory\MetadataFactory;
 use Primavera\Container\Annotation\IgnoreScanner;
 use Primavera\Container\Metadata\FileReflection;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Vox\Metadata\ClassMetadata;
+use Primavera\Metadata\ClassMetadata;
 
 class ComponentScanner
 {
@@ -49,7 +49,7 @@ class ComponentScanner
                 $components->attach($metadata);
             }
 
-            /* @var $methodMetadata \Vox\Metadata\MethodMetadata */
+            /* @var $methodMetadata \Primavera\Metadata\MethodMetadata */
             foreach ($metadata->methodMetadata as $methodMetadata) {
                 if ($methodMetadata->hasAnnotation($className)) {
                     $components->attach($metadata);

@@ -1,11 +1,11 @@
 <?php
 
-namespace Vox\Data;
+namespace Primavera\Data;
 
 use InvalidArgumentException;
-use Vox\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Metadata\Factory\MetadataFactoryInterface;
 use Traversable;
-use Vox\Metadata\PropertyMetadata;
+use Primavera\Metadata\PropertyMetadata;
 
 class ObjectGraphVisitor implements ObjectGraphVisitorInterface
 {

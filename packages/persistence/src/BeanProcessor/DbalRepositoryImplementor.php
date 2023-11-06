@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Persistence\BeanProcessor;
+namespace Primavera\Persistence\BeanProcessor;
 
 use Laminas\Code\Generator\ClassGenerator;
 use Laminas\Code\Generator\MethodGenerator;
@@ -8,11 +8,11 @@ use Laminas\Code\Reflection\MethodReflection;
 use Primavera\Container\Annotation\IgnoreScanner;
 use Primavera\Container\Bean\AbstractInterfaceImplementor;
 use Primavera\Container\Metadata\ClassMetadata;
-use Vox\Metadata\MethodMetadata;
-use Vox\Persistence\Annotation\Table;
-use Vox\Persistence\Parser\ParserInterface;
-use Vox\Persistence\Repository\DbalBaseRepository;
-use Vox\Persistence\Stereotype\Repository;
+use Primavera\Metadata\MethodMetadata;
+use Primavera\Persistence\Annotation\Table;
+use Primavera\Persistence\Parser\ParserInterface;
+use Primavera\Persistence\Repository\DbalBaseRepository;
+use Primavera\Persistence\Stereotype\Repository;
 
 #[IgnoreScanner]
 class DbalRepositoryImplementor extends AbstractInterfaceImplementor
@@ -33,7 +33,7 @@ class DbalRepositoryImplementor extends AbstractInterfaceImplementor
     {
         $classGenerator->setExtendedClass(DbalBaseRepository::class);
 
-        /* @var $table \Vox\Persistence\Annotation\Table */
+        /* @var $table \Primavera\Persistence\Annotation\Table */
         $table = $classMetadata->getAnnotation(Table::class);
         /* @var $repository Repository */
         $repository = $classMetadata->getAnnotation(Repository::class);

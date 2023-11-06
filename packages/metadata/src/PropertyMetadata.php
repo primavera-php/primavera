@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Metadata;
+namespace Primavera\Metadata;
 
 use Metadata\PropertyMetadata as BaseMetadata;
 

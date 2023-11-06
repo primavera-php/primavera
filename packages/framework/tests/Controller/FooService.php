@@ -1,9 +1,9 @@
 <?php
 
 
-namespace Vox\Framework\Tests\Controller;
+namespace Primavera\Framework\Tests\Controller;
 
-use Vox\Framework\Stereotype\Service;
+use Primavera\Framework\Stereotype\Service;
 
 #[Service]
 class FooService

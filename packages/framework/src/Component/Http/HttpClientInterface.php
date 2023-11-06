@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Framework\Component\Http;
+namespace Primavera\Framework\Component\Http;
 
 interface HttpClientInterface {
     public function post(string $path, $body, array $headers = []);

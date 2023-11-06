@@ -4,7 +4,7 @@ namespace Primavera\Container\Metadata;
 
 use Primavera\Container\Annotation\Injects;
 use Primavera\Container\Container\ContainerException;
-use Vox\Metadata\ParamMetadata as BaseMetadata;
+use Primavera\Metadata\ParamMetadata as BaseMetadata;
 
 class ParamMetadata extends BaseMetadata
 {

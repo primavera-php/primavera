@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Framework\Component\Http;
+namespace Primavera\Framework\Component\Http;
 
 use GuzzleHttp\Promise\PromiseInterface;
 

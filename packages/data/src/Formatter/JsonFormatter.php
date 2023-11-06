@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vox\Data\Formatter;
+namespace Primavera\Data\Formatter;
 
 
 class JsonFormatter implements ToFormatInterface, FromFormatInterface, FormatAwareInterface

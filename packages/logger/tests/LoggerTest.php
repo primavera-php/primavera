@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vox\Log;
+namespace Primavera\Log;
 
 
 use Monolog\Handler\StreamHandler;

@@ -1,13 +1,13 @@
 <?php
 
-namespace Vox\Framework\Processor;
+namespace Primavera\Framework\Processor;
 
 use Primavera\Container\Annotation\PostBeanProcessor;
 use Primavera\Container\Container\Container;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Throwable;
-use Vox\Framework\Stereotype\ErrorHandler;
+use Primavera\Framework\Stereotype\ErrorHandler;
 
 /**
  * @PostBeanProcessor()

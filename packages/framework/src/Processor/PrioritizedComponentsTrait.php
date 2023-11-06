@@ -1,9 +1,9 @@
 <?php
 
-namespace Vox\Framework\Processor;
+namespace Primavera\Framework\Processor;
 
 use Primavera\Container\Container\Container;
-use Vox\Framework\Collection\CallbackPriorityQueue;
+use Primavera\Framework\Collection\CallbackPriorityQueue;
 
 trait PrioritizedComponentsTrait {
     private function getPrioritizedComponents(string $className, Container $container = null) {

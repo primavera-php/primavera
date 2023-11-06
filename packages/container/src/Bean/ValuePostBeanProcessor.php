@@ -6,8 +6,8 @@ namespace Primavera\Container\Bean;
 use Primavera\Container\Annotation\Value;
 use Primavera\Container\Container\Container;
 use Psr\Log\LoggerInterface;
-use Vox\Log\Logger;
-use Vox\Metadata\PropertyMetadata;
+use Primavera\Log\Logger;
+use Primavera\Metadata\PropertyMetadata;
 use Primavera\Container\Annotation\PostBeanProcessor;
 
 #[PostBeanProcessor]

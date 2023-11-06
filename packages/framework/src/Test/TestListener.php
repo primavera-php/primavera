@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vox\Framework\Test;
+namespace Primavera\Framework\Test;
 
 
 use Primavera\Container\Annotation\Autowired;
@@ -12,12 +12,12 @@ use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\Warning;
 use Prophecy\Prophet;
 use Throwable;
-use Vox\Framework\Application;
-use Vox\Framework\Test\Stereotype\Mock;
-use Vox\Metadata\Factory\MetadataFactory;
-use Vox\Metadata\Factory\MetadataFactoryFactory;
-use Vox\Metadata\PropertyMetadata;
-use Vox\Metadata\MethodMetadata;
+use Primavera\Framework\Application;
+use Primavera\Framework\Test\Stereotype\Mock;
+use Primavera\Metadata\Factory\MetadataFactory;
+use Primavera\Metadata\Factory\MetadataFactoryFactory;
+use Primavera\Metadata\PropertyMetadata;
+use Primavera\Metadata\MethodMetadata;
 use Primavera\Container\Metadata\ParamMetadata;
 
 class TestListener implements \PHPUnit\Framework\TestListener

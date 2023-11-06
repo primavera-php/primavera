@@ -1,10 +1,10 @@
 <?php
 
-namespace Vox\Persistence\Parser;
+namespace Primavera\Persistence\Parser;
 
 use Doctrine\Common\Lexer\Token;
 use Doctrine\DBAL\Connection;
-use Vox\Persistence\Parser\SimpleSqlLexer as Lexer;
+use Primavera\Persistence\Parser\SimpleSqlLexer as Lexer;
 
 class SimpleSqlParser implements ParserInterface
 {

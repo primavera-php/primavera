@@ -1,27 +1,27 @@
 <?php
 
 
-namespace Vox\Framework\Processor;
+namespace Primavera\Framework\Processor;
 
 
-use Vox\Metadata\Factory\MetadataFactory;
+use Primavera\Metadata\Factory\MetadataFactory;
 use Primavera\Container\Metadata\ClassMetadata;
 use Primavera\Container\Processor\AbstractStereotypeProcessor;
 use Psr\Http\Message\ResponseInterface;
 use Slim\App;
 use Slim\Interfaces\RouteInterface;
-use Vox\Event\EventDispatcher;
-use Vox\Framework\Stereotype\Controller;
-use Vox\Framework\Stereotype\Delete;
-use Vox\Framework\Stereotype\Get;
-use Vox\Framework\Stereotype\Interceptor;
-use Vox\Framework\Stereotype\ParamResolverInterface;
-use Vox\Framework\Stereotype\Patch;
-use Vox\Framework\Stereotype\Post;
-use Vox\Framework\Stereotype\PreDispatch;
-use Vox\Framework\Stereotype\Put;
-use Vox\Framework\Stereotype\UseMiddleware;
-use Vox\Metadata\MethodMetadata;
+use Primavera\Event\EventDispatcher;
+use Primavera\Framework\Stereotype\Controller;
+use Primavera\Framework\Stereotype\Delete;
+use Primavera\Framework\Stereotype\Get;
+use Primavera\Framework\Stereotype\Interceptor;
+use Primavera\Framework\Stereotype\ParamResolverInterface;
+use Primavera\Framework\Stereotype\Patch;
+use Primavera\Framework\Stereotype\Post;
+use Primavera\Framework\Stereotype\PreDispatch;
+use Primavera\Framework\Stereotype\Put;
+use Primavera\Framework\Stereotype\UseMiddleware;
+use Primavera\Metadata\MethodMetadata;
 
 class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
 {
@@ -73,7 +73,7 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
         /* @var $controllerMetadata ClassMetadata */
         $controllerMetadata = $this->metadataFactory->getMetadataForClass(get_class($stereotype));
 
-        /* @var $config \Vox\Framework\Stereotype\Controller */
+        /* @var $config \Primavera\Framework\Stereotype\Controller */
         $config = $controllerMetadata->getAnnotation(Controller::class);
 
         $methodMap = [

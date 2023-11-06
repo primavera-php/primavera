@@ -1,13 +1,13 @@
 <?php
 
-namespace Vox\Framework\Test\Http;
+namespace Primavera\Framework\Test\Http;
 
 use BadMethodCallException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Vox\Framework\Application;
-use Vox\Framework\Component\Http\HttpHandlerInterface;
-use Vox\Framework\Component\Http\HttpPromiseInterface;
+use Primavera\Framework\Application;
+use Primavera\Framework\Component\Http\HttpHandlerInterface;
+use Primavera\Framework\Component\Http\HttpPromiseInterface;
 
 class HttpTestHandler implements HttpHandlerInterface {
     private Application $app;

@@ -3,10 +3,10 @@
 namespace Primavera\Container\Metadata;
 
 use ReflectionClass;
-use Vox\Metadata\ClassMetadata as BaseMetadata;
-use Vox\Metadata\MethodMetadata;
-use Vox\Metadata\ParamMetadata;
-use Vox\Metadata\PropertyMetadata;
+use Primavera\Metadata\ClassMetadata as BaseMetadata;
+use Primavera\Metadata\MethodMetadata;
+use Primavera\Metadata\ParamMetadata;
+use Primavera\Metadata\PropertyMetadata;
 
 class ClassMetadata extends BaseMetadata
 {

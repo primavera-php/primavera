@@ -1,9 +1,9 @@
 <?php
 
-namespace Vox\Persistence\Parser;
+namespace Primavera\Persistence\Parser;
 
-use Vox\Metadata\MethodMetadata;
-use Vox\Metadata\ParamMetadata;
+use Primavera\Metadata\MethodMetadata;
+use Primavera\Metadata\ParamMetadata;
 
 class ParamWalker
 {

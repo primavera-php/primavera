@@ -1,10 +1,10 @@
 <?php
 
-namespace Vox\Data;
+namespace Primavera\Data;
 
 use PHPUnit\Framework\TestCase;
-use Vox\Data\Mapping\Bindings;
-use Vox\Metadata\Factory\MetadataFactoryFactory;
+use Primavera\Data\Mapping\Bindings;
+use Primavera\Metadata\Factory\MetadataFactoryFactory;
 
 class ObjectHydratorTest extends TestCase
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Vox\Metadata\Test;
+namespace Primavera\Metadata\Test;
 
 use PHPUnit\Framework\TestCase;
-use Vox\Metadata\FunctionMetadata;
+use Primavera\Metadata\FunctionMetadata;
 
 class FunctionMetadataTest extends TestCase
 {

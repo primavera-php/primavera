@@ -1,12 +1,12 @@
 <?php
 
-namespace Vox\Data;
+namespace Primavera\Data;
 
 use Countable;
-use Vox\Metadata\Factory\MetadataFactory;
+use Primavera\Metadata\Factory\MetadataFactory;
 use PHPUnit\Framework\TestCase;
-use Vox\Metadata\Driver\AnnotationDriver;
-use Vox\Metadata\Reader\AttributeReader;
+use Primavera\Metadata\Driver\AnnotationDriver;
+use Primavera\Metadata\Reader\AttributeReader;
 
 class ObjectGraphVisitorTest extends TestCase
 {

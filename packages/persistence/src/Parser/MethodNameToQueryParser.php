@@ -1,16 +1,16 @@
 <?php
 
-namespace Vox\Persistence\Parser;
+namespace Primavera\Persistence\Parser;
 
 use Doctrine\Common\Lexer\Token;
 use Primavera\Container\Annotation\Component;
 use Primavera\Container\Annotation\IgnoreScanner;
-use Vox\Metadata\MethodMetadata;
-use Vox\Persistence\Annotation\GroupBy;
-use Vox\Persistence\Annotation\Limit;
-use Vox\Persistence\Annotation\OrderBy;
-use Vox\Persistence\Annotation\Query;
-use Vox\Persistence\Parser\MethodNameToQueryLexer as Lexer;
+use Primavera\Metadata\MethodMetadata;
+use Primavera\Persistence\Annotation\GroupBy;
+use Primavera\Persistence\Annotation\Limit;
+use Primavera\Persistence\Annotation\OrderBy;
+use Primavera\Persistence\Annotation\Query;
+use Primavera\Persistence\Parser\MethodNameToQueryLexer as Lexer;
 
 #[Component]
 #[IgnoreScanner]

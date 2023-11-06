@@ -1,14 +1,14 @@
 <?php
 
-namespace Vox\Framework\Component;
+namespace Primavera\Framework\Component;
 
 use Primavera\Container\Annotation\Autowired;
 use Primavera\Container\Annotation\Value;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
-use Vox\Framework\Stereotype\ErrorHandler;
-use Vox\Framework\Exception\HttpNotFoundException;
+use Primavera\Framework\Stereotype\ErrorHandler;
+use Primavera\Framework\Exception\HttpNotFoundException;
 
 /**
  * @ErrorHandler()

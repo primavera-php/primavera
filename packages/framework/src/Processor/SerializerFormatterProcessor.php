@@ -1,15 +1,15 @@
 <?php
 
 
-namespace Vox\Framework\Processor;
+namespace Primavera\Framework\Processor;
 
 use Primavera\Container\Annotation\PostBeanProcessor;
 use Primavera\Container\Container\Container;
 use Primavera\Container\Container\ContainerAwareInterface;
-use Vox\Data\Formatter\JsonFormatter;
-use Vox\Data\Serializer;
-use Vox\Framework\Stereotype\Formatter;
-use Vox\Framework\Container\ContainerAwareTrait;
+use Primavera\Data\Formatter\JsonFormatter;
+use Primavera\Data\Serializer;
+use Primavera\Framework\Stereotype\Formatter;
+use Primavera\Framework\Container\ContainerAwareTrait;
 
 #[PostBeanProcessor]
 class SerializerFormatterProcessor implements ContainerAwareInterface

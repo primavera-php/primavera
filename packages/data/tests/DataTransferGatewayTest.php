@@ -1,13 +1,13 @@
 <?php
 
-namespace Vox\Data;
+namespace Primavera\Data;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Vox\Metadata\Factory\MetadataFactory;
+use Primavera\Metadata\Factory\MetadataFactory;
 use PHPUnit\Framework\TestCase;
-use Vox\Data\Mapping\Bindings;
-use Vox\Metadata\Driver\AnnotationDriver;
-use Vox\Metadata\Reader\AttributeReader;
+use Primavera\Data\Mapping\Bindings;
+use Primavera\Metadata\Driver\AnnotationDriver;
+use Primavera\Metadata\Reader\AttributeReader;
 
 class DataTransferGatewayTest extends TestCase
 {

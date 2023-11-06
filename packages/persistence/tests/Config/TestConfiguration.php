@@ -1,10 +1,10 @@
 <?php
 
-namespace Vox\PersistenceTests\Config;
+namespace Primavera\PersistenceTests\Config;
 
 use Primavera\Container\Annotation\Configuration;
-use Vox\Persistence\Stereotype\EnableDbal;
-use Vox\Persistence\Stereotype\EnableDbalPersistence;
+use Primavera\Persistence\Stereotype\EnableDbal;
+use Primavera\Persistence\Stereotype\EnableDbalPersistence;
 
 #[Configuration]
 #[EnableDbal]

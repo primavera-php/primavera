@@ -3,7 +3,7 @@
 namespace Primavera\Container\Bean;
 
 use Primavera\Container\Container\ContainerException;
-use Vox\Metadata\Factory\MetadataFactory;
+use Primavera\Metadata\Factory\MetadataFactory;
 use Primavera\Container\Annotation\Bean;
 use Primavera\Container\Annotation\Component;
 use Primavera\Container\Annotation\Configuration;
@@ -15,7 +15,7 @@ use Primavera\Container\Processor\AbstractStereotypeProcessor;
 use Primavera\Container\Processor\PostBeanStereotypeProcessor;
 use Primavera\Container\Scanner\ComponentScanner;
 use Psr\Log\LoggerInterface;
-use Vox\Log\Logger;
+use Primavera\Log\Logger;
 
 class BeanRegisterer
 {

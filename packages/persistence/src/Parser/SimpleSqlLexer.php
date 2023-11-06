@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Persistence\Parser;
+namespace Primavera\Persistence\Parser;
 
 use Doctrine\Common\Lexer\AbstractLexer;
 

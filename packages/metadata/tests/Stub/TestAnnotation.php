@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vox\Metadata\Test\Stub;
+namespace Primavera\Metadata\Test\Stub;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\Target;

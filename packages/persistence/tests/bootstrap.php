@@ -2,7 +2,7 @@
 
 /* @var $loader \Composer\Autoload\ClassLoader */
 $loader = require 'vendor/autoload.php';
-$loader->addPsr4('Vox\\PersistenceTests\\', __DIR__);
+$loader->addPsr4('Primavera\\PersistenceTests\\', __DIR__);
 
 \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 

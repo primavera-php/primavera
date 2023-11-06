@@ -1,10 +1,10 @@
 <?php
 
-namespace Vox\Persistence\Config;
+namespace Primavera\Persistence\Config;
 
 use Primavera\Container\Annotation\Bean;
-use Vox\Persistence\Parser\ExpressionFactoryInterface;
-use Vox\Persistence\Parser\MethodNameToQueryParser;
+use Primavera\Persistence\Parser\ExpressionFactoryInterface;
+use Primavera\Persistence\Parser\MethodNameToQueryParser;
 
 class PersistenceConfiguration
 {

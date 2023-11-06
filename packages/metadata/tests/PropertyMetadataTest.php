@@ -1,9 +1,9 @@
 <?php
 
-namespace Vox\Metadata\Test;
+namespace Primavera\Metadata\Test;
 
 use PHPUnit\Framework\TestCase;
-use Vox\Metadata\PropertyMetadata;
+use Primavera\Metadata\PropertyMetadata;
 
 class PropertyMetadataTest extends TestCase
 {

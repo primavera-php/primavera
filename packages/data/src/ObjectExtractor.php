@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Vox\Data;
+namespace Primavera\Data;
 
 
-use Vox\Metadata\Factory\MetadataFactoryInterface;
-use Vox\Data\Mapping\Bindings;
-use Vox\Data\Mapping\Exclude;
-use Vox\Metadata\PropertyMetadata;
+use Primavera\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Data\Mapping\Bindings;
+use Primavera\Data\Mapping\Exclude;
+use Primavera\Metadata\PropertyMetadata;
 
 class ObjectExtractor implements ObjectExtractorInterface
 {

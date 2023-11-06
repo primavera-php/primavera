@@ -1,11 +1,11 @@
 <?php
 
-namespace Vox\Metadata\Factory;
+namespace Primavera\Metadata\Factory;
 
 use Psr\SimpleCache\CacheInterface;
-use Vox\Metadata\ClassMetadata;
-use Vox\Metadata\MethodMetadata;
-use Vox\Metadata\PropertyMetadata;
+use Primavera\Metadata\ClassMetadata;
+use Primavera\Metadata\MethodMetadata;
+use Primavera\Metadata\PropertyMetadata;
 
 /**
  * @author Jhonatan Teixeira <jhonatan.teixeira@gmail.com>

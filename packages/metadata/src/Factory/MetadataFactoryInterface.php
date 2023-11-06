@@ -1,10 +1,10 @@
 <?php
 
-namespace Vox\Metadata\Factory;
+namespace Primavera\Metadata\Factory;
 
-use Vox\Metadata\ClassMetadataInterface;
-use Vox\Metadata\PropertyMetadata;
-use Vox\Metadata\MethodMetadataInterface;
+use Primavera\Metadata\ClassMetadataInterface;
+use Primavera\Metadata\PropertyMetadata;
+use Primavera\Metadata\MethodMetadataInterface;
 
 /**
  * @template T of ClassMetadataInterface<P, M>

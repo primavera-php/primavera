@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Metadata;
+namespace Primavera\Metadata;
 
 /**
  * Trait to facilitate the annotations read from the metadata drivers

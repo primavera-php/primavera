@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Vox\Framework\Middleware;
+namespace Primavera\Framework\Middleware;
 
 use Primavera\Container\Metadata\ClassMetadata;
 use Psr\Http\Message\ServerRequestInterface;
-use Vox\Data\Serializer;
-use Vox\Framework\Stereotype\ParamResolverInterface;
-use Vox\Framework\Stereotype\RequestBody;
-use Vox\Metadata\MethodMetadata;
+use Primavera\Data\Serializer;
+use Primavera\Framework\Stereotype\ParamResolverInterface;
+use Primavera\Framework\Stereotype\RequestBody;
+use Primavera\Metadata\MethodMetadata;
 
 class RequestBodyResolver implements ParamResolverInterface
 {
@@ -28,7 +28,7 @@ class RequestBodyResolver implements ParamResolverInterface
             return [];
         }
 
-        /* @var $paramsMetadata \Vox\Metadata\ParamMetadata[] */
+        /* @var $paramsMetadata \Primavera\Metadata\ParamMetadata[] */
         $paramsMetadata = [];
 
         foreach ($methodMetadata->params as $param) {

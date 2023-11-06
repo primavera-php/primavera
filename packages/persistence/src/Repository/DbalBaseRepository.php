@@ -1,11 +1,11 @@
 <?php
 
-namespace Vox\Persistence\Repository;
+namespace Primavera\Persistence\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Vox\Data\ObjectHydratorInterface;
-use Vox\Persistence\Persister\PersisterInterface;
+use Primavera\Data\ObjectHydratorInterface;
+use Primavera\Persistence\Persister\PersisterInterface;
 
 /**
  * @template T

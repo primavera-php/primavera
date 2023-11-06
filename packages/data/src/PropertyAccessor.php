@@ -1,8 +1,8 @@
 <?php
 
-namespace Vox\Data;
+namespace Primavera\Data;
 
-use Vox\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Metadata\Factory\MetadataFactoryInterface;
 use RuntimeException;
 
 /**

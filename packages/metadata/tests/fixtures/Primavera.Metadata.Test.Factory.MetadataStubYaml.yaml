@@ -1,0 +1,15 @@
+class:
+  - Primavera\Metadata\Test\Stub\TestAnnotation
+
+properties:
+  name:
+    Primavera\Metadata\Test\Stub\TestAnnotation:
+      name: 'power'
+      test: 'more'
+
+  overriden:
+    - Primavera\Metadata\Test\Stub\TestAnnotation
+
+methods:
+  getId:
+    - Primavera\Metadata\Test\Stub\TestAnnotation

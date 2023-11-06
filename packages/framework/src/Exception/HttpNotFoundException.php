@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Framework\Exception;
+namespace Primavera\Framework\Exception;
 
 class HttpNotFoundException extends \Exception {
     public function __construct($message = 'Not found') {

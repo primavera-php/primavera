@@ -1,12 +1,12 @@
 <?php
 
-namespace Vox\Data;
+namespace Primavera\Data;
 
-use Vox\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Metadata\Factory\MetadataFactoryInterface;
 use ReflectionClass;
 use ReflectionParameter;
-use Vox\Metadata\ClassMetadata;
-use Vox\Metadata\PropertyMetadata;
+use Primavera\Metadata\ClassMetadata;
+use Primavera\Metadata\PropertyMetadata;
 
 /**
  * Use object's metadata to create the entire graph of empty objects in case there's no

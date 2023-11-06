@@ -1,16 +1,16 @@
 <?php
 
 
-namespace Vox\Framework\Tests\Controller;
+namespace Primavera\Framework\Tests\Controller;
 
 use Primavera\Container\Annotation\Autowired;
-use Vox\Framework\Stereotype\Controller;
-use Vox\Framework\Stereotype\Delete;
-use Vox\Framework\Stereotype\Get;
-use Vox\Framework\Stereotype\Post;
-use Vox\Framework\Stereotype\Put;
-use Vox\Framework\Stereotype\RequestBody;
-use Vox\Framework\Exception\HttpNotFoundException;
+use Primavera\Framework\Stereotype\Controller;
+use Primavera\Framework\Stereotype\Delete;
+use Primavera\Framework\Stereotype\Get;
+use Primavera\Framework\Stereotype\Post;
+use Primavera\Framework\Stereotype\Put;
+use Primavera\Framework\Stereotype\RequestBody;
+use Primavera\Framework\Exception\HttpNotFoundException;
 
 
 class FooDto {

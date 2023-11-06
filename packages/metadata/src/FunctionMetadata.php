@@ -1,6 +1,6 @@
 <?php
 
-namespace Vox\Metadata;
+namespace Primavera\Metadata;
 
 class FunctionMetadata implements MetadataInterface, TypedComponentMetadataInterface, \Serializable
 {
