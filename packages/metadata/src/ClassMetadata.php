@@ -40,6 +40,7 @@ class ClassMetadata implements ClassMetadataInterface
         $this->reflection = $class;
         $this->createdAt = time();
         $this->interfaces = $class->getInterfaceNames();
+        $this->fileResources = [$class->getFileName()];
     }
 
     public function getReflection(): \ReflectionClass
@@ -89,7 +90,7 @@ class ClassMetadata implements ClassMetadataInterface
     {
         $this->methodMetadata = array_merge($object->getMethodMetadata(), $this->methodMetadata);
         $this->propertyMetadata = array_merge($object->getPropertyMetadata(), $this->propertyMetadata);
-        $this->fileResources = array_merge( $object->getFileResources(), $this->fileResources);
+        $this->fileResources = array_merge($object->getFileResources(), $this->fileResources);
         $this->annotations = array_merge($object->getAnnotations(), $this->annotations);
         $this->hierarchy = [...$object->getHierarchy(), $object->getName()];
 
@@ -149,5 +150,16 @@ class ClassMetadata implements ClassMetadataInterface
     public function getCreatedAt(): int
     {
         return $this->createdAt;
+    }
+
+    public function isFresh(): bool
+    {
+        foreach ($this->fileResources as $file) {
+            if ($this->createdAt < filemtime($file)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

@@ -43,4 +43,6 @@ interface ClassMetadataInterface extends MetadataInterface
      * @return int
      */
     public function getCreatedAt(): int;
+
+    public function isFresh(): bool;
 }
