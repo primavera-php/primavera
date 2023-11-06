@@ -59,13 +59,13 @@
         }
     },
     "replace": {
-        "vox/cache": "self.version",
-        "vox/data": "self.version",
-        "vox/event": "self.version",
-        "vox/framework": "self.version",
-        "vox/logger": "self.version",
-        "vox/metadata": "self.version",
-        "vox/persistence": "self.version",
+        "primavera/cache": "self.version",
+        "primavera/data": "self.version",
+        "primavera/event": "self.version",
+        "primavera/framework": "self.version",
+        "primavera/logger": "self.version",
+        "primavera/metadata": "self.version",
+        "primavera/persistence": "self.version",
         "primavera/container": "self.version"
     }
 }

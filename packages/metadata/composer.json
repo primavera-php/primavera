@@ -1,5 +1,5 @@
 {
-    "name": "vox/metadata",
+    "name": "primavera/metadata",
     "license": "MIT",
     "autoload": {
         "psr-4": {

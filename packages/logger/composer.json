@@ -1,5 +1,5 @@
 {
-    "name": "vox/logger",
+    "name": "primavera/logger",
     "type": "library",
     "license": "MIT",
     "autoload": {

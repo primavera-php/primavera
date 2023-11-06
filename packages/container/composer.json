@@ -10,14 +10,14 @@
     "require": {
         "php": ">=8.1",
         "doctrine/annotations": "^1",
-        "vox/metadata": "^1.0.0",
+        "primavera/metadata": "1.0",
         "friendsofphp/proxy-manager-lts": "^1",
         "psr/simple-cache": "^1",
         "psr/container": "^1.0",
         "symfony/finder": "^5.1",
-        "vox/logger": "^0.1.0",
-        "vox/event": "^0.6",
-        "vox/cache": "^0.6",
+        "primavera/logger": "1.0",
+        "primavera/event": "1.0",
+        "primavera/cache": "1.0",
         "opis/closure": "^3.6"
     },
     "require-dev": {

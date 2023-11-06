@@ -1,5 +1,5 @@
 {
-    "name": "vox/event",
+    "name": "primavera/event",
     "type": "library",
     "autoload": {
         "psr-4": {
