@@ -19,7 +19,7 @@
     "require": {
         "php": ">=8.1",
         "primavera/container": "1.0",
-        "doctrine/dbal": "^3.5",
+        "doctrine/dbal": "~3.5.0",
         "primavera/data": "1.0"
     },
     "require-dev": {
