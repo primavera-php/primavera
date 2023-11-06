@@ -2,8 +2,8 @@
 
 namespace Vox\Framework\Configuration;
 
-use PhpBeans\Annotation\Bean;
-use PhpBeans\Annotation\Configuration;
+use Primavera\Container\Annotation\Bean;
+use Primavera\Container\Annotation\Configuration;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\App;

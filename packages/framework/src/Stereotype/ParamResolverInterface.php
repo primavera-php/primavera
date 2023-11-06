@@ -4,7 +4,7 @@
 namespace Vox\Framework\Stereotype;
 
 
-use PhpBeans\Metadata\ClassMetadata;
+use Primavera\Container\Metadata\ClassMetadata;
 use Psr\Http\Message\ServerRequestInterface;
 use Vox\Metadata\MethodMetadata;
 

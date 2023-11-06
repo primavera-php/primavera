@@ -5,7 +5,7 @@ namespace Vox\Persistence\Config;
 use Doctrine\DBAL\Connection;
 use Vox\Persistence\BeanProcessor\DbalRepositoryImplementor;
 use Vox\Persistence\Parser\DbalExpressionFactory;
-use PhpBeans\Annotation\Bean;
+use Primavera\Container\Annotation\Bean;
 use Vox\Persistence\Parser\ParserInterface;
 use Vox\Persistence\Parser\SimpleSqlParser;
 

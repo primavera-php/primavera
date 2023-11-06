@@ -2,7 +2,7 @@
 
 namespace Vox\Persistence\Config;
 
-use PhpBeans\Annotation\Bean;
+use Primavera\Container\Annotation\Bean;
 use Vox\Persistence\Parser\ExpressionFactoryInterface;
 use Vox\Persistence\Parser\MethodNameToQueryParser;
 

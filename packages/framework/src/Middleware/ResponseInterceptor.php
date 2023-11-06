@@ -3,7 +3,7 @@
 
 namespace Vox\Framework\Middleware;
 
-use PhpBeans\Annotation\Autowired;
+use Primavera\Container\Annotation\Autowired;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Vox\Framework\Stereotype\Interceptor;

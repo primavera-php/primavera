@@ -4,8 +4,8 @@
 namespace Vox\Framework\Test;
 
 
-use PhpBeans\Annotation\Autowired;
-use PhpBeans\Metadata\ClassMetadata;
+use Primavera\Container\Annotation\Autowired;
+use Primavera\Container\Metadata\ClassMetadata;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestSuite;
@@ -18,7 +18,7 @@ use Vox\Metadata\Factory\MetadataFactory;
 use Vox\Metadata\Factory\MetadataFactoryFactory;
 use Vox\Metadata\PropertyMetadata;
 use Vox\Metadata\MethodMetadata;
-use PhpBeans\Metadata\ParamMetadata;
+use Primavera\Container\Metadata\ParamMetadata;
 
 class TestListener implements \PHPUnit\Framework\TestListener
 {

@@ -2,8 +2,8 @@
 
 namespace Vox\Framework\Processor;
 
-use PhpBeans\Annotation\PostBeanProcessor;
-use PhpBeans\Container\Container;
+use Primavera\Container\Annotation\PostBeanProcessor;
+use Primavera\Container\Container\Container;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Throwable;

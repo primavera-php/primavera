@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vox\Metadata\Test;
+namespace Vox\Metadata\Test\Factory;
 
 use PHPUnit\Framework\TestCase;
 use Vox\Metadata\ClassMetadata;

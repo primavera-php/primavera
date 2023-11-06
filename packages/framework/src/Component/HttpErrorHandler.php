@@ -2,8 +2,8 @@
 
 namespace Vox\Framework\Component;
 
-use PhpBeans\Annotation\Autowired;
-use PhpBeans\Annotation\Value;
+use Primavera\Container\Annotation\Autowired;
+use Primavera\Container\Annotation\Value;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;

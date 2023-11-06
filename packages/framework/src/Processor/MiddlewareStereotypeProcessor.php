@@ -4,7 +4,7 @@
 namespace Vox\Framework\Processor;
 
 
-use PhpBeans\Processor\AbstractStereotypeProcessor;
+use Primavera\Container\Processor\AbstractStereotypeProcessor;
 use Slim\App;
 use Vox\Framework\Stereotype\Middleware;
 

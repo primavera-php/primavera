@@ -4,7 +4,7 @@
 namespace Vox\Framework\Container;
 
 
-use PhpBeans\Container\Container;
+use Primavera\Container\Container\Container;
 
 trait ContainerAwareTrait
 {

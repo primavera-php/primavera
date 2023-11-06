@@ -3,8 +3,8 @@
 namespace Vox\Persistence\Parser;
 
 use Doctrine\Common\Lexer\Token;
-use PhpBeans\Annotation\Component;
-use PhpBeans\Annotation\IgnoreScanner;
+use Primavera\Container\Annotation\Component;
+use Primavera\Container\Annotation\IgnoreScanner;
 use Vox\Metadata\MethodMetadata;
 use Vox\Persistence\Annotation\GroupBy;
 use Vox\Persistence\Annotation\Limit;

@@ -2,8 +2,8 @@
 
 namespace Vox\Framework;
 
-use PhpBeans\Container\Container;
-use PhpBeans\Factory\ContainerBuilder;
+use Primavera\Container\Container\Container;
+use Primavera\Container\Factory\ContainerBuilder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;

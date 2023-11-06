@@ -3,7 +3,7 @@
 
 namespace Vox\Framework\Middleware;
 
-use PhpBeans\Metadata\ClassMetadata;
+use Primavera\Container\Metadata\ClassMetadata;
 use Psr\Http\Message\ServerRequestInterface;
 use Vox\Data\Serializer;
 use Vox\Framework\Stereotype\ParamResolverInterface;

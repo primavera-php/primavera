@@ -3,8 +3,8 @@
 
 namespace Vox\Framework\Tests\Controller;
 
-use PhpBeans\Factory\ContainerBuilder;
-use PhpBeans\Annotation\Autowired;
+use Primavera\Container\Factory\ContainerBuilder;
+use Primavera\Container\Annotation\Autowired;
 use Prophecy\Prophecy\ObjectProphecy;
 use Slim\Psr7\Factory\ServerRequestFactory;
 use Vox\Cache\Factory;

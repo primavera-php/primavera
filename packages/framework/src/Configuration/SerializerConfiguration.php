@@ -3,8 +3,8 @@
 namespace Vox\Framework\Configuration;
 
 use Vox\Metadata\Factory\MetadataFactoryInterface;
-use PhpBeans\Annotation\Bean;
-use PhpBeans\Annotation\Configuration;
+use Primavera\Container\Annotation\Bean;
+use Primavera\Container\Annotation\Configuration;
 use Vox\Data\ObjectExtractor;
 use Vox\Data\ObjectExtractorInterface;
 use Vox\Data\ObjectHydrator;

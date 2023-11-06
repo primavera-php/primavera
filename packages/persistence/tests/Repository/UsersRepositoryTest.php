@@ -3,8 +3,8 @@
 namespace Vox\PersistenceTests\Repository;
 
 use Doctrine\DBAL\Connection;
-use PhpBeans\Container\Container;
-use PhpBeans\Factory\ContainerBuilder;
+use Primavera\Container\Container\Container;
+use Primavera\Container\Factory\ContainerBuilder;
 use Vox\Data\ObjectHydrator;
 use Vox\Persistence\Stereotype\Repository;
 use Vox\PersistenceTests\DbTestCase;

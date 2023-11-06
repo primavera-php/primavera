@@ -5,8 +5,8 @@ namespace Vox\Framework\Processor;
 
 
 use Vox\Metadata\Factory\MetadataFactory;
-use PhpBeans\Metadata\ClassMetadata;
-use PhpBeans\Processor\AbstractStereotypeProcessor;
+use Primavera\Container\Metadata\ClassMetadata;
+use Primavera\Container\Processor\AbstractStereotypeProcessor;
 use Psr\Http\Message\ResponseInterface;
 use Slim\App;
 use Slim\Interfaces\RouteInterface;

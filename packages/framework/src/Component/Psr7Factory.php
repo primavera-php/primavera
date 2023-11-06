@@ -3,7 +3,7 @@
 
 namespace Vox\Framework\Component;
 
-use PhpBeans\Annotation\Component;
+use Primavera\Container\Annotation\Component;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Slim\Psr7\Factory\ResponseFactory;

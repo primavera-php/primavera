@@ -13,7 +13,7 @@
             "packages/persistence/src/helpers.php"
         ],
         "psr-4": {
-            "PhpBeans\\": "packages/php-beans/src\\",
+            "Primavera\\Container\\": "packages/container/src\\",
             "Vox\\Cache\\": "packages/cache/src\\",
             "Vox\\Data\\": "packages/data/src\\",
             "Vox\\Event\\": "packages/event/src\\",
@@ -66,6 +66,6 @@
         "vox/logger": "self.version",
         "vox/metadata": "self.version",
         "vox/persistence": "self.version",
-        "vox/php-beans": "self.version"
+        "primavera/container": "self.version"
     }
 }

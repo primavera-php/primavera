@@ -3,9 +3,9 @@
 
 namespace Vox\Framework\Processor;
 
-use PhpBeans\Annotation\PostBeanProcessor;
-use PhpBeans\Container\Container;
-use PhpBeans\Container\ContainerAwareInterface;
+use Primavera\Container\Annotation\PostBeanProcessor;
+use Primavera\Container\Container\Container;
+use Primavera\Container\Container\ContainerAwareInterface;
 use Vox\Data\Formatter\JsonFormatter;
 use Vox\Data\Serializer;
 use Vox\Framework\Stereotype\Formatter;

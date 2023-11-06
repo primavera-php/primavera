@@ -2,7 +2,7 @@
 
 namespace Vox\Framework\Processor;
 
-use PhpBeans\Container\Container;
+use Primavera\Container\Container\Container;
 use Vox\Framework\Collection\CallbackPriorityQueue;
 
 trait PrioritizedComponentsTrait {

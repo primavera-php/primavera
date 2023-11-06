@@ -3,7 +3,7 @@
 
 namespace Vox\Framework\Tests\Controller;
 
-use PhpBeans\Annotation\Autowired;
+use Primavera\Container\Annotation\Autowired;
 use Vox\Framework\Stereotype\Controller;
 use Vox\Framework\Stereotype\Delete;
 use Vox\Framework\Stereotype\Get;

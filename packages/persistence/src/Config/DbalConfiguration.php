@@ -4,8 +4,8 @@ namespace Vox\Persistence\Config;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
-use PhpBeans\Annotation\Bean;
-use PhpBeans\Annotation\Injects;
+use Primavera\Container\Annotation\Bean;
+use Primavera\Container\Annotation\Injects;
 
 class DbalConfiguration
 {

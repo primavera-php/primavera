@@ -23,8 +23,8 @@
             <directory>packages/event/tests</directory>
         </testsuite>
 
-        <testsuite name="php-beans">
-            <directory>packages/php-beans/tests</directory>
+        <testsuite name="container">
+            <directory>packages/container/tests</directory>
         </testsuite>
 
         <testsuite name="framework">

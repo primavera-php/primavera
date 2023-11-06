@@ -2,7 +2,7 @@
 
 namespace Vox\Persistence\Stereotype;
 
-use PhpBeans\Annotation\Imports;
+use Primavera\Container\Annotation\Imports;
 use Vox\Persistence\Config\DbalPersistenceConfiguration;
 use Vox\Persistence\Config\PersistenceConfiguration;
 
