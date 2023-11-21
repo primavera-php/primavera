@@ -2,8 +2,8 @@ name: 'Packages Split'
 
 on:
     push:
-        branches:
-            - master
+        # branches:
+        #     - master
         tags:
             - '*'
     workflow_dispatch:
@@ -25,21 +25,37 @@ jobs:
                     -
                         local_path: 'cache'
                         split_repository: 'cache'
-
+                    -
+                        local_path: 'framework'
+                        split_repository: 'framework'
+                    -
+                        local_path: 'persistence'
+                        split_repository: 'persistence'
+                    -
+                        local_path: 'metadata'
+                        split_repository: 'metadata'
+                    -
+                        local_path: 'event'
+                        split_repository: 'event'
+                    -
+                        local_path: 'data'
+                        split_repository: 'data'
+                    -
+                        local_path: 'container'
+                        split_repository: 'container'
+                    -
+                        local_path: 'logger'
+                        split_repository: 'logger'
+                        
         steps:
             - uses: actions/checkout@v2
 
-            - name: Safe Directories
-              run: |
-                git config --global --add safe.directory /github/workspace
-                git config --global --add safe.directory /tmp/monorepo_split/build_directory
-
             -
-                # if: "startsWith(github.ref, 'refs/tags/')"
-                if: "!startsWith(github.ref, 'refs/tags/')"
+                if: "startsWith(github.ref, 'refs/tags/')"
+                # if: "!startsWith(github.ref, 'refs/tags/')"
                 uses: "symplify/monorepo-split-github-action@v2.3.0"
                 with:
-                    # tag: ${GITHUB_REF#refs/tags/}
+                    tag: ${GITHUB_REF#refs/tags/}
 
                     # ↓ split "packages/easy-coding-standard" directory
                     package_directory: 'packages/${{ matrix.package.local_path }}'
