@@ -15,6 +15,7 @@ env:
 jobs:
     packages_split:
         runs-on: ubuntu-latest
+        environment: deployment
 
         strategy:
             fail-fast: false
