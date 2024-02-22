@@ -1,0 +1,27 @@
+{
+    "name": "primavera/http",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Primavera\\Http\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jhonatan Teixeira",
+            "email": "jhonatan.teixeira@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "primavera/container": "1.0",
+        "guzzlehttp/guzzle": "^7.3",
+        "slim/psr7": "^1.4"
+    },
+    "require-dev": {
+        "phpspec/prophecy": "^1.13",
+        "phpunit/phpunit": "^9.4",
+        "primavera/cache": "1.0"
+    }
+}

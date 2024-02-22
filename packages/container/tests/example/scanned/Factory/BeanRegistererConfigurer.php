@@ -3,13 +3,15 @@
 
 namespace ScannedTest\Factory;
 
-
+use Primavera\Container\Annotation\Configuration;
+use Primavera\Container\Annotation\Configurator;
 use Primavera\Container\Bean\BeanRegisterer;
-use Primavera\Container\Bean\BeanRegistererConfiguratorInterface;
 
-class BeanRegistererConfigurer implements BeanRegistererConfiguratorInterface
+#[Configuration]
+class BeanRegistererConfigurer
 {
-    public function configure(BeanRegisterer $beanRegisterer)
+    #[Configurator]
+    public static function configure(BeanRegisterer $beanRegisterer)
     {
         $beanRegisterer->addNamespace('ScannedTest\\')
             ->addComponent(SomeRegisteredTestComponent::class)
@@ -18,8 +20,10 @@ class BeanRegistererConfigurer implements BeanRegistererConfiguratorInterface
     }
 }
 
-class SomeRegisteredTestComponent {
-    public function getName() {
+class SomeRegisteredTestComponent 
+{
+    public function getName() 
+    {
         return 'test component';
     }
 }

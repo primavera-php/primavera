@@ -2,6 +2,7 @@
 
 namespace Primavera\Container\Bean;
 
+use Primavera\Container\Annotation\Configurator;
 use Primavera\Container\Container\ContainerException;
 use Primavera\Metadata\Factory\MetadataFactory;
 use Primavera\Container\Annotation\Bean;
@@ -108,15 +109,17 @@ class BeanRegisterer
         return array_map(fn($class) => $this->metadataFactory->getMetadataForClass($class), $this->components);
     }
 
-    public function getAllConfigurators() {
-        $configurators = array_map(fn($c) => $this->metadataFactory->getMetadataForClass($c), $this->configurators);
+    public function configure()
+    {
+        foreach ($this->container->getMetadadasByStereotype(Configuration::class) as $config) {
+            foreach ($config->getAnnotatedMethods(Configurator::class) as $configurator) {
+                if (!$configurator->getReflection()->isStatic()) {
+                    throw new ContainerException('a configurator method must be static');
+                }
 
-        if ($this->componentScanner) {
-            $configurators = array_merge($configurators, $this->componentScanner
-                ->scanComponentsFor(BeanRegistererConfiguratorInterface::class, ...$this->namespaces));
+                $configurator->invoke(null, $this);
+            }
         }
-
-        return array_map(fn($c) => $c->getReflection()->newInstance(), $configurators);
     }
 
     public function registerClassComponents(ClassMetadata $classMetadata) {
@@ -126,12 +129,14 @@ class BeanRegisterer
     }
 
     public function registerComponents() {
-        $configurators = $this->getAllConfigurators();
-
-        /* @var $configurator ClassMetadata */
-        foreach ($configurators as $configurator) {
-            $configurator->configure($this);
+        foreach ($this->getAllComponentsMetadata() as $metadata) {
+            $this->registerComponent($metadata);
         }
+
+        if ($this->componentScanner)
+            $this->scanComponents(Configuration::class);
+
+        $this->configure();
 
         if (!$this->componentScanner) {
             array_map([$this, 'registerClassComponents'], $this->getAllComponentsMetadata());
@@ -140,16 +145,24 @@ class BeanRegisterer
         }
 
         foreach ($this->stereotypes as $stereotypeClass) {
-            $namespaces = $this->namespaces;
+            if ($stereotypeClass == Configuration::class)
+                continue;
 
-            $components = array_merge(
-                $this->componentScanner->scanComponentsFor($stereotypeClass, ...$namespaces),
-                $this->getAllComponentsMetadata(),
-            );
+            $this->scanComponents($stereotypeClass);
+        }
+    }
 
-            foreach ($components as $metadata) {
-                $this->registerComponent($metadata, $stereotypeClass);
-            }
+    private function scanComponents($stereotypeClass)
+    {
+        $namespaces = $this->namespaces;
+
+        $components = array_merge(
+            $this->componentScanner->scanComponentsFor($stereotypeClass, ...$namespaces),
+            $this->getAllComponentsMetadata(),
+        );
+
+        foreach ($components as $metadata) {
+            $this->registerComponent($metadata, $stereotypeClass);
         }
     }
 

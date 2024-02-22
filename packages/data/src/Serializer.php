@@ -4,16 +4,13 @@
 namespace Primavera\Data;
 
 
-use http\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use Primavera\Data\Formatter\FormatAwareInterface;
 use Primavera\Data\Formatter\FromFormatInterface;
 use Primavera\Data\Formatter\ToFormatInterface;
 
-class Serializer
+class Serializer implements SerializerInterface
 {
-    /**
-     * @var FormatterInterface[]
-     */
     private array $formats = [];
 
     private ObjectExtractorInterface $extractor;

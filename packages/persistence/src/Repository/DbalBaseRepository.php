@@ -31,7 +31,11 @@ abstract class DbalBaseRepository implements RepositoryInterface
             ->select('*')
             ->from($this->getTableName());
 
-        return $this->fetchMany($qb->where(...$criteria));
+        if ($criteria) {
+            $qb->where(...$criteria);
+        }
+
+        return $this->fetchMany($qb);
     }
 
     /**

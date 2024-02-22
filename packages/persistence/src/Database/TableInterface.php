@@ -8,5 +8,7 @@ interface TableInterface
 
     public function getIdColumnName(): string;
 
+    public function isAutoIncrementId(): bool;
+
     public function getEntityClassname(): string;
 }

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Primavera\Framework\Stereotype;
+namespace Primavera\Http\Stereotype;
 
 /**
  * @Annotation
@@ -9,15 +9,15 @@ namespace Primavera\Framework\Stereotype;
  * @NamedArgumentConstructor
  */
 #[\Attribute(\Attribute::TARGET_METHOD)]
-class Get
+class Delete
 {
     /**
      * @var string
      * @required
      */
-    public $path = '/';
+    public $path = '{id}';
 
-    public function __construct(string $path = '/')
+    public function __construct(string $path = '{id}')
     {
         $this->path = $path;
     }

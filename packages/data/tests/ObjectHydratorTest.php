@@ -8,7 +8,8 @@ use Primavera\Metadata\Factory\MetadataFactoryFactory;
 
 class ObjectHydratorTest extends TestCase
 {
-    public function testShouldHydrateData() {
+    public function testShouldHydrateData() 
+    {
         $data = [
             'pk' => 10,
             'name' => 'Jhon Doe',
@@ -41,6 +42,43 @@ class ObjectHydratorTest extends TestCase
 
         $this->assertEquals($compareUser, $user);
         $this->assertTrue($user->getAddress()->setterCalled);
+    }
+
+    public function testShouldHydrateDecoratedType()
+    {
+        $data = [
+            [
+                'pk' => 10,
+                'name' => 'Jhon Doe',
+                'createdAt' => '1983-12-20 08:00:00',
+                'styles' => $styles = ['fancy', 'casual'],
+                'options' => $options = ['foo', 'bar'],
+                'titles' => $titles = ['sir', 'master', 'doctor'],
+                'canceledAt' => $canceled = '2020-12-12',
+                'user_address' => [
+                    'id' => 20,
+                    'name' => 'My Address',
+                    'street' => 'Awesome Street'
+                ]
+            ]
+        ];
+
+        $hydrator = new ObjectHydrator((new MetadataFactoryFactory())->createAnnotationMetadataFactory());
+
+        $users = $hydrator->hydrate(User::class . '[]', $data);
+        $compareUser = new User(
+            10,
+            \DateTime::createFromFormat('Y-m-d H:i:s', '1983-12-20 08:00:00'),
+            $styles,
+            $options,
+            $titles,
+            new \DateTime($canceled),
+            'Jhon Doe',
+            new Address(20, 'Awesome Street')
+        );
+        $compareUser->getAddress()->setterCalled = true;
+
+        $this->assertEquals($compareUser, $users[0]);
     }
 }
 

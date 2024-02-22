@@ -4,6 +4,7 @@ namespace Primavera\Data;
 
 use DateTime;
 use Primavera\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Metadata\TypeHelper;
 use RuntimeException;
 use Primavera\Data\Mapping\Bindings;
 use Primavera\Data\Mapping\Discriminator;
@@ -37,9 +38,19 @@ class ObjectHydrator implements ObjectHydratorInterface
         $this->hydrators[$hydrator->getSupportedClassName()] = $hydrator;
     }
     
-    public function hydrate($object, array $data): object
+    public function hydrate($object, array $data): object | array
     {
         if (is_string($object)) {
+            $objectType = new TypeHelper($object);
+
+            if ($objectType->isDecoratedType()) {
+                return $this->convertDecorated($object, $data);
+            }
+
+            if ($objectType->isNativeType()) {
+                return $this->convertNativeType($object, $data);
+            }
+
             $object = (new \ReflectionClass($object))->newInstanceWithoutConstructor();
         }
 

@@ -26,6 +26,30 @@ jobs:
                         local_path: 'cache'
                         split_repository: 'cache'
                     -
+                        local_path: 'container'
+                        split_repository: 'container'
+                    -
+                        local_path: 'data'
+                        split_repository: 'data'
+                    -
+                        local_path: 'event'
+                        split_repository: 'event'
+                    -
+                        local_path: 'framework'
+                        split_repository: 'framework'
+                    -
+                        local_path: 'http'
+                        split_repository: 'http'
+                    -
+                        local_path: 'logger'
+                        split_repository: 'logger'
+                    -
+                        local_path: 'metadata'
+                        split_repository: 'metadata'
+                    -
+                        local_path: 'persistence'
+                        split_repository: 'persistence'
+                    -
                         local_path: 'framework'
                         split_repository: 'framework'
                     -
@@ -51,9 +75,25 @@ jobs:
             - uses: actions/checkout@v2
 
             -
+                if: "!startsWith(github.ref, 'refs/tags/')"
+                uses: "symplify/monorepo-split-github-action@2.3.0"
+                with:
+                    # ↓ split "packages/easy-coding-standard" directory
+                    package_directory: 'packages/${{ matrix.package.local_path }}'
+
+                    # ↓ into https://github.com/symplify/easy-coding-standard repository
+                    repository_organization: 'primavera-php'
+                    repository_name: '${{ matrix.package.split_repository }}'
+
+                    # ↓ the user signed under the split commit
+                    user_name: "Jhonatan Teixeira"
+                    user_email: "jhonatan.teixeira@gmail.com"
+
+                    branch: master
+            
+            -
                 if: "startsWith(github.ref, 'refs/tags/')"
-                # if: "!startsWith(github.ref, 'refs/tags/')"
-                uses: "symplify/monorepo-split-github-action@v2.3.0"
+                uses: "symplify/monorepo-split-github-action@2.3.0"
                 with:
                     tag: ${GITHUB_REF#refs/tags/}
 
@@ -68,4 +108,3 @@ jobs:
                     user_name: "Jhonatan Teixeira"
                     user_email: "jhonatan.teixeira@gmail.com"
 
-                    branch: master

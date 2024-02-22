@@ -8,6 +8,8 @@ trait ResolveTypeTrait
 
     public $typeInfo;
 
+    private $uses = [];
+
     private function resolveType()
     {
         $this->type = $type = $this->parseType();
@@ -66,6 +68,10 @@ trait ResolveTypeTrait
             return preg_replace('/^\\\/', '', $type) . $suffix;
         }
 
+        if (class_exists($type)) {
+            return $type;
+        }
+
         $uses = $this->getClassUses();
         $type = str_replace('\\', '\\\\', $type);
 
@@ -82,6 +88,10 @@ trait ResolveTypeTrait
 
     private function getClassUses(): array
     {
+        if ($this->uses) {
+            return $this->uses;
+        }
+
         $filename = $this->getReflection()->getDeclaringClass()->getFileName();
         
         if (is_file($filename)) {
@@ -99,7 +109,7 @@ trait ResolveTypeTrait
                 array_push($uses, $matches[1]);
             }
             
-            return $uses;
+            return $this->uses = $uses;
         }
         
         return [];

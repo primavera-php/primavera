@@ -1,11 +1,13 @@
 <?php
 
-namespace Primavera\Framework\Component\Http;
+namespace Primavera\Http;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-interface HttpHandlerInterface {
+interface HttpHandlerInterface 
+{
     public function send(RequestInterface $request, array $options = []): ResponseInterface;
-    public function sendAsync(RequestInterface $request, array $options = []);
+
+    public function sendAsync(RequestInterface $request, array $options = []): HttpPromiseInterface;
 }

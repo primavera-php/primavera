@@ -4,6 +4,7 @@
 namespace Primavera\Framework\Processor;
 
 
+use Primavera\Framework\Stereotype\PreDispatch;
 use Primavera\Metadata\Factory\MetadataFactory;
 use Primavera\Container\Metadata\ClassMetadata;
 use Primavera\Container\Processor\AbstractStereotypeProcessor;
@@ -12,47 +13,40 @@ use Slim\App;
 use Slim\Interfaces\RouteInterface;
 use Primavera\Event\EventDispatcher;
 use Primavera\Framework\Stereotype\Controller;
-use Primavera\Framework\Stereotype\Delete;
-use Primavera\Framework\Stereotype\Get;
 use Primavera\Framework\Stereotype\Interceptor;
 use Primavera\Framework\Stereotype\ParamResolverInterface;
-use Primavera\Framework\Stereotype\Patch;
-use Primavera\Framework\Stereotype\Post;
-use Primavera\Framework\Stereotype\PreDispatch;
-use Primavera\Framework\Stereotype\Put;
 use Primavera\Framework\Stereotype\UseMiddleware;
 use Primavera\Metadata\MethodMetadata;
+use Primavera\Http\Stereotype\Get;
+use Primavera\Http\Stereotype\Post;
+use Primavera\Http\Stereotype\Put;
+use Primavera\Http\Stereotype\Patch;
+use Primavera\Http\Stereotype\Delete;
+
 
 class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
 {
     use PrioritizedComponentsTrait;
     
-    private MetadataFactory $metadataFactory;
+    public function __construct(
+        private MetadataFactory $metadataFactory,
+        private EventDispatcher $eventDispatcher,
+    ) { }
 
-    private EventDispatcher $eventDispatcher;
-
-    public function __construct(MetadataFactory $metadataFactory, EventDispatcher $eventDispatcher) {
-        $this->metadataFactory = $metadataFactory;
-        $this->eventDispatcher = $eventDispatcher;
-    }
-
-    public function getStereotypeName(): string {
+    public function getStereotypeName(): string 
+    {
         return Controller::class;
     }
 
-    private function processMiddleware(RouteInterface $route, MethodMetadata $methodMetadata,
-                                       ClassMetadata $classMetadata) {
-        if ($methodMetadata->hasAnnotation(UseMiddleware::class)) {
+    private function processMiddleware(
+        RouteInterface $route,
+        MethodMetadata $methodMetadata,
+        ClassMetadata $classMetadata
+    ) {
+        foreach (array_filter([...$classMetadata->getAnnotations(), ...$methodMetadata->getAnnotations()], fn($a) => $a instanceof UseMiddleware) as $annotation) {
             $route->add(
                 $this->getContainer()
-                    ->get($methodMetadata->getAnnotation(UseMiddleware::class)->middlewareClass)
-            );
-        }
-
-        if ($classMetadata->hasAnnotation(UseMiddleware::class)) {
-            $route->add(
-                $this->getContainer()
-                    ->get($classMetadata->getAnnotation(UseMiddleware::class)->middlewareClass)
+                    ->get($annotation->middlewareClass)
             );
         }
     }

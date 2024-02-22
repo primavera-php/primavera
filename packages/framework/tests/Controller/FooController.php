@@ -5,11 +5,11 @@ namespace Primavera\Framework\Tests\Controller;
 
 use Primavera\Container\Annotation\Autowired;
 use Primavera\Framework\Stereotype\Controller;
-use Primavera\Framework\Stereotype\Delete;
-use Primavera\Framework\Stereotype\Get;
-use Primavera\Framework\Stereotype\Post;
-use Primavera\Framework\Stereotype\Put;
-use Primavera\Framework\Stereotype\RequestBody;
+use Primavera\Http\Stereotype\Delete;
+use Primavera\Http\Stereotype\Get;
+use Primavera\Http\Stereotype\Post;
+use Primavera\Http\Stereotype\Put;
+use Primavera\Http\Stereotype\RequestBody;
 use Primavera\Framework\Exception\HttpNotFoundException;
 
 
@@ -58,12 +58,12 @@ class FooController
 
     #[Put('{id}')]
     #[RequestBody('data')]
-    public function put($id, FooDto $data) {
+    public function put(int $id, FooDto $data) {
         return $this->service->put($id, $data);
     }
 
     #[Delete]
-    public function delete($id) {
+    public function delete(int $id) {
         return $this->service->delete($id);
     }
 

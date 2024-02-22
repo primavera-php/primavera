@@ -27,7 +27,7 @@ class UsersRepositoryTest extends DbTestCase
         $builder->withAppNamespaces()
             ->withNamespaces('Primavera\\PersistenceTests\\')
             ->withStereotypes(Repository::class)
-            ->withConfigFile(__DIR__ . '/../application.yaml')
+            ->withConfigFile(__DIR__ . '/application.yaml')
             ->withComponents(ObjectHydrator::class)
         ;
 
@@ -37,7 +37,6 @@ class UsersRepositoryTest extends DbTestCase
 
     public function testShouldGetRepositoryAndFindData()
     {
-        /* @var $repo \Primavera\PersistenceTests\Repository\UsersRepository */
         $repo = $this->container->get(UsersRepository::class);
 
         $bruce = $repo->findById(1);

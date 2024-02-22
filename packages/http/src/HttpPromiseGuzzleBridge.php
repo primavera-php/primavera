@@ -1,11 +1,14 @@
 <?php
 
-namespace Primavera\Framework\Component\Http;
+namespace Primavera\Http;
 
 use GuzzleHttp\Promise\PromiseInterface;
 
-class HttpPromiseGuzzleBridge implements HttpPromiseInterface {
-    private PromiseInterface $promise;
+class HttpPromiseGuzzleBridge implements HttpPromiseInterface 
+{
+    public function __construct(
+        private PromiseInterface $promise,
+    ) {}
     
     public function cancel() {
         return $this->promise->cancel();

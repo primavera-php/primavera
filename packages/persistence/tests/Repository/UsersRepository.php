@@ -8,6 +8,9 @@ use Primavera\Persistence\Repository\RepositoryInterface;
 use Primavera\Persistence\Stereotype\Repository;
 use Primavera\PersistenceTests\Entity\Users;
 
+/**
+ * @extends RepositoryInterface<Users>
+ */
 #[Repository(Users::class)]
 #[Table('users')]
 interface UsersRepository extends RepositoryInterface

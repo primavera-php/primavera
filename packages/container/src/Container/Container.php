@@ -105,6 +105,13 @@ class Container implements ContainerInterface, \IteratorAggregate
         }
     }
 
+    /**
+     * @template T
+     * 
+     * @param class-string<T> $id
+     * 
+     * @return T
+     */
     public function get(string $id) 
     {
         if (isset($this->beans[$id])) {
@@ -212,11 +219,15 @@ class Container implements ContainerInterface, \IteratorAggregate
         );
     }
 
-    public function getComponentsByStereotype(string $stereotype): \Generator
+    public function getComponentsByStereotype(string $stereotype): array
     {
+        $data = [];
+
         foreach ($this->getMetadadasByStereotype($stereotype) as $id => $metadata) {
-            yield $id => $this->get($id);
+            $data[$id] = $this->get($id);
         }
+
+        return $data;
     }
 
 	/**

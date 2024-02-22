@@ -73,7 +73,11 @@ class ObjectExtractor implements ObjectExtractorInterface
                     ?? $property->name
                 : $property->name;
 
-            $data[$name] = !is_scalar($value) ? $this->extract($value, $context) : $value;
+            $data[$name] = !is_scalar($value) 
+                && !is_bool($value) 
+                && !is_null($value) 
+                    ? $this->extract($value, $context) 
+                    : $value;
         }
 
         if ($context['extractType'] ?? false) {

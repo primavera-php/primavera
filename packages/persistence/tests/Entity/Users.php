@@ -5,7 +5,7 @@ namespace Primavera\PersistenceTests\Entity;
 
 class Users
 {
-    public int $id;
+    public ?int $id = null;
 
     public string $name;
 

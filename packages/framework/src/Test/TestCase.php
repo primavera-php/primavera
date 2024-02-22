@@ -7,10 +7,11 @@ namespace Primavera\Framework\Test;
 use Primavera\Container\Factory\ContainerBuilder;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Prophecy\Prophet;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Primavera\Framework\Application;
-use Primavera\Framework\Component\Http\HttpClient;
-use Primavera\Framework\Component\Http\HttpClientInterface;
+use Primavera\Http\HttpClient;
+use Primavera\Http\HttpClientInterface;
 use Primavera\Framework\Test\Http\HttpTestHandler;
 
 class TestCase extends BaseTestCase implements HttpClientInterface
@@ -57,6 +58,26 @@ class TestCase extends BaseTestCase implements HttpClientInterface
 
     public function put(string $path, $body, array $headers = []) {
         return $this->http->put($path, $body, $headers);
+    }
+
+    public  function send(RequestInterface $request): ResponseInterface
+    {
+        return $this->http->send($request);
+    }
+
+    public function createRequest(string $method, string $path, array $headers = []): RequestInterface
+    {
+        return $this->http->createRequest($method, $path, $headers);
+    }
+
+    public function addBody(RequestInterface $request, string $body): RequestInterface
+    {
+        return $this->http->addBody($request, $body);
+    }
+
+    public function addQuery(RequestInterface $request, array $query): RequestInterface
+    {
+        return $this->http->addQuery($request, $query);
     }
 
     public function assertStatus(int $status, ResponseInterface $response) {

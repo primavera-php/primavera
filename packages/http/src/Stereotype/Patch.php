@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Primavera\Framework\Stereotype;
+namespace Primavera\Http\Stereotype;
 
 /**
  * @Annotation

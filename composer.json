@@ -20,7 +20,8 @@
             "Primavera\\Framework\\": "packages/framework/src\\",
             "Primavera\\Log\\": "packages/logger/src\\",
             "Primavera\\Metadata\\": "packages/metadata/src\\",
-            "Primavera\\Persistence\\": "packages/persistence/src\\"
+            "Primavera\\Persistence\\": "packages/persistence/src\\",
+            "Primavera\\Http\\": "packages/http/src\\"
         }
     },
     "require": {
@@ -66,6 +67,7 @@
         "primavera/logger": "self.version",
         "primavera/metadata": "self.version",
         "primavera/persistence": "self.version",
-        "primavera/container": "self.version"
+        "primavera/container": "self.version",
+        "primavera/http": "self.version"
     }
 }

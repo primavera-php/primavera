@@ -1,2 +1,2 @@
 database:
-  connectionString: sqlite3::test_database.db
+  connectionString: sqlite3::fr_test_database.db

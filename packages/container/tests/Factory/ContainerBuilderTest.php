@@ -5,6 +5,7 @@ namespace PhpBeansTest\Factory;
 
 use Primavera\Container\Factory\ContainerBuilder;
 use PHPUnit\Framework\TestCase;
+use ScannedTest\Factory\BeanRegistererConfigurer;
 use ScannedTest\Factory\SomeRegisteredTestComponent;
 use ScannedTest\Factory\SomeTestBehaviorImplementation;
 
@@ -17,7 +18,7 @@ class ContainerBuilderTest extends TestCase
             ->withNamespaces('ScannedTest\\')
             ->withNamespaces('Shared\\')
             ->withBeans(['someValue' => 'lorem ipsum'])
-            ->withComponents(SomeTestComponent::class, SomeInjectedComponent::class)
+            ->withComponents(SomeTestComponent::class, SomeInjectedComponent::class, BeanRegistererConfigurer::class)
             ->withBeans([
                 SomeTestBean::class => new SomeTestBean(),
             ])

@@ -4,9 +4,7 @@
 namespace Primavera\Framework\Tests\Controller;
 
 use Primavera\Container\Factory\ContainerBuilder;
-use Primavera\Container\Annotation\Autowired;
 use Prophecy\Prophecy\ObjectProphecy;
-use Slim\Psr7\Factory\ServerRequestFactory;
 use Primavera\Cache\Factory;
 use Primavera\Framework\Application;
 use Primavera\Framework\Test\Stereotype\Mock;
@@ -14,14 +12,13 @@ use Primavera\Framework\Test\TestCase;
 
 class ControllerTest extends TestCase
 {
-    /**
-     * @var MockableService|ObjectProphecy
-     */
     #[Mock(MockableService::class)]
-    private ObjectProphecy $mockableService;
+    private MockableService | ObjectProphecy $mockableService;
     
-    public function setupApplication(Application $application) {
-        $application->addNamespaces('Primavera\Framework\Tests\\');
+    public function setupApplication(Application $application) 
+    {
+        $application->addNamespaces('Primavera\Framework\Tests\\')
+            ->withAppConfigFile(null);
     }
 
     public function configureBuilder(ContainerBuilder $containerBuilder)
@@ -32,31 +29,36 @@ class ControllerTest extends TestCase
         );
     }
 
-    public function testShouldGetList() {
+    public function testShouldGetList() 
+    {
         $data = $this->get('/foo');
 
         $this->assertEquals('[{"foo":"bar"},{"foo":"baz"}]', $data->getBody()->getContents());
     }
 
-    public function testShouldGetOne() {
+    public function testShouldGetOne() 
+    {
         $data = $this->get('/foo/0');
 
         $this->assertEquals('{"foo":"bar"}', $data->getBody()->getContents());
     }
 
-    public function testShouldPostOne() {
+    public function testShouldPostOne() 
+    {
         $data = $this->post('/foo', ['foo' => 'bar baz']);
 
         $this->assertEquals('{"foo":"bar baz"}', $data->getBody()->getContents());
     }
 
-    public function testShouldPutOne() {
+    public function testShouldPutOne() 
+    {
         $data = $this->put('/foo/2', ['foo' => 'bar bazar']);
 
         $this->assertEquals('{"foo":"bar bazar"}', $data->getBody()->getContents());
     }
 
-    public function testShouldDeleteOne() {
+    public function testShouldDeleteOne() 
+    {
         $data = $this->delete('/foo/2', ['foo' => 'bar bazar']);
 
         $this->assertStatus(204, $data);
@@ -73,14 +75,16 @@ class ControllerTest extends TestCase
         $this->assertEquals('{"foo":"bar"}', $data->getBody()->getContents());
     }
 
-    public function testShouldThrowErrorNoTypeDefined() {
+    public function testShouldThrowErrorNoTypeDefined() 
+    {
         $response = $this->post('/foo/error', []);
 
         $this->assertInternalError($response)
             ->assertResponseContains($response, 'no type defined');
     }
 
-    public function testShouldParseRequestParamOnParameter() {
+    public function testShouldParseRequestParamOnParameter() 
+    {
         $data = $this->put('/foo/1/param', ['foo' => 'bar baz']);
 
         $this->assertEquals('["1",{"foo":"bar baz"}]', $data->getBody()->getContents());

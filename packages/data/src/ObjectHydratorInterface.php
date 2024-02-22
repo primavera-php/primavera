@@ -7,5 +7,5 @@ namespace Primavera\Data;
  */
 interface ObjectHydratorInterface
 {
-    public function hydrate($object, array $data): object;
+    public function hydrate($object, array $data): object | array;
 }

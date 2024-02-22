@@ -1,8 +1,9 @@
 <?php
 
-namespace Primavera\Framework\Component\Http;
+namespace Primavera\Http;
 
-interface HttpPromiseInterface {
+interface HttpPromiseInterface 
+{
     public function then(
         callable $onFulfilled = null,
         callable $onRejected = null

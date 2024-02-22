@@ -1,6 +1,7 @@
 <?php
 
-namespace Primavera\Framework\Component\Http;
+namespace Primavera\Http;
+use Psr\Http\Message\RequestInterface;
 
 interface HttpClientAsyncInterface {
     public function postAsync(string $path, $body, array $headers = []);
@@ -10,4 +11,6 @@ interface HttpClientAsyncInterface {
     public function getAsync(string $path, array $query = [], array $headers = []);
     
     public function deleteAsync(string $path, array $query = [], array $headers = []);
+
+    public function sendAsync(RequestInterface $request): HttpPromiseInterface;
 }

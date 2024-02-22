@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Primavera\Framework\Stereotype;
+namespace Primavera\Http\Stereotype;
 
 /**
  * @Annotation
@@ -21,13 +21,21 @@ class RequestBody
      */
     public $type = null;
 
+
+    /**
+     * @var string
+     */
+    public $format = 'json';
+
     /**
      * @param string|null $argName
      * @param string|null $type
+     * @param string|null $format
      */
-    public function __construct(string $argName = null, string $type = null)
+    public function __construct(string $argName = null, string $type = null, string $format = 'json')
     {
         $this->argName = $argName;
         $this->type = $type;
+        $this->format = $format;
     }
 }

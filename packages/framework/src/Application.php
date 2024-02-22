@@ -23,11 +23,20 @@ class Application
     protected ?Container $container = null;
     
     protected array $namespaces = [];
+
+    protected ?string $appConfigFile = 'application.yaml';
     
     public function addNamespaces(string ...$namespaces) 
     {
         $this->namespaces = array_merge($this->namespaces, $namespaces);
         
+        return $this;
+    }
+
+    public function withAppConfigFile(?string $configFile)
+    {
+        $this->appConfigFile = $configFile;
+
         return $this;
     }
     
@@ -47,6 +56,9 @@ class Application
             )
             ->withAppNamespaces()
             ->withNamespaces(...$this->namespaces);
+        
+        if ($this->appConfigFile)
+            $builder->withConfigFile($this->appConfigFile);
 
         if ($configure) {
             $configure($builder);
@@ -57,6 +69,9 @@ class Application
     
     public function getBuilder(): ?ContainerBuilder
     {
+        if (!$this->builder)
+            $this->configure();
+
         return $this->builder;
     }
 

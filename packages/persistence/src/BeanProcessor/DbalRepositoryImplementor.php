@@ -17,6 +17,8 @@ use Primavera\Persistence\Stereotype\Repository;
 #[IgnoreScanner]
 class DbalRepositoryImplementor extends AbstractInterfaceImplementor
 {
+    use TableImplementorTrait;
+
     private ParserInterface $parser;
 
     public function __construct(ParserInterface $parser)
@@ -32,31 +34,24 @@ class DbalRepositoryImplementor extends AbstractInterfaceImplementor
     protected function postProcess(ClassMetadata $classMetadata, ClassGenerator $classGenerator)
     {
         $classGenerator->setExtendedClass(DbalBaseRepository::class);
-
-        /* @var $table \Primavera\Persistence\Annotation\Table */
-        $table = $classMetadata->getAnnotation(Table::class);
-        /* @var $repository Repository */
-        $repository = $classMetadata->getAnnotation(Repository::class);
-
-        $classGenerator->addMethods([
-            MethodGenerator::copyMethodSignature(new MethodReflection($classMetadata->name, 'getTableName'))
-                ->setBody("return '{$table->tableName}';")
-                ->setAbstract(false)
-                ->setInterface(false),
-            MethodGenerator::copyMethodSignature(new MethodReflection($classMetadata->name, 'getIdColumnName'))
-                ->setBody("return '{$table->idColunmName}';")
-                ->setAbstract(false)
-                ->setInterface(false),
-            MethodGenerator::copyMethodSignature(new MethodReflection($classMetadata->name, 'getEntityClassname'))
-                ->setBody("return '{$repository->entity}';")
-                ->setAbstract(false)
-                ->setInterface(false),
-        ]);
+        
+        $this->implementTable($classMetadata, $classGenerator);
     }
 
     protected function getBlacklistedMethods(): array
     {
-        return ['find', 'findById', 'findOne', 'getTableName', 'getIdColumnName', 'getEntityClassname'];
+        return [
+            'find',
+            'findById',
+            'findOne',
+            'getTableName',
+            'getIdColumnName',
+            'getEntityClassname',
+            'isAutoIncrementId',
+            'save',
+            'insert',
+            'update',
+        ];
     }
 
     public function implementMethodBody(MethodGenerator $methodGenerator, MethodMetadata $metadata,

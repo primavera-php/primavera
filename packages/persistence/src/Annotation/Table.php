@@ -22,9 +22,15 @@ class Table
      */
     public $idColunmName;
 
-    public function __construct(string $tableName, string $idColumnName = 'id')
+    /**
+     * @var bool
+     */
+    public $autoIncrementId;
+
+    public function __construct(string $tableName, string $idColumnName = 'id', bool $autoIncrementId = false)
     {
         $this->tableName = $tableName;
         $this->idColunmName = $idColumnName;
+        $this->autoIncrementId = $autoIncrementId;
     }
 }

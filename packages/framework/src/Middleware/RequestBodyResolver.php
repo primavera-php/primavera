@@ -4,10 +4,10 @@
 namespace Primavera\Framework\Middleware;
 
 use Primavera\Container\Metadata\ClassMetadata;
+use Primavera\Http\Stereotype\RequestBody;
 use Psr\Http\Message\ServerRequestInterface;
 use Primavera\Data\Serializer;
 use Primavera\Framework\Stereotype\ParamResolverInterface;
-use Primavera\Framework\Stereotype\RequestBody;
 use Primavera\Metadata\MethodMetadata;
 
 class RequestBodyResolver implements ParamResolverInterface
@@ -57,8 +57,21 @@ class RequestBodyResolver implements ParamResolverInterface
             throw new \LogicException("no type defined for param {$paramsMetadata[$argName]->name} on {$controllerMetadata->name}::{$methodMetadata->name}");
         }
 
-        $body = $this->serializer
-            ->deserialize($this->defaultFormat, $type, $request->getBody());
+        if (class_exists($type)) {
+            $body = $this->serializer
+                ->deserialize($this->defaultFormat, $type, $request->getBody());
+        } elseif (in_array($type, ['int', 'string', 'bool', 'float'])) {
+            $body = match($type) {
+                'int' => (int) $request->getBody(),
+                'string' => (string) $request->getBody(),
+                'bool' => (bool) $request->getBody(),
+                'float' => (float) $request->getBody(),
+            };
+        } elseif($type === 'array') {
+            $body = json_decode($request->getBody(), true);
+        } else {
+            throw new \LogicException("type {$type} is not supported for automatic body conversion");
+        }
 
         return [$argName => $body];
     }

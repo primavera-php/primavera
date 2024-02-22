@@ -6,13 +6,9 @@ namespace Primavera\Framework\Component;
 use Primavera\Container\Annotation\Component;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Slim\Psr7\Factory\ResponseFactory;
-use Slim\Psr7\Factory\StreamFactory;
 use Primavera\Data\Serializer;
 
-/**
- * @Component()
- */
+#[Component]
 class Psr7Factory
 {
     private ResponseFactoryInterface $responseFactory;
@@ -28,7 +24,8 @@ class Psr7Factory
         $this->serializer = $serializer;
     }
 
-    public function createResponse(int $status, $body, $format = 'json') {
+    public function createResponse(int $status, $body, $format = 'json') 
+    {
         if ($body instanceof \Throwable) {
             $body = (string) $body;
         }

@@ -19,7 +19,8 @@
         "slim/slim": "^4",
         "slim/psr7": "^1.4",
         "primavera/data": "1.0",
-        "guzzlehttp/guzzle": "^7.3"
+        "guzzlehttp/guzzle": "^7.3",
+        "primavera/http": "1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.4",
