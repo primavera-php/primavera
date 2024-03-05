@@ -7,7 +7,7 @@
         }
     },
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "primavera/metadata": "1.0",
         "primavera/event": "1.0"
     },

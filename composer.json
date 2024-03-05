@@ -21,18 +21,19 @@
             "Primavera\\Log\\": "packages/logger/src\\",
             "Primavera\\Metadata\\": "packages/metadata/src\\",
             "Primavera\\Persistence\\": "packages/persistence/src\\",
-            "Primavera\\Http\\": "packages/http/src\\"
+            "Primavera\\Http\\": "packages/http/src\\",
+            "Primavera\\Doctrine\\": "packages/doctrine/src\\"
         }
     },
     "require": {
-        "doctrine/annotations": "^1",
+        "doctrine/annotations": "^2",
         "doctrine/cache": "^1",
-        "doctrine/dbal": "~3.5.0",
+        "doctrine/dbal": "^4.0",
         "friendsofphp/proxy-manager-lts": "^1",
         "guzzlehttp/guzzle": "^7.3",
         "monolog/monolog": "^2.2",
         "opis/closure": "^3.6",
-        "php": ">=8.1",
+        "php": ">=8.2",
         "psr/cache": "^1",
         "psr/container": "^1.0",
         "psr/event-dispatcher": "^1",
@@ -41,7 +42,8 @@
         "slim/slim": "^4",
         "symfony/cache": ">=3.3",
         "symfony/finder": "^5.1",
-        "symfony/yaml": "^3"
+        "symfony/yaml": "^3",
+        "doctrine/orm": "^3.0"
     },
     "require-dev": {
         "mayflower/php-codebrowser": "^4",
@@ -68,6 +70,7 @@
         "primavera/metadata": "self.version",
         "primavera/persistence": "self.version",
         "primavera/container": "self.version",
-        "primavera/http": "self.version"
+        "primavera/http": "self.version",
+        "primavera/doctrine": "self.version"
     }
 }

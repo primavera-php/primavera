@@ -4,6 +4,7 @@ namespace Primavera\PersistenceTests;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Tools\DsnParser;
 use PHPUnit\Framework\TestCase;
 
 class DbTestCase extends TestCase
@@ -16,7 +17,8 @@ class DbTestCase extends TestCase
     protected function setUp(): void
     {
         @unlink('test_database.db');
-        $this->connection = DriverManager::getConnection(['url' => 'sqlite3::test_database.db']);
+        // $this->connection = DriverManager::getConnection(['url' => 'sqlite3::test_database.db']);
+        $this->connection = DriverManager::getConnection((new DsnParser())->parse('sqlite3::test_database.db'));
 
         $schema = new Schema();
         $userTable = $schema->createTable('users');

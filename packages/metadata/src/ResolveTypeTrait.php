@@ -92,7 +92,11 @@ trait ResolveTypeTrait
             return $this->uses;
         }
 
-        $filename = $this->getReflection()->getDeclaringClass()->getFileName();
+        $reflection = $this->getReflection();
+
+        $filename = $reflection instanceof \ReflectionClass 
+            ? $reflection->getFileName()
+            : $reflection->getDeclaringClass()->getFileName();
         
         if (is_file($filename)) {
             $contents = file_get_contents($filename);

@@ -84,6 +84,7 @@ class AnnotationDriver implements DriverInterface
         return [
             $this->getGetter($propertyMetadata, $classMetadata),
             $this->getSetter($propertyMetadata, $classMetadata),
+            $this->getAdder($propertyMetadata, $classMetadata),
         ];
     }
 
@@ -97,6 +98,12 @@ class AnnotationDriver implements DriverInterface
         $getterName = sprintf('get%s', ucfirst($propertyMetadata->name));
 
         return $classMetadata->methodMetadata[$getterName] ?? null;
+    }
+
+    private function getAdder(\ReflectionProperty $propertyMetadata, ClassMetadata $classMetadata) {
+        $adderName = sprintf('add%s', ucfirst($propertyMetadata->name));
+
+        return $classMetadata->methodMetadata[$adderName] ?? null;
     }
 
     public function __serialize()

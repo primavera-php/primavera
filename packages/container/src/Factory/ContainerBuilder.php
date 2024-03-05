@@ -4,16 +4,14 @@ namespace Primavera\Container\Factory;
 
 use Composer\Autoload\ClassLoader;
 use Primavera\Container\Bean\BeanRegisterer;
+use Primavera\Container\ConfigurationData;
 use Primavera\Container\Container\Container;
-use Primavera\Container\FlattenArrayIterator;
 use Primavera\Container\Metadata\ClassMetadata;
 use Primavera\Container\Metadata\ParamMetadata;
 use Primavera\Container\Scanner\ComponentScanner;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
-use Symfony\Component\Yaml\Yaml;
 use Primavera\Event\EventDispatcher;
-use Primavera\Metadata\Cache\PsrSimpleCacheAdapter;
 use Primavera\Metadata\Factory\MetadataFactoryFactory;
 use Primavera\Metadata\MethodMetadata;
 
@@ -45,7 +43,7 @@ class ContainerBuilder
 
     private bool $debug;
 
-    private ?array $configFile = null;
+    private ?string $configFile = null;
 
     private ?string $withComponentScanner = ComponentScanner::class;
 
@@ -141,7 +139,7 @@ class ContainerBuilder
     }
 
     public function withConfigFile(string $configFile) {
-        $this->configFile = Yaml::parseFile($configFile);
+        $this->configFile = $configFile;
 
         return $this;
     }
@@ -155,9 +153,13 @@ class ContainerBuilder
         $container->set('debug', $this->debug);
 
         if ($this->configFile && !$hasCache) {
-            foreach (new FlattenArrayIterator($this->configFile) as $id => $config) {
+            $configData = new ConfigurationData($this->configFile);
+
+            foreach ($configData as $id => $config) {
                 $container->set($id, $config);
             }
+
+            $container->set('config', $configData);
         }
 
         foreach ($this->beans as $id => $value) {

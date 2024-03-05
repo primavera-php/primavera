@@ -1,0 +1,23 @@
+{
+    "name": "primavera/doctrine",
+    "type": "library",
+    "require": {
+        "doctrine/orm": "^3.0",
+        "primavera/container": "1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Primavera\\Doctrine\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jhonatan Teixeira",
+            "email": "jhonatan.teixeira@gmail.com"
+        }
+    ]
+}

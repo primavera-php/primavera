@@ -45,4 +45,11 @@ interface ClassMetadataInterface extends MetadataInterface
     public function getCreatedAt(): int;
 
     public function isFresh(): bool;
+
+    public function instanceOf(string $classOrInterfaceName): bool;
+
+    public function hasGenerics(): bool;
+
+    public function getGenericsInfo(): ?array;
+
 }

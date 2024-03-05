@@ -15,7 +15,7 @@ class PropertyMetadataTest extends TestCase
     }
 
     public function testShouldParseDateTime() {
-        $metadata = new PropertyMetadata($this->myEventReflection->getProperty('createdAt'), null, null);
+        $metadata = new PropertyMetadata($this->myEventReflection->getProperty('createdAt'), null, null, null);
 
         $this->assertEquals(\DateTime::class, $metadata->typeInfo['class']);
         $this->assertEquals('Y-m-d H:i:s', $metadata->typeInfo['decoration']);
@@ -24,22 +24,22 @@ class PropertyMetadataTest extends TestCase
     }
 
     public function testShouldParseDecorationColections() {
-        $metadata1 = new PropertyMetadata($this->myEventReflection->getProperty('dates'), null, null);
+        $metadata1 = new PropertyMetadata($this->myEventReflection->getProperty('dates'), null, null, null);
 
         $this->assertEquals('array', $metadata1->typeInfo['class']);
         $this->assertEquals(\DateTime::class, $metadata1->typeInfo['decoration']);
 
-        $metadata2 = new PropertyMetadata($this->myEventReflection->getProperty('dates2'), null, null);
+        $metadata2 = new PropertyMetadata($this->myEventReflection->getProperty('dates2'), null, null, null);
 
         $this->assertEquals('array', $metadata2->typeInfo['class']);
         $this->assertEquals(\DateTime::class, $metadata2->typeInfo['decoration']);
 
-        $metadata3 = new PropertyMetadata($this->myEventReflection->getProperty('relations'), null, null);
+        $metadata3 = new PropertyMetadata($this->myEventReflection->getProperty('relations'), null, null, null);
 
         $this->assertEquals('array', $metadata3->typeInfo['class']);
         $this->assertEquals(MyEvent::class, $metadata3->typeInfo['decoration']);
 
-        $metadata4 = new PropertyMetadata($this->myEventReflection->getProperty('relations2'), null, null);
+        $metadata4 = new PropertyMetadata($this->myEventReflection->getProperty('relations2'), null, null, null);
 
         $this->assertEquals(\Iterator::class, $metadata4->typeInfo['class']);
         $this->assertEquals(MyEvent::class, $metadata4->typeInfo['decoration']);

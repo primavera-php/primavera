@@ -5,6 +5,13 @@ namespace Primavera\Metadata;
 class ClassMetadata implements ClassMetadataInterface
 {
     use AnnotationsTrait;
+
+    use ResolveTypeTrait {
+        getType as protected;
+        isDecoratedType as protected;
+        isNativeType as protected;
+        getParsedType as protected;
+    }
     
     private \ReflectionClass $reflection;
 
@@ -41,11 +48,22 @@ class ClassMetadata implements ClassMetadataInterface
         $this->createdAt = time();
         $this->interfaces = $class->getInterfaceNames();
         $this->fileResources = [$class->getFileName()];
+        $this->resolveType();
     }
 
     public function getReflection(): \ReflectionClass
     {
         return $this->reflection ??= new \ReflectionClass($this->name);
+    }
+
+    private function getReflectionType()
+    {
+        return null;
+    }
+
+    private function getDocBlockTypePrefix()
+    {
+        return 'extends';
     }
 
     public function addMethodMetadata(MethodMetadataInterface $methodMetadata)
@@ -69,6 +87,8 @@ class ClassMetadata implements ClassMetadataInterface
             $this->annotations,
             $this->interfaces,
             $this->hierarchy,
+            $this->type,
+            $this->typeInfo,
         ]);
     }
 
@@ -83,6 +103,8 @@ class ClassMetadata implements ClassMetadataInterface
             $this->annotations,
             $this->interfaces,
             $this->hierarchy,
+            $this->type,
+            $this->typeInfo,
         ] = unserialize($data);
     }
  
@@ -161,5 +183,22 @@ class ClassMetadata implements ClassMetadataInterface
         }
 
         return true;
+    }
+
+    public function instanceOf(string $classOrInterfaceName): bool
+    {
+        return in_array($classOrInterfaceName, $this->hierarchy)
+            || in_array($classOrInterfaceName, $this->interfaces)
+            || $classOrInterfaceName === $this->name;
+    }
+
+    public function hasGenerics(): bool
+    {
+        return $this->isDecoratedType();
+    }
+
+    public function getGenericsInfo(): ?array
+    {
+        return $this->typeInfo;
     }
 }

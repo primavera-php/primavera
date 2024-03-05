@@ -6,6 +6,7 @@ use Primavera\Container\Annotation\Configuration;
 use Primavera\Container\Annotation\Imports;
 use Primavera\Container\Event\AfterInstanceBeanEvent;
 use Primavera\Container\Event\BeforeInstanceBeanEvent;
+use Primavera\Container\Factory\StereotypeFactoryInterface;
 use Primavera\Container\Metadata\ClassMetadata;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -38,6 +39,11 @@ class Container implements ContainerInterface, \IteratorAggregate
     private array $interfaces = [];
 
     private array $statuses = [];
+
+    /**
+     * @var ClassMetadata[]
+     */
+    private array $stereotypeFactories = [];
 
     private LoggerInterface $logger;
 
@@ -91,6 +97,15 @@ class Container implements ContainerInterface, \IteratorAggregate
                 }
             }
 
+            if ($value->instanceOf(StereotypeFactoryInterface::class)) {
+                if (!$value->hasGenerics()) {
+                    throw new ContainerException(
+                        "the Stereotype factory {$value->getName()} must have generics info using the @extends docblock, so the code can know what this builds"
+                    );
+                }
+
+                $this->stereotypeFactories[$value->getGenericsInfo()['decoration']] = $value;
+            }
         } elseif ($value instanceof MethodMetadataInterface) {
             $this->methodMetadatas[$id] = $value;
 
@@ -182,6 +197,19 @@ class Container implements ContainerInterface, \IteratorAggregate
     private function newIntanceFromMetadata(string $id)
     {
         $params = ($metadata = $this->metadatas[$id])->getConstructorParams();
+
+        $stereotypes = [
+            ...array_map(fn($a) => $a::class, $metadata->getAnnotations()),
+            ...$metadata->getInterfaces(),
+            ...$metadata->getHierarchy()
+        ];
+
+        foreach ($stereotypes as $stereotype) {
+            if (isset($this->stereotypeFactories[$stereotype])) {
+                return $this->get(($this->stereotypeFactories[$stereotype])->getName())
+                    ->create($this, $metadata, $this->resolveParams($params));
+            }
+        }
 
         return $metadata->getReflection()
             ->newInstanceArgs($this->resolveParams($params));

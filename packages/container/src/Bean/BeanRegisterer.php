@@ -4,6 +4,7 @@ namespace Primavera\Container\Bean;
 
 use Primavera\Container\Annotation\Configurator;
 use Primavera\Container\Container\ContainerException;
+use Primavera\Container\Factory\StereotypeFactoryInterface;
 use Primavera\Metadata\Factory\MetadataFactory;
 use Primavera\Container\Annotation\Bean;
 use Primavera\Container\Annotation\Component;
@@ -66,6 +67,7 @@ class BeanRegisterer
                 PostBeanProcessor::class,
                 AbstractStereotypeProcessor::class,
                 AbstractInterfaceImplementor::class,
+                StereotypeFactoryInterface::class,
             ],
             $stereotypes
         );
@@ -128,21 +130,24 @@ class BeanRegisterer
         }
     }
 
-    public function registerComponents() {
+    public function registerComponents()
+    {
         foreach ($this->getAllComponentsMetadata() as $metadata) {
             $this->registerComponent($metadata);
         }
 
-        if ($this->componentScanner)
+        if ($this->componentScanner) {
             $this->scanComponents(Configuration::class);
-
-        $this->configure();
+            $this->scanComponents(StereotypeFactoryInterface::class);
+        }
 
         if (!$this->componentScanner) {
             array_map([$this, 'registerClassComponents'], $this->getAllComponentsMetadata());
 
             return;
         }
+
+        $this->configure();
 
         foreach ($this->stereotypes as $stereotypeClass) {
             if ($stereotypeClass == Configuration::class)

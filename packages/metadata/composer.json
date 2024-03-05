@@ -12,8 +12,8 @@
         }
     },
     "require": {
-        "php": ">=8.1",
-        "doctrine/annotations": "^1",
+        "php": ">=8.2",
+        "doctrine/annotations": "^2",
         "symfony/yaml": "^3",
         "friendsofphp/proxy-manager-lts": "^1",
         "psr/simple-cache": "^1",

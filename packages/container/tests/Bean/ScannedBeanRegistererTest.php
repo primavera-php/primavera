@@ -9,10 +9,12 @@ use Primavera\Metadata\Factory\MetadataFactoryInterface;
 use Primavera\Container\Cache\ContainerCacheGenerator;
 use Primavera\Container\Container\NotFoundContainerException;
 use Primavera\Container\Factory\ContainerBuilder;
+use ScannedTest\Interfaces\InterfaceForBuilding;
 use Shared\Annotation\TestImport;
 use Shared\Stub\BarComponent;
 use Shared\Stub\BazComponent;
 use Shared\Stub\BeanComponent;
+use Shared\Stub\BuildingComponent;
 use Shared\Stub\FooComponent;
 use Shared\Stub\TestImportService;
 use PHPUnit\Framework\TestCase;
@@ -30,7 +32,7 @@ class ScannedBeanRegistererTest extends TestCase
             ->withNamespaces('ScannedTest\\')
             ->withNamespaces('Shared\\')
             ->withBeans(['someValue' => 'lorem ipsum'])
-            ->withStereotypes(TestImport::class)
+            ->withStereotypes(TestImport::class, InterfaceForBuilding::class)
             ->withConfigFile(__DIR__ . '/../example/shared/configs/application.yaml')
         ;
 
@@ -75,6 +77,9 @@ class ScannedBeanRegistererTest extends TestCase
         $this->assertInstanceOf(FooComponent::class, $container->get(BazComponent::class)->getFooComponent());
         $this->assertInstanceOf(TestImportService::class, $container->get(TestImportService::class));
         $this->assertEquals("lorem ipsum", $container->get(TestImportService::class)->value);
+
+        $this->assertTrue($container->get(BuildingComponent::class)->isBuilt());
+        $this->assertInstanceOf(BarComponent::class, $container->get(BuildingComponent::class)->barComponent);
     }
 
     public function testScannerShouldIgnoreIgnorableComponents()

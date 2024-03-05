@@ -2,8 +2,6 @@
 
 namespace Primavera\Metadata;
 
-use Metadata\PropertyMetadata as BaseMetadata;
-
 class PropertyMetadata implements ClassComponentMetadataInterface, \Serializable
 {
     use AnnotationsTrait;
@@ -20,8 +18,9 @@ class PropertyMetadata implements ClassComponentMetadataInterface, \Serializable
 
     public function __construct(
         \ReflectionProperty $property,
-        public ?MethodMetadata $getter,
-        public ?MethodMetadata $setter,
+        public readonly ?MethodMetadata $getter,
+        public readonly ?MethodMetadata $setter,
+        public readonly ?MethodMetadata $adder,
     ) {
         $this->class = $property->class;
         $this->name = $property->name;
@@ -67,6 +66,11 @@ class PropertyMetadata implements ClassComponentMetadataInterface, \Serializable
     public function hasGetter() 
     {
         return !empty($this->getter);
+    }
+
+    public function hasAdder() 
+    {
+        return !empty($this->adder);
     }
 
     public function getValue(object $object)

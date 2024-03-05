@@ -73,6 +73,12 @@ class ClassHierarchyTest extends TestCase
             $root->getInterfaces()
         );
 
+        $this->assertTrue($childThree->instanceOf(InterfaceOne::class));
+        $this->assertTrue($childThree->instanceOf(InterfaceTwo::class));
+        $this->assertTrue($childThree->instanceOf(Root::class));
+        $this->assertTrue($childThree->instanceOf(ChildOne::class));
+        $this->assertTrue($childThree->instanceOf(ChildTwo::class));
+        $this->assertTrue($childThree->instanceOf(ChildThree::class));
     }
 }
 
