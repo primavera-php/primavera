@@ -5,9 +5,7 @@ namespace ScannedTest\Bean;
 
 
 use example\shared\Stub\IgnoredClass;
-use Primavera\Metadata\Factory\MetadataFactoryInterface;
-use Primavera\Container\Cache\ContainerCacheGenerator;
-use Primavera\Container\Container\NotFoundContainerException;
+use Primavera\Container\NotFoundContainerException;
 use Primavera\Container\Factory\ContainerBuilder;
 use ScannedTest\Interfaces\InterfaceForBuilding;
 use Shared\Annotation\TestImport;
@@ -15,6 +13,7 @@ use Shared\Stub\BarComponent;
 use Shared\Stub\BazComponent;
 use Shared\Stub\BeanComponent;
 use Shared\Stub\BuildingComponent;
+use Shared\Stub\ComponentWithInterceptedComponent;
 use Shared\Stub\FooComponent;
 use Shared\Stub\TestImportService;
 use PHPUnit\Framework\TestCase;
@@ -80,6 +79,8 @@ class ScannedBeanRegistererTest extends TestCase
 
         $this->assertTrue($container->get(BuildingComponent::class)->isBuilt());
         $this->assertInstanceOf(BarComponent::class, $container->get(BuildingComponent::class)->barComponent);
+
+        $this->assertEquals(20, $container->get(ComponentWithInterceptedComponent::class)->interceptedComponent->getValue());
     }
 
     public function testScannerShouldIgnoreIgnorableComponents()

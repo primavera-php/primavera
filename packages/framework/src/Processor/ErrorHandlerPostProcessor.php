@@ -3,7 +3,7 @@
 namespace Primavera\Framework\Processor;
 
 use Primavera\Container\Annotation\PostBeanProcessor;
-use Primavera\Container\Container\Container;
+use Primavera\Container\Container;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Throwable;

@@ -5,7 +5,7 @@ namespace Primavera\Container\Factory;
 use Composer\Autoload\ClassLoader;
 use Primavera\Container\Bean\BeanRegisterer;
 use Primavera\Container\ConfigurationData;
-use Primavera\Container\Container\Container;
+use Primavera\Container\Container;
 use Primavera\Container\Metadata\ClassMetadata;
 use Primavera\Container\Metadata\ParamMetadata;
 use Primavera\Container\Scanner\ComponentScanner;

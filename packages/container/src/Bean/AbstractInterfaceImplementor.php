@@ -6,8 +6,8 @@ use Laminas\Code\Generator\ClassGenerator;
 use Laminas\Code\Generator\MethodGenerator;
 use Laminas\Code\Reflection\MethodReflection;
 use Primavera\Metadata\Factory\MetadataFactory;
-use Primavera\Container\Container\ContainerAwareInterface;
-use Primavera\Container\Container\ContainerAwareTrait;
+use Primavera\Container\ContainerAwareInterface;
+use Primavera\Container\ContainerAwareTrait;
 use Primavera\Container\Metadata\ClassMetadata;
 use Primavera\Metadata\MethodMetadata;
 

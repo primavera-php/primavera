@@ -3,7 +3,7 @@
 namespace Primavera\Container\Metadata;
 
 use Primavera\Container\Annotation\Injects;
-use Primavera\Container\Container\ContainerException;
+use Primavera\Container\ContainerException;
 use Primavera\Metadata\ParamMetadata as BaseMetadata;
 
 class ParamMetadata extends BaseMetadata

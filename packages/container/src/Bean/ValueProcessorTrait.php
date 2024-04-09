@@ -4,7 +4,7 @@
 namespace Primavera\Container\Bean;
 
 
-use Primavera\Container\Container\Container;
+use Primavera\Container\Container;
 use Primavera\Metadata\PropertyMetadata;
 
 trait ValueProcessorTrait

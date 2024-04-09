@@ -4,7 +4,7 @@
 namespace Primavera\Container\Bean;
 
 use Primavera\Container\Annotation\Value;
-use Primavera\Container\Container\Container;
+use Primavera\Container\Container;
 use Psr\Log\LoggerInterface;
 use Primavera\Log\Logger;
 use Primavera\Metadata\PropertyMetadata;

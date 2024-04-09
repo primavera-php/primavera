@@ -3,7 +3,7 @@
 namespace Primavera\PersistenceTests\Repository;
 
 use Doctrine\DBAL\Connection;
-use Primavera\Container\Container\Container;
+use Primavera\Container\Container;
 use Primavera\Container\Factory\ContainerBuilder;
 use Primavera\Data\ObjectHydrator;
 use Primavera\Persistence\Stereotype\Repository;

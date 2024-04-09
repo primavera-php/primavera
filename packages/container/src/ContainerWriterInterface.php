@@ -1,6 +1,6 @@
 <?php
 
-namespace Primavera\Container\Container;
+namespace Primavera\Container;
 
 interface ContainerWriterInterface 
 {

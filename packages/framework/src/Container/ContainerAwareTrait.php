@@ -4,7 +4,7 @@
 namespace Primavera\Framework\Container;
 
 
-use Primavera\Container\Container\Container;
+use Primavera\Container\Container;
 
 trait ContainerAwareTrait
 {

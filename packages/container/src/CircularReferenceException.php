@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Primavera\Container\Container;
+namespace Primavera\Container;
 
 class CircularReferenceException extends ContainerException
 {    

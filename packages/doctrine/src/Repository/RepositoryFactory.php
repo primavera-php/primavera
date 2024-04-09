@@ -8,8 +8,16 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Repository\DefaultRepositoryFactory;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Repository\RepositoryFactory as RepositoryFactoryInterface;
+use Primavera\Container\Annotation\IgnoreScanner;
+use Primavera\Container\Factory\StereotypeFactoryInterface;
+use Primavera\Metadata\ClassMetadataInterface;
+use Psr\Container\ContainerInterface;
 
-class RepositoryFactory implements RepositoryFactoryInterface
+/**
+ * @extends StereotypeFactoryInterface<EntityRepository>
+ */
+#[IgnoreScanner]
+class RepositoryFactory implements RepositoryFactoryInterface, StereotypeFactoryInterface
 {
     /**
      * @var EntityRepository[]
@@ -27,6 +35,13 @@ class RepositoryFactory implements RepositoryFactoryInterface
 
     public function getRepository(EntityManagerInterface $entityManager, string $entityName): EntityRepository
     {
-        return $this->registeredRepositories[$entityName] ?? $this->defaultRepositoryFactory->getRepository($entityManager, $entityName);
+        return $this->registeredRepositories[$entityName] ??= $this->defaultRepositoryFactory->getRepository($entityManager, $entityName);
+    }
+
+    public function create(ContainerInterface $container, ClassMetadataInterface $metadata, array $params): EntityRepository
+    {
+        if ($metadata->getName() === EntityRepository::class) {
+
+        }
     }
 }

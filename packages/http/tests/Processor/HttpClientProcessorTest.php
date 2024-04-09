@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Predis\Response\ResponseInterface;
 use Primavera\Cache\Factory;
 use Primavera\Container\Bean\AbstractInterfaceImplementor;
-use Primavera\Container\Container\Container;
+use Primavera\Container\Container;
 use Primavera\Container\Factory\ContainerBuilder;
 use Primavera\Http\HttpClientInterface;
 use Primavera\Http\Stereotype\Get;

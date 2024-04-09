@@ -3,7 +3,7 @@
 namespace Primavera\Container\Event;
 
 use Primavera\Container\Bean\BeanRegisterer;
-use Primavera\Container\Container\Container;
+use Primavera\Container\Container;
 
 class BeanRegistererEvent 
 {

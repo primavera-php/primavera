@@ -3,8 +3,8 @@
 namespace Primavera\Container\Bean;
 
 use Primavera\Container\Annotation\Autowired;
-use Primavera\Container\Container\Container;
-use Primavera\Container\Container\ContainerException;
+use Primavera\Container\Container;
+use Primavera\Container\ContainerException;
 use Primavera\Metadata\PropertyMetadata;
 use Primavera\Container\Annotation\PostBeanProcessor;
 

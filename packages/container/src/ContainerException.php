@@ -1,6 +1,6 @@
 <?php
 
-namespace Primavera\Container\Container;
+namespace Primavera\Container;
 
 use Exception;
 use Psr\Container\ContainerExceptionInterface;

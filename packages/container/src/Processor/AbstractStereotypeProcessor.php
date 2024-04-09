@@ -2,8 +2,8 @@
 
 namespace Primavera\Container\Processor;
 
-use Primavera\Container\Container\Container;
-use Primavera\Container\Container\ContainerAwareInterface;
+use Primavera\Container\Container;
+use Primavera\Container\ContainerAwareInterface;
 
 abstract class AbstractStereotypeProcessor implements ContainerAwareInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Primavera\Container\Container;
+namespace Primavera\Container;
 
 trait ContainerAwareTrait
 {

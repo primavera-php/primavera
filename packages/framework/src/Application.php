@@ -2,7 +2,7 @@
 
 namespace Primavera\Framework;
 
-use Primavera\Container\Container\Container;
+use Primavera\Container\Container;
 use Primavera\Container\Factory\ContainerBuilder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

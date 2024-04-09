@@ -1,6 +1,6 @@
 <?php
 
-namespace Primavera\Container\Container;
+namespace Primavera\Container;
 
 use Primavera\Container\Annotation\Configuration;
 use Primavera\Container\Annotation\Imports;
@@ -44,6 +44,11 @@ class Container implements ContainerInterface, \IteratorAggregate
      * @var ClassMetadata[]
      */
     private array $stereotypeFactories = [];
+
+    /**
+     * @var ParamResolverInterceptorInterface[]
+     */
+    private array $paramResolverInterceptors = [];
 
     private LoggerInterface $logger;
 
@@ -105,6 +110,10 @@ class Container implements ContainerInterface, \IteratorAggregate
                 }
 
                 $this->stereotypeFactories[$value->getGenericsInfo()['decoration']] = $value;
+            }
+
+            if ($value->instanceOf(ParamResolverInterceptorInterface::class)) {
+                $this->paramResolverInterceptors[] = $this->get($value->getName());
             }
         } elseif ($value instanceof MethodMetadataInterface) {
             $this->methodMetadatas[$id] = $value;
@@ -181,6 +190,12 @@ class Container implements ContainerInterface, \IteratorAggregate
         return array_map(
             function (ParamMetadata $p) {
                 try {
+                    foreach ($this->paramResolverInterceptors as $paramInterceptor) {
+                        if ($paramInterceptor->canIntercept($p)) {
+                            return $paramInterceptor->resolve($p, $this);
+                        }
+                    }
+                    
                     return $this->get($p->getId());
                 } catch (NotFoundContainerException $e) {
                     if ($p->getReflection()->isOptional()) {
@@ -287,6 +302,7 @@ class Container implements ContainerInterface, \IteratorAggregate
             $this->methodMetadatas,
             $this->metadataFactory,
             $this->eventDispatcher,
+            $this->stereotypeFactories,
         ];
     }
 
@@ -297,6 +313,7 @@ class Container implements ContainerInterface, \IteratorAggregate
             $this->methodMetadatas,
             $this->metadataFactory,
             $this->eventDispatcher,
+            $this->stereotypeFactories,
         ] = $data;
 
         $this->initialize();

@@ -2,7 +2,7 @@
 
 namespace PhpBeansTest;
 
-use Primavera\Container\Container\Container;
+use Primavera\Container\Container;
 use Primavera\Container\Factory\ContainerBuilder;
 use Primavera\Container\Scanner\ComponentScanner;
 use Shared\Annotation\GeneratedClass;

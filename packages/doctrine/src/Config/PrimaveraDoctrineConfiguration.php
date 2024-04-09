@@ -5,6 +5,7 @@ namespace Primavera\Doctrine\Config;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Repository\DefaultRepositoryFactory;
 use Primavera\Container\Annotation\Bean;
@@ -13,14 +14,13 @@ use Primavera\Container\Annotation\Injects;
 use Primavera\Container\Bean\BeanRegisterer;
 use Primavera\Container\ConfigurationData;
 use Primavera\Doctrine\Repository\RepositoryFactory;
-use Primavera\Doctrine\Stereotype\Repository;
 
 class PrimaveraDoctrineConfiguration
 {
     #[Configurator]
     public static function configureDoctrineModule(BeanRegisterer $beanRegisterer)
     {
-        $beanRegisterer->addStereotype(Repository::class);
+        $beanRegisterer->addStereotype(EntityRepository::class);
     }
 
     #[Bean]

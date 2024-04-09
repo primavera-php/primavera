@@ -2,7 +2,7 @@
 
 namespace Primavera\Framework\Processor;
 
-use Primavera\Container\Container\Container;
+use Primavera\Container\Container;
 use Primavera\Framework\Collection\CallbackPriorityQueue;
 
 trait PrioritizedComponentsTrait {
