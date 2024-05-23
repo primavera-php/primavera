@@ -7,9 +7,8 @@ namespace Primavera\Data;
 use Primavera\Metadata\Factory\MetadataFactoryInterface;
 use Primavera\Data\Mapping\Bindings;
 use Primavera\Data\Mapping\Exclude;
-use Primavera\Metadata\PropertyMetadata;
 
-class ObjectExtractor implements ObjectExtractorInterface
+class ObjectExtractor implements ComposableObjectExtractorInterface
 {
     private MetadataFactoryInterface $metadataFactory;
 
@@ -26,14 +25,33 @@ class ObjectExtractor implements ObjectExtractorInterface
         $this->defaultDateFormat = $defaultDateFormat;
     }
 
-    public function addExtractor(TypeAwareObjectExtractor $extractor) {
+    public function addExtractor(TypeAwareObjectExtractor $extractor) 
+    {
         $this->extractors[$extractor->getSupportedClassName()] = $extractor;
+    }
+
+    protected function getExtractorForClass($class): ?TypeAwareObjectExtractor
+    {
+        if (is_object($class)) {
+            $class = get_class($class);
+        }
+
+        $metadata = $this->metadataFactory->getMetadataForClass($class);
+
+        foreach (array_reverse([...$metadata->getHierarchy(), $class]) as $type) {
+            if (isset($this->extractors[$type])) {
+                return $this->extractors[$type];
+            }
+        }
+
+        return null;
     }
 
     /**
      * @return array|string|null
      */
-    public function extract($object, array &$context = []) {
+    public function extract($object, array &$context = []) 
+    {
         if (is_iterable($object)) {
             return $this->extractIterable($object, $context);
         }
@@ -46,8 +64,8 @@ class ObjectExtractor implements ObjectExtractorInterface
 
         $context['storage']->attach($object);
 
-        if (isset($this->extractors[get_class($object)])) {
-            return $this->extractors[get_class($object)]->extract($object, $context);
+        if ($extractor = $this->getExtractorForClass($object)) {
+            return $extractor->extract($object, $context);
         }
 
         if ($object instanceof \DateTime) {
@@ -59,7 +77,7 @@ class ObjectExtractor implements ObjectExtractorInterface
         $metadata = $this->metadataFactory->getMetadataForClass(get_class($object));
 
         /* @var $property PropertyMetadata */
-        foreach($metadata->propertyMetadata as $property) {
+        foreach($metadata->getPropertyMetadata() as $property) {
             if ($property->hasAnnotation(Exclude::class)) {
                 continue;
             }
@@ -89,7 +107,8 @@ class ObjectExtractor implements ObjectExtractorInterface
         return $data;
     }
 
-    protected function extractDate(\DateTime $date, array &$context) {
+    protected function extractDate(\DateTime $date, array &$context) 
+    {
         /* @var $property PropertyMetadata */
         $property = $context['property'];
         $format = $this->defaultDateFormat;
@@ -101,7 +120,8 @@ class ObjectExtractor implements ObjectExtractorInterface
         return $date->format($format);
     }
 
-    protected function extractIterable(iterable $collection, array &$context): array {
+    protected function extractIterable(iterable $collection, array &$context): array 
+    {
         $extracted = [];
 
         foreach ($collection as $index => $item) {

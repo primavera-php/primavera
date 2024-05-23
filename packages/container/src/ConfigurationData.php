@@ -25,7 +25,7 @@ class ConfigurationData implements \IteratorAggregate
         $config = [];
 
         foreach ($data as $name => $item) {
-            if (is_array($item)) {
+            if (is_array($item) && !array_is_list($item)) {
                 $config[$name] = new self($this->buildData($item, is_null($parent) ? $name : "$parent.$name"));
 
                 continue;

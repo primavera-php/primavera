@@ -1,0 +1,5 @@
+doctrine:
+  metadataDriver: annotation
+  entityPaths: 
+    - Entity
+  connectionString: sqlite3::dt_test_database.db

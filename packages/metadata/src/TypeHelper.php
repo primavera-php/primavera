@@ -15,6 +15,10 @@ class TypeHelper
         $this->type = $type;
         $this->class = $class;
         $this->typeInfo = $this->parseTypeDecoration($type);
+
+        if ($this->typeInfo && !$this->class) {
+            $this->class = $this->typeInfo['decoration'];
+        }
     }
 
     private function getReflectionType() 
@@ -28,6 +32,6 @@ class TypeHelper
 
     public function getReflection(): \ReflectionClass
     {
-        return $this->reflection ??= new \ReflectionClass($this->class);
+        return $this->reflection ??= new \ReflectionClass($this->class ?? $this->type);
     }
 }

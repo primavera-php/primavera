@@ -8,24 +8,55 @@ trait ResolveTypeTrait
 
     public $typeInfo;
 
+    public $realType;
+
+    public $isParsedType = false;
+
     private $uses = [];
 
     private function resolveType()
     {
         $this->type = $type = $this->parseType();
-        $this->typeInfo = $this->parseTypeDecoration($type);
+        $this->realType = $realType = $this->getRealType();
 
-        if (!$type) {
-            $type = $this->getReflectionType();
-
-            if ($type instanceof \ReflectionUnionType || $type instanceof \ReflectionIntersectionType) {
-                $this->type = array_map(fn($t) => $t->getName(), $type->getTypes());
-
-                return;
-            }
-
-            $this->type = $type?->getName();
+        if ($type) {
+            $this->isParsedType = true;
+            $this->typeInfo = $this->parseTypeDecoration($type);
+        } else {
+            $this->type = $realType;
         }
+    }
+
+    public function isParsedType(): bool
+    {
+        return $this->isParsedType;
+    }
+
+    public function hasRealType(): bool
+    {
+        return $this->getReflectionType() != null;
+    }
+
+    public function getRealType(): null | string | array
+    {
+        if ($this->realType != null) {
+            return $this->realType;
+        }
+
+        $type = $this->getReflectionType();
+
+        if ($type instanceof \ReflectionUnionType || $type instanceof \ReflectionIntersectionType) {
+            $type = array_map(fn($t) => $t->getName(), $type->getTypes());
+
+            return null;
+        }
+
+        return $type?->getName();
+    }
+
+    public function getTypeInfo(): ?array
+    {
+        return $this->typeInfo;
     }
 
     abstract private function getReflectionType();
@@ -42,7 +73,7 @@ trait ResolveTypeTrait
         $docComment = $this->getDocComment();
 
         preg_match(
-            "/@{$this->getDocBlockTypePrefix()}\s+(?P<full>(?P<class>[^\[\s<]+)(?P<suffix>(\[\])|(<.+>))?)/",
+            "/@{$this->getDocBlockTypePrefix()}\s+(?P<full>(?P<class>[^\[\s<]+)(?P<suffix>(\[\])|(<(?P<decoration>.+)>))?)/",
             $docComment,
             $matches
         );
@@ -54,21 +85,45 @@ trait ResolveTypeTrait
             return;
         }
 
-        if ($resolvedType = $this->resolveFullTypeName($type, $matches['suffix'] ?? null)) {
-            return $resolvedType;
+        $decoration = $matches['decoration'] ?? null;
+        $suffix = $matches['suffix'] ?? null;
+
+        if ($this->checkIsNativeType($type)) {
+            if (!$suffix) {
+                return $type;
+            }
+
+            if ($suffix == '[]' || ($decoration && $this->checkIsNativeType($decoration))) {
+                return $type . $suffix;
+            }
+
+            return $type . "<{$this->resolveFullTypeName($decoration)}>";
+        }
+
+        if ($resolvedType = $this->resolveFullTypeName($type)) {
+            if (!$suffix) {
+                return $resolvedType;
+            }
+
+            if ($suffix == '[]' || ($decoration && $this->checkIsNativeType($decoration))) {
+                return $resolvedType . $suffix;
+            }
+
+            return $resolvedType . "<{$this->resolveFullTypeName($decoration)}>";
         }
 
         return $fullType;
     }
 
-    private function resolveFullTypeName($type, $suffix = null) {
+    private function resolveFullTypeName($type) 
+    {
         $type = preg_replace('/^\?/', '', $type);
 
         if (preg_match('/^\\\/', $type)) {
-            return preg_replace('/^\\\/', '', $type) . $suffix;
+            return preg_replace('/^\\\/', '', $type);
         }
 
-        if (class_exists($type)) {
+        if (class_exists($type) || interface_exists($type)) {
             return $type;
         }
 
@@ -76,14 +131,18 @@ trait ResolveTypeTrait
         $type = str_replace('\\', '\\\\', $type);
 
         foreach ($uses as $use) {
-            if (preg_match("/{$type}$/", $use)) {
-                return $use . $suffix;
+            if (preg_match("/(^{$type}$)|(\\\\{$type}$)/", $use)) {
+                return $use;
             }
 
-            if (class_exists("$use\\$type")) {
-                return "$use\\$type" . $suffix;
+            $useType = "$use\\$type";
+
+            if (class_exists($useType) || interface_exists($useType)) {
+                return $useType;
             }
         }
+
+        return $type;
     }
 
     private function getClassUses(): array
@@ -125,10 +184,10 @@ trait ResolveTypeTrait
             return preg_replace('/(\[\]$)|(\<\>$)/', '', $this->type);
         }
     }
-    
-    public function isNativeType(): bool
+
+    private function checkIsNativeType(string $type): bool
     {
-        return in_array($this->type, [
+        return in_array($type, [
             'string',
             'array',
             'int',
@@ -141,6 +200,11 @@ trait ResolveTypeTrait
             '\DateTimeImmutable',
             'DateTimeImmutable',
         ]);
+    }
+    
+    public function isNativeType(): bool
+    {
+        return $this->checkIsNativeType($this->type);
     }
     
     public function isDecoratedType(): bool

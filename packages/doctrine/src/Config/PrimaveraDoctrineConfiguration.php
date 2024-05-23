@@ -13,6 +13,8 @@ use Primavera\Container\Annotation\Configurator;
 use Primavera\Container\Annotation\Injects;
 use Primavera\Container\Bean\BeanRegisterer;
 use Primavera\Container\ConfigurationData;
+use Primavera\Doctrine\Container\RepositoryInjector;
+use Primavera\Doctrine\DataMapper\CollectionMapper;
 use Primavera\Doctrine\Repository\RepositoryFactory;
 
 class PrimaveraDoctrineConfiguration
@@ -20,13 +22,11 @@ class PrimaveraDoctrineConfiguration
     #[Configurator]
     public static function configureDoctrineModule(BeanRegisterer $beanRegisterer)
     {
-        $beanRegisterer->addStereotype(EntityRepository::class);
-    }
-
-    #[Bean]
-    public function repositoryFactory(): RepositoryFactory
-    {
-        return new RepositoryFactory(new DefaultRepositoryFactory());
+        $beanRegisterer->addStereotype(EntityRepository::class)
+            ->addComponent(DefaultRepositoryFactory::class)
+            ->addComponent(RepositoryFactory::class)
+            ->addComponent(RepositoryInjector::class)
+            ->addComponent(CollectionMapper::class);
     }
 
     #[Bean]
@@ -37,13 +37,11 @@ class PrimaveraDoctrineConfiguration
                 $configurationData->doctrine->entityPaths,
                 $debug,
                 $configurationData->doctrine->proxyDir,
-                $configurationData->doctrine->reportFieldsWhereDeclared ?? false,
             ),
             'xml' => ORMSetup::createXMLMetadataConfiguration(
                 $configurationData->doctrine->xmlPaths,
                 $debug,
                 $configurationData->doctrine->proxyDir,
-                $configurationData->doctrine->reportFieldsWhereDeclared ?? false,
             )
         };
 

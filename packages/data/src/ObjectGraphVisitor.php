@@ -44,7 +44,7 @@ class ObjectGraphVisitor implements ObjectGraphVisitorInterface
         $objectMetadata = $this->metadataFactory->getMetadataForClass(get_class($object));
         
         /* @var $propertyMetadata PropertyMetadata */
-        foreach ($objectMetadata->propertyMetadata as $propertyMetadata) {
+        foreach ($objectMetadata->getPropertyMetadata() as $propertyMetadata) {
             $value = $this->propertyAccessor 
                 ? $this->propertyAccessor->get($object, $propertyMetadata->name) 
                 : $propertyMetadata->getValue($object);

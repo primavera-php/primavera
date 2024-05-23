@@ -222,7 +222,7 @@ class Container implements ContainerInterface, \IteratorAggregate
         foreach ($stereotypes as $stereotype) {
             if (isset($this->stereotypeFactories[$stereotype])) {
                 return $this->get(($this->stereotypeFactories[$stereotype])->getName())
-                    ->create($this, $metadata, $this->resolveParams($params));
+                    ->create($this, $metadata, $params);
             }
         }
 

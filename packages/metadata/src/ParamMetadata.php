@@ -1,6 +1,7 @@
 <?php
 
 namespace Primavera\Metadata;
+use Error;
 
 class ParamMetadata implements TypedComponentMetadataInterface, \Serializable
 {
@@ -91,7 +92,11 @@ class ParamMetadata implements TypedComponentMetadataInterface, \Serializable
     public function loadAnnotations()
     {
         foreach ($this->reflection->getAttributes() as $attribute) {
-            $this->annotations[$attribute->getName()] = $attribute->newInstance();
+            try {
+                $this->annotations[$attribute->getName()] = $attribute->newInstance();
+            } catch (Error $e) {
+                // catch all
+            }
         }
     }
 }

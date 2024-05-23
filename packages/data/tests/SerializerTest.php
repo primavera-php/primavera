@@ -12,9 +12,12 @@ class SerializerTest extends TestCase
 
     protected function setUp(): void
     {
+        $customDateMapper = new CustomDateMapper();
         $mf = (new MetadataFactoryFactory())->createAnnotationMetadataFactory();
         $this->serializer = new Serializer(new ObjectExtractor($mf), new ObjectHydrator($mf));
-        $this->serializer->registerFormat(new JsonFormatter());
+        $this->serializer->registerFormat(new JsonFormatter())
+            ->registerCustomHydrator($customDateMapper)
+            ->registerCustomExtractor($customDateMapper);
     }
 
     public function testShouldSerializeToJson() {
@@ -24,10 +27,21 @@ class SerializerTest extends TestCase
         $this->assertEquals($data, $this->serializer->deserialize('json', SerializeStub::class, $expected));
     }
 
+    public function testShouldSerializeListToJson() 
+    {
+        [$data, $expected] = $this->createData();
+
+        $data = array_fill(0, 10, $data);
+        $expected = json_encode(array_fill(0, 10, json_decode($expected, true)));
+
+        $this->assertEquals($expected, $this->serializer->serialize('json', $data));
+        $this->assertEquals($data, $this->serializer->deserialize('json', SerializeStub::class, $expected));
+    }
+
     public function createData() {
         return [
-            new SerializeStub(10, 'jhon', 33),
-            '{"id":10,"name":"jhon","age":33}'
+            new SerializeStub(10, 'jhon', 33, new CustomDate('20', '12', '1983')),
+            '{"id":10,"name":"jhon","age":33,"date":"20-12-1983"}'
         ];
     }
 }
@@ -39,11 +53,14 @@ class SerializeStub {
 
     private int $age;
 
-    public function __construct(int $id, string $name, int $age)
+    private CustomDate $date;
+
+    public function __construct(int $id, string $name, int $age, CustomDate $date)
     {
         $this->id = $id;
         $this->name = $name;
         $this->age = $age;
+        $this->date = $date;
     }
 
     public function getId(): int
@@ -59,5 +76,35 @@ class SerializeStub {
     public function getAge(): int
     {
         return $this->age;
+    }
+}
+
+class CustomDate
+{
+    public function __construct(
+        public string $day,
+        public string $month,
+        public string $year,
+    ) {}
+}
+
+class CustomDateMapper implements TypeAwareObjectExtractor, TypeAwareObjectHydrator
+{
+    public function getSupportedClassName(): string
+    {
+        return CustomDate::class;
+    }
+
+    /**
+     * @param CustomDate $object
+     */
+    public function extract($object, array &$context = [])
+    {
+        return implode('-', [$object->day, $object->month, $object->year]);
+    }
+
+    public function hydrate($object, $data, array &$context = null): array | object
+    {
+        return new CustomDate(...explode('-', $data));
     }
 }

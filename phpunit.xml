@@ -42,6 +42,10 @@
         <testsuite name="http">
             <directory>packages/http/tests</directory>
         </testsuite>
+
+        <testsuite name="doctrine">
+            <directory>packages/doctrine/tests</directory>
+        </testsuite>
     </testsuites>
 
     <filter>

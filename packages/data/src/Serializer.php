@@ -13,9 +13,9 @@ class Serializer implements SerializerInterface
 {
     private array $formats = [];
 
-    private ObjectExtractorInterface $extractor;
+    private ComposableObjectExtractorInterface $extractor;
 
-    private ObjectHydratorInterface $hydrator;
+    private ComposableObjectHydratorInterface $hydrator;
 
     /**
      * Serializer constructor.
@@ -28,7 +28,7 @@ class Serializer implements SerializerInterface
         $this->hydrator = $hydrator;
     }
 
-    public function registerFormat($formatter, string $format = null)
+    public function registerFormat($formatter, string $format = null): SerializerInterface
     {
         if ($formatter instanceof FormatAwareInterface) {
             $format = $formatter->getFormatName();
@@ -47,6 +47,21 @@ class Serializer implements SerializerInterface
         return $this;
     }
 
+    public function registerCustomHydrator(TypeAwareObjectHydrator $hydrator): SerializerInterface
+    {
+        $this->hydrator->addHydrator($hydrator);
+
+        return $this;
+    }
+
+    public function registerCustomExtractor(TypeAwareObjectExtractor $extractor): SerializerInterface
+    {
+        $this->extractor->addExtractor($extractor);
+
+        return $this;
+    }
+
+
     public function serialize(string $format, $data, array &$context = []) {
         $data = $this->extractor->extract($data, $context);
 
@@ -60,7 +75,7 @@ class Serializer implements SerializerInterface
 
         $data = $this->formats[$format]->fromFormat($data, $context);
 
-        return $this->hydrator->hydrate($object, $data);
+        return $this->hydrator->hydrate($object, $data, $context);
     }
 
     private function checkFormatter(string $format, $isSerializer = true, $isDeserializer = true) {

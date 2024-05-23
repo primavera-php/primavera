@@ -2,6 +2,8 @@
 
 namespace Primavera\Data;
 
+use ArrayIterator;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Primavera\Data\Mapping\Bindings;
 use Primavera\Metadata\Factory\MetadataFactoryFactory;
@@ -80,6 +82,48 @@ class ObjectHydratorTest extends TestCase
 
         $this->assertEquals($compareUser, $users[0]);
     }
+
+    public function testShouldMapComplexData()
+    {
+        $hydrator = new ObjectHydrator((new MetadataFactoryFactory())->createAnnotationMetadataFactory());
+        $hydrator->addHydrator(new ArrayIteratorHydrator());
+
+        $data = [
+            'collection' => [
+                [
+                    'name' => 'abc',
+                ],
+                [
+                    'name' => 'def',
+                ],
+            ],
+            'anotherCollection' => [
+                [
+                    'name' => 'fgh',
+                ],
+                [
+                    'name' => 'xyz',
+                ],
+            ],
+        ];
+
+        $hydrated = $hydrator->hydrate(ComplexMappingData::class, $data);
+
+        $this->assertEquals(
+            new ComplexMappingData(
+                new ArrayIterator([
+                    new SimpleData('abc'),
+                    new SimpleData('def'),
+                ]),
+                new ArrayIterator([
+                    new SimpleData('fgh'),
+                    new SimpleData('xyz'),
+                ])
+            ),
+            $hydrated
+        );
+    }
+
 }
 
 class Person {
@@ -179,5 +223,49 @@ class Address {
     {
         $this->street = $street;
         $this->setterCalled = true;
+    }
+}
+
+
+class SimpleData
+{
+    public function __construct(
+        public string $name
+    ) {}
+}
+
+class ComplexMappingData
+{
+    /**
+     * @var SimpleData[]
+     */
+    public ArrayIterator $collection;
+
+    /**
+     * @var ArrayIterator<SimpleData>
+     */
+    public ArrayIterator $anotherCollection;
+
+    public function __construct($collection, $anotherCollection)
+    {
+        $this->collection = $collection;
+        $this->anotherCollection = $anotherCollection;
+    }
+}
+
+class ArrayIteratorHydrator implements TypeAwareObjectHydrator
+{
+    public function getSupportedClassName(): string
+    {
+        return ArrayIterator::class;
+    }
+
+    public function hydrate($object, $data, array &$context = null): array|object
+    {
+        if (!($data[0] instanceof SimpleData)) {
+            throw new Exception("test failed, decorated data must be converted before this hydrator is called");
+        }
+
+        return new ArrayIterator($data);
     }
 }

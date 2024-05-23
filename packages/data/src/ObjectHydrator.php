@@ -17,7 +17,7 @@ use Primavera\Metadata\PropertyMetadata;
  * 
  * @author Jhonatan Teixeira <jhonatan.teixeira@gmail.com>
  */
-class ObjectHydrator implements ObjectHydratorInterface
+class ObjectHydrator implements ComposableObjectHydratorInterface
 {
     /**
      * @var MetadataFactoryInterface
@@ -34,30 +34,57 @@ class ObjectHydrator implements ObjectHydratorInterface
         $this->metadataFactory = $metadataFactory;
     }
 
-    public function addHydrator(TypeAwareObjectHydrator $hydrator) {
+    public function addHydrator(TypeAwareObjectHydrator $hydrator) 
+    {
         $this->hydrators[$hydrator->getSupportedClassName()] = $hydrator;
     }
+
+    protected function getHydratorForClass($class): ?TypeAwareObjectHydrator
+    {
+        if (is_object($class)) {
+            $class = get_class($class);
+        }
+
+        $metadata = $this->metadataFactory->getMetadataForClass($class);
+
+        foreach (array_reverse([...$metadata->getHierarchy(), $class]) as $type) {
+            if (isset($this->hydrators[$type])) {
+                return $this->hydrators[$type];
+            }
+        }
+
+        return null;
+    }
     
-    public function hydrate($object, array $data): object | array
+    public function hydrate($object, $data, array &$context = null): object | array
     {
         if (is_string($object)) {
             $objectType = new TypeHelper($object);
+            $object = $objectType->getReflection()->newInstanceWithoutConstructor();
+        } else {
+            $objectType = new TypeHelper($object::class);
+        }
 
-            if ($objectType->isDecoratedType()) {
-                return $this->convertDecorated($object, $data);
-            }
+        if ($objectType->isDecoratedType()) {
+            return $this->convertDecorated($objectType->getType(), $data);
+        }
 
-            if ($objectType->isNativeType()) {
-                return $this->convertNativeType($object, $data);
-            }
+        if ($objectType->isNativeType()) {
+            return $this->convertNativeType($objectType->getType(), $data);
+        }
 
-            $object = (new \ReflectionClass($object))->newInstanceWithoutConstructor();
+        if (is_array($data) && array_is_list($data)) {
+            return $this->hydrateList($object, $data, $context);
+        }
+
+        if ($hydrator = $this->getHydratorForClass($object)) {
+            return $hydrator->hydrate($object, $data, $context);
         }
 
         $objectMetadata = $this->getObjectMetadata($object, $data);
 
         /* @var $propertyMetadata PropertyMetadata  */
-        foreach ($objectMetadata->propertyMetadata as $propertyMetadata) {
+        foreach ($objectMetadata->getPropertyMetadata() as $propertyMetadata) {
             $annotation = $propertyMetadata->getAnnotation(Bindings::class);
             $source     = $annotation ? ($annotation->source ?? $propertyMetadata->name) : $propertyMetadata->name;
             $type       = $propertyMetadata->type;
@@ -76,11 +103,20 @@ class ObjectHydrator implements ObjectHydratorInterface
                 } elseif ($propertyMetadata->isNativeType()) {
                     $value = $this->convertNativeType($type, $value);
                 } else {
-                    if (!class_exists($type)) {
+                    if (!class_exists($type, true) && !interface_exists($type, true)) {
                         throw new RuntimeException("type $type don't exists");
                     }
                     
-                    $value = $this->convertObjectValue($type, $value);
+                    $value = $this->convertObjectValue($type, $value, $context);
+                }
+
+                if (
+                    $propertyMetadata->isParsedType()
+                    && $propertyMetadata->isDecoratedType()
+                    && $propertyMetadata->hasRealType() 
+                    && $propertyMetadata->getRealType() != ($propertyMetadata->getTypeInfo()['class'])
+                ) {
+                    $value = $this->convertObjectValue($propertyMetadata->getRealType(), $value, $context);
                 }
             }
 
@@ -92,6 +128,17 @@ class ObjectHydrator implements ObjectHydratorInterface
         }
 
         return $object;
+    }
+
+    protected function hydrateList($type, array $list, array &$context = null): array
+    {
+        $hydrated = [];
+
+        foreach($list as $data) {
+            $hydrated[] = $this->hydrate($type, $data, $context);
+        }
+
+        return $hydrated;
     }
     
     private function convertNativeType($type, $value)
@@ -129,23 +176,25 @@ class ObjectHydrator implements ObjectHydratorInterface
         $class      = isset($matches['brackets']) ? 'array' : $matches['class'];
         $decoration = isset($matches['brackets']) ? $matches['class'] : $matches['decoration'];
 
+        $convertItem = function($item) use ($decoration) {
+            if (is_scalar($item) || is_bool($item) || $item instanceof DateTime) {
+                return $this->convertNativeType($decoration, $item);
+            }
+            
+            return $this->convertObjectValue($decoration, $item);
+        };
+
+        $populateData = function ($value) use($convertItem) {
+            return array_map($convertItem, $value);
+        };
+
         switch ($class) {
             case 'array':
                 if (!is_array($value)) {
                     throw new RuntimeException('value mapped as array is not array');
                 }
 
-                $data = [];
-
-                foreach ($value as $item) {
-                    if (is_scalar($item) || is_bool($item) || $item instanceof DateTime) {
-                        $value = $this->convertNativeType($decoration, $item);
-                    } else {
-                        $value = $this->convertObjectValue($decoration, $item);
-                    }
-
-                    $data[] = $value;
-                }
+                $data = $populateData($value);
 
                 break;
             case 'DateTime':
@@ -166,34 +215,39 @@ class ObjectHydrator implements ObjectHydratorInterface
                 }
 
                 break;
+            default:
+                if (is_array($value)) {
+                    $data = $populateData($value);
+                } else {
+                    $data = $convertItem($value);
+                }
+
+                $data = $this->convertObjectValue($class, $data);
         }
 
         return $data;
     }
     
-    private function convertObjectValue(string $type, array $data)
+    private function convertObjectValue(string $type, $data, array &$context = null)
     {
+        if ($hydrator = $this->getHydratorForClass($type)) {
+            return $hydrator->hydrate($type, $data, $context);
+        }
+
         $metadata = $this->getObjectMetadata($type, $data);
         $object   = $metadata->getReflection()->newInstanceWithoutConstructor();
 
-        if (isset($this->hydrators[$type])) {
-            return $this->hydrators[$type]->hydrate($object, $data);
-        }
-
-        $this->hydrate(
-            $object, 
-            $data
-        );
+        $this->hydrate($object, $data, $context);
 
         return $object;
     }
     
-    private function getObjectMetadata($object, array $data): ClassMetadata
+    private function getObjectMetadata($object, $data): ClassMetadata
     {
         $metadata      = $this->metadataFactory->getMetadataForClass(is_string($object) ? $object : get_class($object));
         $discriminator = $metadata->getAnnotation(Discriminator::class);
 
-        if ($discriminator instanceof Discriminator && isset($data[$discriminator->field])) {
+        if (is_array($data) && $discriminator instanceof Discriminator && isset($data[$discriminator->field])) {
             if (!isset($discriminator->map[$data[$discriminator->field]])) {
                 throw new RuntimeException("no discrimination for {$data[$discriminator->field]}");
             }

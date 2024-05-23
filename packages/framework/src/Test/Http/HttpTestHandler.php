@@ -34,7 +34,13 @@ class HttpTestHandler implements HttpHandlerInterface
             $request = $serverRequest;
         }
 
-        return $this->app->handle($request);
+        $response = $this->app->handle($request);
+
+        if ($response->getStatusCode() >= 300) {
+            throw new \Exception($response->getBody()->getContents());
+        }
+
+        return $response;
     }
 
     public function sendAsync(RequestInterface $request, array $options = []): HttpPromiseInterface 

@@ -15,6 +15,6 @@ class BuildingComponentFactory implements StereotypeFactoryInterface
 {
     public function create(ContainerInterface $container, ClassMetadataInterface $metadata, array $params): InterfaceForBuilding
     {
-        return new BuildingComponent(...$params);
+        return new BuildingComponent(...array_map(fn($p) => $container->get($p->getId()), $params));
     }
 }
