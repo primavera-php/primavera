@@ -2,7 +2,10 @@
 
 namespace Primavera\Data;
 
+use Primavera\Data\Mapping\Bindings;
+use Primavera\Metadata\ClassMetadataInterface;
 use Primavera\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Metadata\PropertyMetadata;
 use RuntimeException;
 
 /**
@@ -12,15 +15,12 @@ use RuntimeException;
  */
 class PropertyAccessor implements PropertyAccessorInterface
 {
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
+    private array $metadatas = [];
     
-    public function __construct(MetadataFactoryInterface $metadataFactory)
-    {
-        $this->metadataFactory = $metadataFactory;
-    }
+    public function __construct(
+        private MetadataFactoryInterface $metadataFactory,
+    ) {}
+
     
     public function get($object, string $name)
     {
@@ -34,7 +34,7 @@ class PropertyAccessor implements PropertyAccessorInterface
         }
         
         $metadata = $this->metadataFactory->getMetadataForClass($object::class);
-        $property = $metadata->getPropertyMetadata()[$name] 
+        $property = $metadata->getPropertyMetadata()[$name]
             ?? throw new RuntimeException("property $name doesn't exists on {$metadata->getName()}");
         
         if ($property->hasGetter()) {
@@ -56,13 +56,13 @@ class PropertyAccessor implements PropertyAccessorInterface
         }
         
         $metadata = $this->metadataFactory->getMetadataForClass($object::class);
-        $propertyMetadata = $metadata->getPropertyMetadata()[$name] 
+        $property = $metadata->getPropertyMetadata()[$name] 
             ?? throw new RuntimeException("property $name doesn't exists on {$metadata->getName()}");
         
-        if ($propertyMetadata->hasSetter()) {
-            $propertyMetadata->setter->invoke($object, $value);
+        if ($property->hasSetter()) {
+            $property->setter->invoke($object, $value);
         } else {
-            $propertyMetadata->setValue($object, $value);
+            $property->setValue($object, $value);
         }
     }
 

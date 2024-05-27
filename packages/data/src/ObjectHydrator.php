@@ -8,9 +8,7 @@ use Primavera\Metadata\TypeHelper;
 use RuntimeException;
 use Primavera\Data\Mapping\Bindings;
 use Primavera\Data\Mapping\Discriminator;
-use Primavera\Data\Mapping\Exclude;
 use Primavera\Metadata\ClassMetadata;
-use Primavera\Metadata\PropertyMetadata;
 
 /**
  * Hydrates objects based on its metadata information, uses data mapping
