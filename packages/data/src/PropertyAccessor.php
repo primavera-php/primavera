@@ -33,19 +33,15 @@ class PropertyAccessor implements PropertyAccessorInterface
             }
         }
         
-        $metadata = $this->metadataFactory->getMetadataForClass(get_class($object));
+        $metadata = $this->metadataFactory->getMetadataForClass($object::class);
+        $property = $metadata->getPropertyMetadata()[$name] 
+            ?? throw new RuntimeException("property $name doesn't exists on {$metadata->getName()}");
         
-        $getterName = sprintf('get%s', ucfirst($name));
-        
-        if (isset($metadata->methodMetadata[$getterName])) {
-            return $metadata->methodMetadata[$getterName]->invoke($object);
+        if ($property->hasGetter()) {
+            return $property->getter->invoke($object);
         }
         
-        if (!isset($metadata->propertyMetadata[$name])) {
-            throw new RuntimeException("property $name doesn't exists on {$metadata->name}");
-        }
-        
-        return $metadata->propertyMetadata[$name]->getValue($object);
+        return $property->getValue($object);
     }
 
     public function set($object, string $name, $value)
@@ -59,20 +55,33 @@ class PropertyAccessor implements PropertyAccessorInterface
             }
         }
         
-        $metadata = $this->metadataFactory->getMetadataForClass(get_class($object));
+        $metadata = $this->metadataFactory->getMetadataForClass($object::class);
+        $propertyMetadata = $metadata->getPropertyMetadata()[$name] 
+            ?? throw new RuntimeException("property $name doesn't exists on {$metadata->getName()}");
         
-        $setterName = sprintf('set%s', ucfirst($name));
-        
-        if (isset($metadata->methodMetadata[$setterName])) {
-            $metadata->methodMetadata[$setterName]->invoke($object, $value);
-            
-            return;
+        if ($propertyMetadata->hasSetter()) {
+            $propertyMetadata->setter->invoke($object, $value);
+        } else {
+            $propertyMetadata->setValue($object, $value);
         }
-        
-        if (!isset($metadata->propertyMetadata[$name])) {
-            throw new RuntimeException("property $name doesn't exists on {$metadata->name}");
+    }
+
+    public function tryGet(object $object, string $name, $defaultValue = null)
+    {
+        try {
+            return $this->get($object, $name);
+        } catch (\Error) {
+            if ($defaultValue !== null) {
+                $property = $this->metadataFactory
+                    ->getMetadataForClass($object::class)
+                    ->getPropertyMetadata()[$name] ?? null;
+                
+                if ($property?->getReflection()?->hasDefaultValue()) {
+                    return $property->getReflection()->getDefaultValue();
+                }
+            }
+
+            return $defaultValue;
         }
-        
-        $metadata->propertyMetadata[$name]->setValue($object, $value);
     }
 }

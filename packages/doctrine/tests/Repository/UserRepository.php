@@ -7,6 +7,7 @@ namespace Primavera\Doctrine\Test\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\UnitOfWork;
 use Primavera\Doctrine\Annotation\InjectRepository;
 use Primavera\Doctrine\Test\Entity\Phone;
 use Primavera\Doctrine\Test\Entity\User;
@@ -35,11 +36,8 @@ class UserRepository extends EntityRepository
 
     public function save(User $user)
     {
-        if (!$user->id) {
+        if ($this->getEntityManager()->getUnitOfWork()->getEntityState($user) === UnitOfWork::STATE_NEW) {
             $this->getEntityManager()->persist($user);
-        } else {
-            $this->getEntityManager()->getUnitOfWork()->scheduleForUpdate($user);
-            $this->getEntityManager()->getUnitOfWork()->computeChangeSets();
         }
 
         $this->getEntityManager()->flush();

@@ -20,7 +20,7 @@ class Phone
     public ?int $id = null;
 
     public function __construct(
-        #[ManyToOne(cascade: ['all'], inversedBy: 'users')]
+        #[ManyToOne(cascade: ['persist'], inversedBy: 'users')]
         #[Exclude]
         public User $user,
         

@@ -25,7 +25,7 @@ class HttpErrorHandler
             case HttpNotFoundException::class:
                 return $response->withStatus(404, $error->getMessage());
             default:
-                $response = $response->withStatus(500, $error->getMessage());
+                $response = $this->psr7Factory->createResponse(500, $error->getMessage());
 
                 if ($this->debug) {
                     $response = $this->psr7Factory->createResponse(500, $error);

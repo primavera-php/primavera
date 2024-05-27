@@ -123,11 +123,6 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
 
                 $responseData = call_user_func_array($action, array_values($actionParams));
 
-                if ($responseData instanceof ResponseInterface) {
-                    return $responseData;
-                }
-
-
                 foreach ($this->getPrioritizedComponents(Interceptor::class) as $interceptor) {
                     $response = $interceptor($responseData, $request, $response, $args);
                 }

@@ -19,11 +19,12 @@ class TestCase extends BaseTestCase implements HttpClientInterface
     protected ?Application $application = null;
     protected ?Prophet $prophet = null;
     protected ?HttpClient $http = null;
+    protected ?HttpTestHandler $httpHandler = null;
 
     public function setApplication(Application $application): void
     {
         $this->application = $application;
-        $this->http = new HttpClient(new HttpTestHandler($application));
+        $this->http = new HttpClient($this->httpHandler = new HttpTestHandler($application));
     }
     
     public function setupApplication(Application $application) {
@@ -54,6 +55,13 @@ class TestCase extends BaseTestCase implements HttpClientInterface
 
     public function post(string $path, $body, array $headers = []) {
         return $this->http->post($path, $body, $headers);
+    }
+
+    public function ignoreHttpErrors()
+    {
+        $this->httpHandler->ignoreErrors();
+
+        return $this;
     }
 
     public function put(string $path, $body, array $headers = []) {

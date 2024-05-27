@@ -4,11 +4,13 @@ namespace Primavera\Doctrine\Container;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Primavera\Container\Annotation\IgnoreScanner;
 use Primavera\Container\ParamResolverInterceptorInterface;
 use Primavera\Doctrine\Annotation\InjectRepository;
 use Primavera\Metadata\ParamMetadata;
 use Psr\Container\ContainerInterface;
 
+#[IgnoreScanner]
 class RepositoryInjector implements ParamResolverInterceptorInterface
 {
     public function canIntercept(ParamMetadata $paramMetadata): bool

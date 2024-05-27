@@ -77,7 +77,7 @@ class ControllerTest extends TestCase
 
     public function testShouldThrowErrorNoTypeDefined() 
     {
-        $response = $this->post('/foo/error', []);
+        $response = $this->ignoreHttpErrors()->post('/foo/error', []);
 
         $this->assertInternalError($response)
             ->assertResponseContains($response, 'no type defined');

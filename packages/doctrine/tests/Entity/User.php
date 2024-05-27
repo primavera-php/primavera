@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
 
@@ -37,9 +38,14 @@ class User
         private Collection $phones = new ArrayCollection(),
     ) {}
 
-
     public function getPhones(): Collection
     {
         return $this->phones ??= new ArrayCollection();
+    }
+
+    public function addPhone(Phone $phone)
+    {
+        $this->phones->add($phone);
+        $phone->user = $this;
     }
 }

@@ -20,96 +20,26 @@ use Primavera\Metadata\PropertyMetadata;
 class ObjectHydrator implements ComposableObjectHydratorInterface
 {
     /**
+     * @var MetadataFactoryInterface
+     */
+    private $metadataFactory;
+
+    /**
      * @var TypeAwareObjectHydrator[]
      */
     private array $hydrators = [];
-
-    private PropertyAccessorInterface $propertyAcessor;
     
-    public function __construct(
-        private MetadataFactoryInterface $metadataFactory,
-    ) {
-        $this->propertyAcessor = new PropertyAccessor($this->metadataFactory);
+    public function __construct(MetadataFactoryInterface $metadataFactory)
+    {
+        $this->metadataFactory = $metadataFactory;
     }
 
     public function addHydrator(TypeAwareObjectHydrator $hydrator) 
     {
         $this->hydrators[$hydrator->getSupportedClassName()] = $hydrator;
     }
-   
-    public function hydrate($object, $data, array &$context = null): object | array
-    {
-        if (is_null($context)) {
-            $context = [];
-        }
 
-        $type = new TypeHelper(is_string($object) ? $object : $object::class);
-
-        if ($type->isDecoratedType()) {
-            return $this->convertDecorated($type->getType(), $data);
-        }
-
-        if ($type->isNativeType()) {
-            return $this->convertNativeType($type->getType(), $data);
-        }
-
-        $metadata = $this->metadataFactory->getMetadataForClass($type->getType());
-
-        if (is_string($object)) {
-            $object = $metadata->getReflection()->newInstanceWithoutConstructor();
-        }
-
-        $context['object'] = $object;
-        $context['hydrator'] = $this;
-        $context['metadata'] = $metadata;
-
-        if (is_array($data) && array_is_list($data)) {
-            return $this->hydrateList($object, $data, $context);
-        }
-
-        if ($hydrator = $this->getHydratorForClass($type->getType())) {
-            return $hydrator->hydrate($object, $data, $context);
-        }
-
-        foreach ($metadata->getPropertyMetadata() as $property) {
-            $annotation = $property->getAnnotation(Bindings::class);
-            $source = $annotation ? ($annotation->source ?? $property->getName()) : $property->getName();
-            $type = $property->type;
-            $context['property'] = $property;
-            $value = $data[$source] ?? null;
-
-            $objPropertyData = null;
-
-            if (class_exists($property->getType()) || interface_exists($property->getType())) {
-                $objPropertyData = $this->propertyAcessor->tryGet($object, $property->getName());
-            }
-
-            if (!$value) {
-                continue;
-            }
-
-            $value = match(true) {
-                $property->isDecoratedType() => $this->convertDecorated($property->type, $value, $objPropertyData, $context),
-                $property->isNativeType() => $this->convertNativeType($type, $value),
-                default => $this->convertObjectValue($type, $value, $objPropertyData, $context)
-            };
-
-            if (
-                $property->isParsedType()
-                && $property->isDecoratedType()
-                && $property->hasRealType() 
-                && $property->getRealType() != ($property->getTypeInfo()['class'])
-            ) {
-                $value = $this->convertObjectValue($property->getRealType(), $value, $objPropertyData, $context);
-            }
-
-            $this->propertyAcessor->set($object, $property->getName(), $value);
-        }
-
-        return $object;
-    }
-
-    private function getHydratorForClass($class): ?TypeAwareObjectHydrator
+    protected function getHydratorForClass($class): ?TypeAwareObjectHydrator
     {
         if (is_object($class)) {
             $class = get_class($class);
@@ -124,6 +54,89 @@ class ObjectHydrator implements ComposableObjectHydratorInterface
         }
 
         return null;
+    }
+    
+    public function hydrate($object, $data, array &$context = null): object | array
+    {
+        if (is_null($context)) {
+            $context = [];
+        }
+
+        $context['hydrator'] = $this;
+
+        if (is_string($object)) {
+            $objectType = new TypeHelper($object);
+            $object = $objectType->getReflection()->newInstanceWithoutConstructor();
+        } else {
+            $objectType = new TypeHelper($object::class);
+        }
+
+        $context['object'] = $object;
+
+        if ($objectType->isDecoratedType()) {
+            return $this->convertDecorated($objectType->getType(), $data);
+        }
+
+        if ($objectType->isNativeType()) {
+            return $this->convertNativeType($objectType->getType(), $data);
+        }
+
+        if (is_array($data) && array_is_list($data)) {
+            return $this->hydrateList($object, $data, $context);
+        }
+
+        if ($hydrator = $this->getHydratorForClass($object)) {
+            return $hydrator->hydrate($object, $data, $context);
+        }
+
+        $objectMetadata = $this->getObjectMetadata($object, $data);
+
+        /* @var $propertyMetadata PropertyMetadata  */
+        foreach ($objectMetadata->getPropertyMetadata() as $propertyMetadata) {
+            $annotation = $propertyMetadata->getAnnotation(Bindings::class);
+            $source     = $annotation ? ($annotation->source ?? $propertyMetadata->name) : $propertyMetadata->name;
+            $type       = $propertyMetadata->type;
+            $context['property'] = $propertyMetadata;
+            
+            if (!isset($data[$source]) 
+                || ($propertyMetadata->hasAnnotation(Exclude::class) 
+                    && $propertyMetadata->getAnnotation(Exclude::class)->input)) {
+                continue;
+            }
+            
+            $value = $data[$source];
+
+            if ($type && !is_null($value)) {
+                if ($propertyMetadata->isDecoratedType()) {
+                    $value = $this->convertDecorated($type, $value);
+                } elseif ($propertyMetadata->isNativeType()) {
+                    $value = $this->convertNativeType($type, $value);
+                } else {
+                    if (!class_exists($type, true) && !interface_exists($type, true)) {
+                        throw new RuntimeException("type $type don't exists");
+                    }
+                    
+                    $value = $this->convertObjectValue($type, $value, $context);
+                }
+
+                if (
+                    $propertyMetadata->isParsedType()
+                    && $propertyMetadata->isDecoratedType()
+                    && $propertyMetadata->hasRealType() 
+                    && $propertyMetadata->getRealType() != ($propertyMetadata->getTypeInfo()['class'])
+                ) {
+                    $value = $this->convertObjectValue($propertyMetadata->getRealType(), $value, $context);
+                }
+            }
+
+            if ($propertyMetadata->hasSetter()) {
+                $propertyMetadata->setter->invoke($object, $value);
+            } else {
+                $propertyMetadata->setValue($object, $value);
+            }
+        }
+
+        return $object;
     }
 
     protected function hydrateList($type, array $list, array &$context = null): array
@@ -165,19 +178,19 @@ class ObjectHydrator implements ComposableObjectHydratorInterface
         }
     }
     
-    private function convertDecorated(string $type, $value, object $object = null, &$context = null)
+    private function convertDecorated(string $type, $value)
     {
         preg_match('/(?P<class>.*)((\<(?P<decoration>.*)\>)|(?P<brackets>\[\]))/', $type, $matches);
         
         $class      = isset($matches['brackets']) ? 'array' : $matches['class'];
         $decoration = isset($matches['brackets']) ? $matches['class'] : $matches['decoration'];
 
-        $convertItem = function($item) use ($decoration, $object) {
+        $convertItem = function($item) use ($decoration) {
             if (is_scalar($item) || is_bool($item) || $item instanceof DateTime) {
                 return $this->convertNativeType($decoration, $item);
             }
             
-            return $this->convertObjectValue($decoration, $item, $object, $context);
+            return $this->convertObjectValue($decoration, $item);
         };
 
         $populateData = function ($value) use($convertItem) {
@@ -224,17 +237,14 @@ class ObjectHydrator implements ComposableObjectHydratorInterface
         return $data;
     }
     
-    private function convertObjectValue(string $type, $data, object $object = null, array &$context = null)
+    private function convertObjectValue(string $type, $data, array &$context = null)
     {
-        $metadata = $this->getObjectMetadata($type, $data);
-
-        if (!$object) {
-            $object = $metadata->getReflection()->newInstanceWithoutConstructor();
-        }
-
         if ($hydrator = $this->getHydratorForClass($type)) {
-            return $hydrator->hydrate($object, $data, $context);
+            return $hydrator->hydrate($type, $data, $context);
         }
+
+        $metadata = $this->getObjectMetadata($type, $data);
+        $object   = $metadata->getReflection()->newInstanceWithoutConstructor();
 
         $this->hydrate($object, $data, $context);
 

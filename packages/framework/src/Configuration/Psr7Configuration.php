@@ -4,8 +4,6 @@ namespace Primavera\Framework\Configuration;
 
 use Primavera\Container\Annotation\Bean;
 use Primavera\Container\Annotation\Configuration;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Factory\RequestFactory;

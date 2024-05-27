@@ -102,8 +102,11 @@ class AnnotationDriver implements DriverInterface
 
     private function getAdder(\ReflectionProperty $propertyMetadata, ClassMetadata $classMetadata) {
         $adderName = sprintf('add%s', ucfirst($propertyMetadata->name));
+        $singularAdderName = preg_replace('/s$/', '', $adderName);
 
-        return $classMetadata->methodMetadata[$adderName] ?? null;
+        return $classMetadata->methodMetadata[$adderName] 
+            ?? $classMetadata->methodMetadata[$singularAdderName] 
+            ?? null;
     }
 
     public function __serialize()

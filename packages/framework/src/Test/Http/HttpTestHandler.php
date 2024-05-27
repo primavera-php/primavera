@@ -15,7 +15,15 @@ class HttpTestHandler implements HttpHandlerInterface
 {
     public function __construct(
         private Application $app,
+        private bool $ignoreErrors = false,
     ) {}
+
+    public function ignoreErrors()
+    {
+        $this->ignoreErrors = true;
+
+        return $this;
+    }
     
     public function send(RequestInterface $request, array $options = []): ResponseInterface 
     {
@@ -36,9 +44,11 @@ class HttpTestHandler implements HttpHandlerInterface
 
         $response = $this->app->handle($request);
 
-        if ($response->getStatusCode() >= 300) {
+        if ($response->getStatusCode() > 404 && !$this->ignoreErrors) {
             throw new \Exception($response->getBody()->getContents());
         }
+
+        $this->ignoreErrors = false;
 
         return $response;
     }

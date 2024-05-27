@@ -10,4 +10,6 @@ interface PropertyAccessorInterface
     public function get($object, string $name);
     
     public function set($object, string $name, $value);
+
+    public function tryGet(object $object, string $name, $defaultValue = null);
 }

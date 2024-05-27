@@ -4,11 +4,14 @@ namespace Primavera\Doctrine\Test\Framework;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\EntityManager;
+use Primavera\Cache\Factory;
 use Primavera\Container\Annotation\Autowired;
+use Primavera\Container\Factory\ContainerBuilder;
 use Primavera\Doctrine\Test\Entity\Phone;
 use Primavera\Doctrine\Test\Entity\User;
 use Primavera\Doctrine\Test\Repository\UserRepository;
 use Primavera\Framework\Application;
+use Primavera\Framework\Component\Psr7Factory;
 use Primavera\Framework\Exception\HttpNotFoundException;
 use Primavera\Framework\Stereotype\Controller;
 use Primavera\Framework\Test\TestCase;
@@ -30,7 +33,7 @@ class ControllerTest extends TestCase
     ];
 
     private $addedData = [
-        'mathews' => ['name' => 'Dave Mathews', 'email' => 'mathews@email.com', 'type' => 'singer', 'phones' => []],
+        'mathews' => ['name' => 'Dave Mathews', 'email' => 'mathews@email.com', 'type' => 'singer', 'phones' => [['phone' => '5555-5555']]],
     ];
 
     public function setUp(): void
@@ -90,6 +93,14 @@ class ControllerTest extends TestCase
             ->withAppConfigFile(__DIR__ . '/../application.yaml');
     }
 
+    public function configureBuilder(ContainerBuilder $containerBuilder)
+    {
+        $containerBuilder->withCache(
+            (new Factory())
+                ->createSimpleCache(Factory::PROVIDER_SYMFONY, Factory::TYPE_FILE, '', 0, 'build/cache')
+        );
+    }
+
     public function tearDown(): void
     {
         parent::tearDown();
@@ -118,7 +129,17 @@ class ControllerTest extends TestCase
     {
         $data = $this->post('/users', $this->addedData['mathews']);
 
-        $this->assertEquals([...$this->addedData['mathews'], ...['id' => 4]], json_decode($data->getBody()->getContents(), true));
+        $this->assertEquals(
+            [
+                ...$this->addedData['mathews'],
+                'id' => 4,
+                'phones' => [
+                    [...$this->addedData['mathews']['phones'][0], 'id' => 4],
+
+                ]
+            ],
+            json_decode($data->getBody()->getContents(), true)
+        );
     }
 
     public function testShouldPutOne() 
@@ -144,6 +165,7 @@ class UserController
 {
     public function __construct(
         private UserRepository $usersRepository,
+        private Psr7Factory $psr7Factory,
     ) {}
 
     #[Get]
@@ -177,12 +199,16 @@ class UserController
     {
         $data->id = $id;
 
-        return $this->usersRepository->save($data);
+        $this->usersRepository->save($data);
+
+        return $data;
     }
 
     #[Delete]
     public function delete(int $id) 
     {
-        return $this->usersRepository->delete($id);
+        $this->usersRepository->delete($id);
+
+        return $this->psr7Factory->createResponse(204, "entity with id {$id} deleted");
     }
 }

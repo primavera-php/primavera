@@ -54,6 +54,7 @@ class Container implements ContainerInterface, \IteratorAggregate
 
     private const INSTANTIATING = 1;
     private const INSTANTIATED = 2;
+    private const ERROR = 3;
 
     public function __construct(
         /** @var MetadataFactoryInterface<\Primavera\Container\Metadata\ClassMetadata> */
@@ -198,6 +199,8 @@ class Container implements ContainerInterface, \IteratorAggregate
                     
                     return $this->get($p->getId());
                 } catch (NotFoundContainerException $e) {
+                    $this->statuses[$p->getId()] = self::ERROR;
+                    
                     if ($p->getReflection()->isOptional()) {
                         return $p->getReflection()->getDefaultValue();
                     }
