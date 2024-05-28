@@ -15,6 +15,7 @@ use Primavera\Container\Bean\BeanRegisterer;
 use Primavera\Container\ConfigurationData;
 use Primavera\Doctrine\Container\RepositoryInjector;
 use Primavera\Doctrine\DataMapper\CollectionMapper;
+use Primavera\Doctrine\Middleware\DoctrineMergeResolver;
 use Primavera\Doctrine\Repository\RepositoryFactory;
 
 class PrimaveraDoctrineConfiguration
@@ -26,7 +27,8 @@ class PrimaveraDoctrineConfiguration
             ->addComponent(DefaultRepositoryFactory::class)
             ->addComponent(RepositoryFactory::class)
             ->addComponent(RepositoryInjector::class)
-            ->addComponent(CollectionMapper::class);
+            ->addComponent(CollectionMapper::class)
+            ->addComponent(DoctrineMergeResolver::class);
     }
 
     #[Bean]

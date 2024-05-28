@@ -22,7 +22,8 @@
             "Primavera\\Metadata\\": "packages/metadata/src\\",
             "Primavera\\Persistence\\": "packages/persistence/src\\",
             "Primavera\\Http\\": "packages/http/src\\",
-            "Primavera\\Doctrine\\": "packages/doctrine/src\\"
+            "Primavera\\Doctrine\\": "packages/doctrine/src\\",
+            "Primavera\\Swoole\\": "packages/swoole/src\\"
         }
     },
     "require": {
@@ -43,7 +44,9 @@
         "symfony/cache": ">=3.3",
         "symfony/finder": "^5.1",
         "symfony/yaml": "^3",
-        "doctrine/orm": "^3.0"
+        "doctrine/orm": "^3.0",
+        "openswoole/core": "^22.1",
+        "doctrine/migrations": "^3.7.4"
     },
     "require-dev": {
         "mayflower/php-codebrowser": "^4",
@@ -54,7 +57,8 @@
         "predis/predis": "^1.1",
         "sebastian/phpcpd": "^6",
         "squizlabs/php_codesniffer": "^2",
-        "symplify/monorepo-builder": "*"
+        "symplify/monorepo-builder": "*",
+        "openswoole/ide-helper": "^22.1.5"
     },
     "autoload-dev": {
         "psr-4": {
@@ -71,6 +75,7 @@
         "primavera/persistence": "self.version",
         "primavera/container": "self.version",
         "primavera/http": "self.version",
-        "primavera/doctrine": "self.version"
+        "primavera/doctrine": "self.version",
+        "primavera/swoole": "self.version"
     }
 }

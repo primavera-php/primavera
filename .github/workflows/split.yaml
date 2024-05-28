@@ -70,6 +70,13 @@ jobs:
                     -
                         local_path: 'logger'
                         split_repository: 'logger'
+                    -
+                        local_path: 'doctrine'
+                        split_repository: 'doctrine'
+                    -
+                        local_path: 'swoole'
+                        split_repository: 'swoole'
+
                         
         steps:
             - uses: actions/checkout@v2

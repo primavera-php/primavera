@@ -12,6 +12,8 @@ use Primavera\Metadata\MethodMetadata;
 
 class RequestBodyResolver implements ParamResolverInterface
 {
+    use GetAcceptsTrait;
+
     private Serializer $serializer;
 
     private string $defaultFormat;
@@ -49,6 +51,8 @@ class RequestBodyResolver implements ParamResolverInterface
             }
 
             $argName = reset($annotatedParams)->name;
+        } else {
+            return [];
         }
 
         $type = $paramsMetadata[$argName]->type ?? $requestBody?->type;
@@ -59,7 +63,7 @@ class RequestBodyResolver implements ParamResolverInterface
 
         if (class_exists($type)) {
             $body = $this->serializer
-                ->deserialize($this->defaultFormat, $type, $request->getBody());
+                ->deserialize($this->getAcceptData($request) ?? $this->defaultFormat, $type, $request->getBody());
         } elseif (in_array($type, ['int', 'string', 'bool', 'float'])) {
             $body = match($type) {
                 'int' => (int) $request->getBody(),

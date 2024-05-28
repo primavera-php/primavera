@@ -1,0 +1,25 @@
+{
+    "name": "primavera/swoole",
+    "type": "library",
+    "require": {
+        "primavera/framework": "1.0",
+        "openswoole/core": "^22.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4",
+        "primavera/cache": "1.0",
+        "openswoole/ide-helper": "^22.1.5"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Primavera\\Swoole\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jhonatan Teixeira",
+            "email": "jhonatan.teixeira@gmail.com"
+        }
+    ]
+}

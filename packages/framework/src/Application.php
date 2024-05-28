@@ -76,7 +76,7 @@ class Application
     }
 
     public function getContainer(): Container {
-        return $this->container ??= $this->builder->build();
+        return $this->container ??= $this->getBuilder()->build();
     }
 
     public function run() {

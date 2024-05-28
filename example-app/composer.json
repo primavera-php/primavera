@@ -1,0 +1,52 @@
+{
+    "name": "primavera/swoole",
+    "type": "library",
+    "require": {
+        "doctrine/annotations": "^2",
+        "doctrine/cache": "^1",
+        "doctrine/dbal": "^4.0",
+        "friendsofphp/proxy-manager-lts": "^1",
+        "guzzlehttp/guzzle": "^7.3",
+        "monolog/monolog": "^2.2",
+        "opis/closure": "^3.6",
+        "php": ">=8.2",
+        "psr/cache": "^1",
+        "psr/container": "^1.0",
+        "psr/event-dispatcher": "^1",
+        "psr/simple-cache": "^1",
+        "slim/psr7": "^1.4",
+        "slim/slim": "^4",
+        "symfony/cache": ">=3.3",
+        "symfony/finder": "^5.1",
+        "symfony/yaml": "^3",
+        "doctrine/orm": "^3.0",
+        "openswoole/core": "^22.1",
+        "doctrine/migrations": "^3.7.4"
+    },
+    "require-dev": {
+        "openswoole/ide-helper": "^22.1.5"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Primavera\\ExampleApp\\": "src/",
+            "Primavera\\Swoole\\": "../packages/swoole/src\\",
+            "Primavera\\Container\\": "../packages/container/src\\",
+            "Primavera\\Cache\\": "../packages/cache/src\\",
+            "Primavera\\Data\\": "../packages/data/src\\",
+            "Primavera\\Event\\": "../packages/event/src\\",
+            "Primavera\\Framework\\": "../packages/framework/src\\",
+            "Primavera\\Log\\": "../packages/logger/src\\",
+            "Primavera\\Metadata\\": "../packages/metadata/src\\",
+            "Primavera\\Persistence\\": "../packages/persistence/src\\",
+            "Primavera\\Http\\": "../packages/http/src\\",
+            "Primavera\\Doctrine\\": "../packages/doctrine/src\\"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jhonatan Teixeira",
+            "email": "jhonatan.teixeira@gmail.com"
+        }
+    ]
+}

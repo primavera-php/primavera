@@ -42,7 +42,7 @@ class ConfigurationData implements \IteratorAggregate
         return $this->data;
     }
 
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \RecursiveIteratorIterator(
             new class($this->data) extends \RecursiveArrayIterator {

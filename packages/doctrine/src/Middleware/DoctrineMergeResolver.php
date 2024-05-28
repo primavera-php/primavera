@@ -1,6 +1,6 @@
 <?php
 
-namespace Doctrine\Middleware;
+namespace Primavera\Doctrine\Middleware;
 
 use BadMethodCallException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -9,6 +9,7 @@ use Primavera\Container\Metadata\ParamMetadata;
 use Primavera\Data\SerializerInterface;
 use Primavera\Doctrine\Annotation\Merge;
 use Primavera\Framework\Exception\HttpNotFoundException;
+use Primavera\Framework\Middleware\GetAcceptsTrait;
 use Primavera\Framework\Stereotype\ParamResolverInterface;
 use Primavera\Metadata\ClassMetadata;
 use Primavera\Metadata\MethodMetadata;
@@ -17,6 +18,8 @@ use Psr\Http\Message\ServerRequestInterface;
 #[IgnoreScanner]
 class DoctrineMergeResolver implements ParamResolverInterface
 {
+    use GetAcceptsTrait;
+
     public function __construct(
         private EntityManagerInterface $em,
         private SerializerInterface $serializer,
@@ -56,7 +59,7 @@ class DoctrineMergeResolver implements ParamResolverInterface
                 throw new HttpNotFoundException("{$param->getType()} with {$merge->findBy} = {$value} not found for merge");
             }
 
-            $this->serializer->deserialize($request->getHeader('Accept')[0] ?? $this->defaultFormat, $entity, $request->getBody());
+            $this->serializer->deserialize($this->getAcceptData($request) ?? $this->defaultFormat, $entity, $request->getBody());
 
             $resolved[$param->name] = $entity;
         }

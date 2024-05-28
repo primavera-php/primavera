@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Primavera\Cache\Factory;
 use Primavera\Container\Annotation\Autowired;
 use Primavera\Container\Factory\ContainerBuilder;
+use Primavera\Doctrine\Annotation\Merge;
 use Primavera\Doctrine\Test\Entity\Phone;
 use Primavera\Doctrine\Test\Entity\User;
 use Primavera\Doctrine\Test\Repository\UserRepository;
@@ -135,7 +136,6 @@ class ControllerTest extends TestCase
                 'id' => 4,
                 'phones' => [
                     [...$this->addedData['mathews']['phones'][0], 'id' => 4],
-
                 ]
             ],
             json_decode($data->getBody()->getContents(), true)
@@ -147,6 +147,10 @@ class ControllerTest extends TestCase
         $data = $this->put('/users/2', $putData = [...$this->data['lars'], 'type' => 'bad drummer']);
 
         $this->assertEquals($putData, json_decode($data->getBody()->getContents(), true));
+
+        $lars = $this->em->find(User::class, 2);
+
+        $this->assertEquals('bad drummer', $lars->type);
     }
 
     public function testShouldDeleteOne() 
@@ -187,7 +191,7 @@ class UserController
     }
 
     #[Post]
-    public function post(User $data) 
+    public function post(#[RequestBody] User $data) 
     {
         $this->usersRepository->save($data);
 
@@ -195,7 +199,7 @@ class UserController
     }
 
     #[Put('{id}')]
-    public function put(int $id, #[RequestBody] User $data) 
+    public function put(int $id, #[Merge] User $data) 
     {
         $data->id = $id;
 

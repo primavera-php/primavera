@@ -52,7 +52,7 @@ class FooController
     }
 
     #[Post]
-    public function post(FooDto $data) {
+    public function post(#[RequestBody] FooDto $data) {
         return $this->service->post($data);
     }
 

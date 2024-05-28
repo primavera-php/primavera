@@ -11,6 +11,8 @@ use Primavera\Data\Formatter\ToFormatInterface;
 
 class Serializer implements SerializerInterface
 {
+    use GetFormatTrait;
+
     private array $formats = [];
 
     private ComposableObjectExtractorInterface $extractor;
@@ -64,6 +66,7 @@ class Serializer implements SerializerInterface
 
     public function serialize(string $format, $data, array &$context = []) {
         $data = $this->extractor->extract($data, $context);
+        $format = $this->getFormat($format);
 
         $this->checkFormatter($format, true, false);
 
@@ -71,6 +74,8 @@ class Serializer implements SerializerInterface
     }
 
     public function deserialize(string $format, $object, $data, array &$context = []) {
+        $format = $this->getFormat($format);
+
         $this->checkFormatter($format, false, true);
 
         $data = $this->formats[$format]->fromFormat($data, $context);
