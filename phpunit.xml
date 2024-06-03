@@ -46,6 +46,10 @@
         <testsuite name="doctrine">
             <directory>packages/doctrine/tests</directory>
         </testsuite>
+
+        <testsuite name="process">
+            <directory>packages/process/tests</directory>
+        </testsuite>
     </testsuites>
 
     <filter>

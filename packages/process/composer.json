@@ -1,0 +1,21 @@
+{
+    "name": "vox/concurrent-futures",
+    "description": "Use concurrent multiple process on a python like interface.",
+    "licence": "MIT",
+    "authors": [
+        {
+            "name": "Jhonatan Teixeira",
+            "email": "jhonatan.teixeira@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Primavera\\Process\\": "src" }
+    },
+    "require": {
+        "php": ">=8.2",
+        "ext-pcntl": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    }
+}

@@ -2,7 +2,7 @@
 
 namespace Primavera\Metadata;
 
-interface MetadataInterface extends \Serializable
+interface MetadataInterface
 {
     #[\ReturnTypeWillChange]
     public function getReflection(): \ReflectionClass | \ReflectionProperty | \ReflectionMethod | \ReflectionParameter | \ReflectionFunction;

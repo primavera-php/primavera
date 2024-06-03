@@ -4,6 +4,7 @@ namespace Primavera\Container;
 
 use Primavera\Container\Annotation\Configuration;
 use Primavera\Container\Annotation\Imports;
+use Primavera\Container\Annotation\Transient;
 use Primavera\Container\Event\AfterInstanceBeanEvent;
 use Primavera\Container\Event\BeforeInstanceBeanEvent;
 use Primavera\Container\Factory\StereotypeFactoryInterface;
@@ -139,8 +140,15 @@ class Container implements ContainerInterface, \IteratorAggregate
      */
     public function get(string $id) 
     {
-        if (isset($this->beans[$id])) {
+        $isTransitent = (isset($this->methodMetadatas[$id]) && $this->methodMetadatas[$id]->hasAnnotation(Transient::class)) 
+            || (isset($this->metadatas[$id]) && $this->metadatas[$id]->hasAnnotation(Transient::class));
+
+        if (isset($this->beans[$id]) && !$isTransitent) {
             return $this->beans[$id];
+        }
+
+        if ($isTransitent) {
+            return $this->newInstance($id);
         }
 
         $this->beans[$id] = $bean = $this->newInstance($id);
@@ -270,6 +278,11 @@ class Container implements ContainerInterface, \IteratorAggregate
         $data = [];
 
         foreach ($this->getMetadadasByStereotype($stereotype) as $id => $metadata) {
+            if ($metadata->hasAnnotation(Transient::class) 
+                || (isset($this->methodMetadatas[$id]) && $this->methodMetadatas[$id]->hasAnnotation(Transient::class))) {
+                continue;
+            }
+
             $data[$id] = $this->get($id);
         }
 

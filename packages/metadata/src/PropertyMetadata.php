@@ -2,7 +2,7 @@
 
 namespace Primavera\Metadata;
 
-class PropertyMetadata implements ClassComponentMetadataInterface, \Serializable
+class PropertyMetadata implements ClassComponentMetadataInterface
 {
     use AnnotationsTrait;
     
@@ -93,9 +93,9 @@ class PropertyMetadata implements ClassComponentMetadataInterface, \Serializable
         return $this->name;
     }
 
-    public function serialize(): ?string
+    public function __serialize(): array
     {
-        return serialize([
+        return [
             $this->class,
             $this->name,
             $this->type,
@@ -103,10 +103,10 @@ class PropertyMetadata implements ClassComponentMetadataInterface, \Serializable
             $this->annotations,
             $this->getter,
             $this->setter,
-        ]);
+        ];
     }
 
-    public function unserialize(string $data): void
+    public function __unserialize(array $data): void
     {
         [
             $this->class,
@@ -116,6 +116,6 @@ class PropertyMetadata implements ClassComponentMetadataInterface, \Serializable
             $this->annotations,
             $this->getter,
             $this->setter,
-        ] = unserialize($data);
+        ] = $data;
     }
 }

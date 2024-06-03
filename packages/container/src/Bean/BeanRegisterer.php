@@ -234,7 +234,8 @@ class BeanRegisterer
     public function postProccess()
     {
         foreach ($this->container->getComponentsByStereotype(PostBeanProcessor::class) as $component) {
-            $invokeMetadata = $this->container->getMetadata(get_class($component))->getMethodMetadata()['__invoke'] ?? throw new ContainerException('post p´rocessor must be a invokable class');
+            $invokeMetadata = $this->container->getMetadata($component::class)->getMethodMetadata()['__invoke'] 
+                ?? throw new ContainerException('post processor must be a invokable class');
             $params = array_map(fn($p) => $this->container->get($p->getId()), $invokeMetadata->getParams());
 
             $component(...$params);

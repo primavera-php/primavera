@@ -23,7 +23,8 @@
             "Primavera\\Persistence\\": "packages/persistence/src\\",
             "Primavera\\Http\\": "packages/http/src\\",
             "Primavera\\Doctrine\\": "packages/doctrine/src\\",
-            "Primavera\\Swoole\\": "packages/swoole/src\\"
+            "Primavera\\Swoole\\": "packages/swoole/src\\",
+            "Primavera\\Process\\": "packages/process/src\\"
         }
     },
     "require": {
@@ -76,6 +77,7 @@
         "primavera/container": "self.version",
         "primavera/http": "self.version",
         "primavera/doctrine": "self.version",
-        "primavera/swoole": "self.version"
+        "primavera/swoole": "self.version",
+        "primavera/process": "self.version"
     }
 }

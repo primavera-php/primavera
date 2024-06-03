@@ -3,7 +3,7 @@
 namespace Primavera\Metadata;
 use Error;
 
-class ParamMetadata implements TypedComponentMetadataInterface, \Serializable
+class ParamMetadata implements TypedComponentMetadataInterface
 {
     use ResolveTypeTrait, AnnotationsTrait;
 
@@ -63,7 +63,7 @@ class ParamMetadata implements TypedComponentMetadataInterface, \Serializable
         return $this->function;
     }
 
-    public function unserialize(string $data)
+    public function __unserialize(array $data): void
     {
         [
             $this->class,
@@ -73,12 +73,12 @@ class ParamMetadata implements TypedComponentMetadataInterface, \Serializable
             $this->typeInfo,
             $this->annotations,
             $this->metadata,
-        ] = unserialize($data);
+        ] = $data;
     }
 
-    public function serialize(): ?string
+    public function __serialize(): array
     {
-        return serialize([
+        return [
             $this->class,
             $this->function,
             $this->name,
@@ -86,7 +86,7 @@ class ParamMetadata implements TypedComponentMetadataInterface, \Serializable
             $this->typeInfo,
             $this->annotations,
             $this->metadata,
-        ]);
+        ];
     }
 
     public function loadAnnotations()

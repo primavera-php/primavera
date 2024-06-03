@@ -76,9 +76,9 @@ class ClassMetadata implements ClassMetadataInterface
         $this->propertyMetadata[$propertyMetadata->name] = $propertyMetadata;
     }
 
-    public function serialize(): ?string
+    public function __serialize(): array
     {
-        return serialize([
+        return [
             $this->name,
             $this->methodMetadata,
             $this->propertyMetadata,
@@ -89,10 +89,10 @@ class ClassMetadata implements ClassMetadataInterface
             $this->hierarchy,
             $this->type,
             $this->typeInfo,
-        ]);
+        ];
     }
 
-    public function unserialize(string $data)
+    public function __unserialize(array $data)
     {
         [
             $this->name,
@@ -105,7 +105,7 @@ class ClassMetadata implements ClassMetadataInterface
             $this->hierarchy,
             $this->type,
             $this->typeInfo,
-        ] = unserialize($data);
+        ] = $data;
     }
  
     public function merge(ClassMetadataInterface $object): void

@@ -4,7 +4,7 @@ namespace Primavera\Metadata;
 
 use Metadata\MethodMetadata as BaseMetadata;
 
-class MethodMetadata implements MethodMetadataInterface, \Serializable
+class MethodMetadata implements MethodMetadataInterface
 {
     use AnnotationsTrait, ResolveTypeTrait, ResolveParamsTrait;
     
@@ -54,19 +54,19 @@ class MethodMetadata implements MethodMetadataInterface, \Serializable
         return $this->getReflection()->invoke(...$args);
     }
 
-    public function serialize(): ?string
+    public function __serialize(): array
     {
-        return serialize([
+        return [
             $this->class, 
             $this->name,
             $this->annotations,
             $this->type,
             $this->typeInfo,
             $this->params,
-        ]);
+        ];
     }
 
-    public function unserialize(string $data)
+    public function __unserialize(array $data)
     {
         [
             $this->class, 
@@ -75,6 +75,6 @@ class MethodMetadata implements MethodMetadataInterface, \Serializable
             $this->type,
             $this->typeInfo,
             $this->params,
-        ] = unserialize($data);
+        ] = $data;
     }
 }
