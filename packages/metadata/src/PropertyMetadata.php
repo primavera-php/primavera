@@ -2,7 +2,7 @@
 
 namespace Primavera\Metadata;
 
-class PropertyMetadata implements ClassComponentMetadataInterface
+class PropertyMetadata implements ClassComponentMetadataInterface, ValueHolderInterface
 {
     use AnnotationsTrait;
     
@@ -73,13 +73,23 @@ class PropertyMetadata implements ClassComponentMetadataInterface
         return !empty($this->adder);
     }
 
-    public function getValue(object $object)
+    public function getValue(?object $object)
     {
+        if (!$object) {
+            return $this->getReflection()->getDeclaringClass()->getStaticPropertyValue($this->name);
+        }
+
         return $this->getReflection()->getValue($object);
     }
 
-    public function setValue(object $object, mixed $value): void
+    public function setValue(?object $object, $value): void
     {
+        if (!$object) {
+            $this->getReflection()->getDeclaringClass()->setStaticPropertyValue($this->name, $value);
+
+            return;
+        }
+
         $this->getReflection()->setValue($object, $value);
     }
 
@@ -91,6 +101,11 @@ class PropertyMetadata implements ClassComponentMetadataInterface
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function isStatic(): bool
+    {
+        return $this->getReflection()->isStatic();
     }
 
     public function __serialize(): array

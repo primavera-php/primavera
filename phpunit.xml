@@ -50,6 +50,10 @@
         <testsuite name="process">
             <directory>packages/process/tests</directory>
         </testsuite>
+
+        <testsuite name="commons">
+            <directory>packages/commons/tests</directory>
+        </testsuite>
     </testsuites>
 
     <filter>

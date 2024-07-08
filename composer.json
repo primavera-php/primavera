@@ -24,7 +24,8 @@
             "Primavera\\Http\\": "packages/http/src\\",
             "Primavera\\Doctrine\\": "packages/doctrine/src\\",
             "Primavera\\Swoole\\": "packages/swoole/src\\",
-            "Primavera\\Process\\": "packages/process/src\\"
+            "Primavera\\Process\\": "packages/process/src\\",
+            "Primavera\\Commons\\": "packages/commons/src\\"
         }
     },
     "require": {
@@ -78,6 +79,7 @@
         "primavera/http": "self.version",
         "primavera/doctrine": "self.version",
         "primavera/swoole": "self.version",
-        "primavera/process": "self.version"
+        "primavera/process": "self.version",
+        "primavera/commons": "self.version"
     }
 }

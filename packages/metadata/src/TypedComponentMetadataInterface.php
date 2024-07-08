@@ -13,4 +13,6 @@ interface TypedComponentMetadataInterface extends MetadataInterface
     public function getRealType(): null | string | array;
 
     public function getTypeInfo(): ?array;
+
+    public function isNativeType(): bool;
 }

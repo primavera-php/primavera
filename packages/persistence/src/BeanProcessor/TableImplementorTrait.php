@@ -5,14 +5,14 @@ namespace Primavera\Persistence\BeanProcessor;
 use Laminas\Code\Generator\ClassGenerator;
 use Laminas\Code\Generator\MethodGenerator;
 use Laminas\Code\Reflection\MethodReflection;
-use Primavera\Container\Metadata\ClassMetadata;
+use Primavera\Metadata\ClassMetadataInterface;
 use Primavera\Persistence\Annotation\Table;
 
 trait TableImplementorTrait
 {
     abstract public function getStereotypeName(): string;
 
-    public function implementTable(ClassMetadata $classMetadata, ClassGenerator $classGenerator)
+    public function implementTable(ClassMetadataInterface $classMetadata, ClassGenerator $classGenerator)
     {
         $table = $classMetadata->getAnnotation(Table::class);
         $stereotype = $classMetadata->getAnnotation($this->getStereotypeName());

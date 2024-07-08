@@ -4,12 +4,10 @@ namespace Primavera\Persistence\BeanProcessor;
 
 use Laminas\Code\Generator\ClassGenerator;
 use Laminas\Code\Generator\MethodGenerator;
-use Laminas\Code\Reflection\MethodReflection;
 use Primavera\Container\Annotation\IgnoreScanner;
 use Primavera\Container\Bean\AbstractInterfaceImplementor;
-use Primavera\Container\Metadata\ClassMetadata;
-use Primavera\Metadata\MethodMetadata;
-use Primavera\Persistence\Annotation\Table;
+use Primavera\Metadata\ClassMetadataInterface;
+use Primavera\Metadata\MethodMetadataInterface;
 use Primavera\Persistence\Parser\ParserInterface;
 use Primavera\Persistence\Repository\DbalBaseRepository;
 use Primavera\Persistence\Stereotype\Repository;
@@ -31,7 +29,7 @@ class DbalRepositoryImplementor extends AbstractInterfaceImplementor
         return Repository::class;
     }
 
-    protected function postProcess(ClassMetadata $classMetadata, ClassGenerator $classGenerator)
+    protected function postProcess(ClassMetadataInterface $classMetadata, ClassGenerator $classGenerator)
     {
         $classGenerator->setExtendedClass(DbalBaseRepository::class);
         
@@ -54,8 +52,8 @@ class DbalRepositoryImplementor extends AbstractInterfaceImplementor
         ];
     }
 
-    public function implementMethodBody(MethodGenerator $methodGenerator, MethodMetadata $metadata,
-                                        ClassMetadata $classMetadata): string
+    public function implementMethodBody(MethodGenerator $methodGenerator, MethodMetadataInterface $metadata,
+                                        ClassMetadataInterface $classMetadata): string
     {
         $exprs = $this->parser->parse($metadata);
         $operation = array_shift($exprs)['operation'];

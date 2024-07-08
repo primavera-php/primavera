@@ -2,6 +2,7 @@
 
 namespace Primavera\Metadata\Factory;
 
+use IteratorAggregate;
 use Primavera\Metadata\ClassMetadataInterface;
 use Primavera\Metadata\PropertyMetadata;
 use Primavera\Metadata\MethodMetadataInterface;
@@ -11,10 +12,12 @@ use Primavera\Metadata\MethodMetadataInterface;
  * @template P of PropertyMetadata
  * @template M of MethodMetadataInterface
  */
-interface MetadataFactoryInterface
+interface MetadataFactoryInterface extends IteratorAggregate
 {
     /**
-     * @return T
+     * @return T<P, M>
      */
     public function getMetadataForClass(string $className): ClassMetadataInterface;
+
+    public function loadFromFolder(string $folder = null): MetadataFactoryInterface;
 }

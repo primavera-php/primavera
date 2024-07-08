@@ -3,12 +3,12 @@
 
 namespace Primavera\Framework\Middleware;
 
-use Primavera\Container\Metadata\ClassMetadata;
 use Primavera\Http\Stereotype\RequestBody;
+use Primavera\Metadata\ClassMetadataInterface;
+use Primavera\Metadata\MethodMetadataInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Primavera\Data\Serializer;
 use Primavera\Framework\Stereotype\ParamResolverInterface;
-use Primavera\Metadata\MethodMetadata;
 
 class RequestBodyResolver implements ParamResolverInterface
 {
@@ -24,7 +24,7 @@ class RequestBodyResolver implements ParamResolverInterface
         $this->defaultFormat = $defaultFormat;
     }
 
-    public function resolve(ClassMetadata $controllerMetadata, MethodMetadata $methodMetadata,
+    public function resolve(ClassMetadataInterface $controllerMetadata, MethodMetadataInterface $methodMetadata,
                             ServerRequestInterface $request, array $args): array {
         if (!in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'])) {
             return [];

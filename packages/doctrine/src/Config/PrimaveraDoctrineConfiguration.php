@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Repository\DefaultRepositoryFactory;
-use Primavera\Container\Annotation\Bean;
+use Primavera\Container\Annotation\Factory;
 use Primavera\Container\Annotation\Configurator;
 use Primavera\Container\Annotation\Injects;
 use Primavera\Container\Bean\BeanRegisterer;
@@ -31,7 +31,7 @@ class PrimaveraDoctrineConfiguration
             ->addComponent(DoctrineMergeResolver::class);
     }
 
-    #[Bean]
+    #[Factory]
     public function entityManager(ConfigurationData $configurationData, RepositoryFactory $repositoryFactory, #[Injects('debug')] $debug = false): EntityManager
     {
         $config = match ($configurationData->doctrine->metadataDriver ?? 'annotation') {

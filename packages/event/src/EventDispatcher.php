@@ -3,13 +3,12 @@
 namespace Primavera\Event;
 
 use Opis\Closure\SerializableClosure;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\EventDispatcher\ListenerProviderInterface;
+use Psr\EventDispatcher\StoppableEventInterface;
 
-class EventDispatcher implements EventDispatcherInterface, ListenerProviderInterface
+class EventDispatcher implements EventDispatcherInterface
 {
     /**
-     * @var callable[object]
+     * @var callable(object)[]
      */
     private array $listeners = [];
     
@@ -17,7 +16,11 @@ class EventDispatcher implements EventDispatcherInterface, ListenerProviderInter
     {
         foreach ($this->getListenersForEvent($event) as $listener) {
             $listener($event);
-        } 
+
+            if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
+                break;
+            }
+        }
     }
 
     public function getListenersForEvent(object $event): iterable 

@@ -2,16 +2,24 @@
 
 namespace Primavera\Metadata\Factory;
 
+use ArrayIterator;
+use FilesystemIterator;
+use Primavera\Metadata\FileReflection;
 use Psr\SimpleCache\CacheInterface;
 use Primavera\Metadata\ClassMetadataInterface;
 use Primavera\Metadata\Driver\DriverInterface;
 use Primavera\Metadata\PropertyMetadata;
 use Primavera\Metadata\MethodMetadataInterface;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use Traversable;
 
 /**
  * @template T of ClassMetadataInterface<P, M>
  * @template P of PropertyMetadata
  * @template M of MethodMetadataInterface
+ * 
+ * @extends \IteratorAggregate<T>
  */
 class MetadataFactory implements MetadataFactoryInterface
 {
@@ -62,5 +70,30 @@ class MetadataFactory implements MetadataFactoryInterface
     private function getCacheKey(string $className)
     {
         return $this->cachePrefix . str_replace("\\", '.', $className);
+    }
+
+    public function loadFromFolder(string $folder = null): MetadataFactoryInterface
+    {
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($folder ?? getcwd(), FilesystemIterator::CURRENT_AS_PATHNAME | FilesystemIterator::SKIP_DOTS)
+        );
+
+        foreach ($files as $file) {
+            $file = new FileReflection($file);
+
+            foreach ($file->getClasses() as $class) {
+                $this->getMetadataForClass($class->name);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return T[]
+     */
+    public function getIterator(): Traversable
+    {
+        return new ArrayIterator($this->metadatas);
     }
 }

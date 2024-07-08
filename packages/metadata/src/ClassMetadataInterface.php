@@ -3,8 +3,8 @@
 namespace Primavera\Metadata;
 
 /**
- * @template P
- * @template M
+ * @template P of ClassComponentMetadataInterface & ValueHolderInterface
+ * @template M of MethodMetadataInterface
  */
 interface ClassMetadataInterface extends MetadataInterface
 {
@@ -15,9 +15,9 @@ interface ClassMetadataInterface extends MetadataInterface
     public function merge(ClassMetadataInterface $object): void;
 
     /**
-     * @return M[]
+     * @return M[] | M
      */
-    public function getMethodMetadata(): array;
+    public function getMethodMetadata(string $name = null): array | MethodMetadataInterface;
 
     /**
      * @return P[]
@@ -52,4 +52,15 @@ interface ClassMetadataInterface extends MetadataInterface
 
     public function getGenericsInfo(): ?array;
 
+    public function getNamespace(): ?string;
+
+    /**
+     * @return M[]
+     */
+    public function getAnnotatedMethodsMetadata(string $annotation): array;
+
+    /**
+     * @return P[]
+     */
+    public function getAnnotatedPropertiesMetadata(string $annotation): array;
 }

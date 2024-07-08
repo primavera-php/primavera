@@ -6,8 +6,8 @@ use Laminas\Code\Generator\ClassGenerator;
 use Laminas\Code\Generator\MethodGenerator;
 use Primavera\Container\Annotation\IgnoreScanner;
 use Primavera\Container\Bean\AbstractInterfaceImplementor;
-use Primavera\Container\Metadata\ClassMetadata;
-use Primavera\Metadata\MethodMetadata;
+use Primavera\Metadata\ClassMetadataInterface;
+use Primavera\Metadata\MethodMetadataInterface;
 use Primavera\Persistence\Parser\ParserInterface;
 use Primavera\Persistence\Persister\DbalBasePersister;
 use Primavera\Persistence\Stereotype\Persister;
@@ -29,7 +29,7 @@ class DbalPersisterImplementor extends AbstractInterfaceImplementor
         return Persister::class;
     }
 
-    protected function postProcess(ClassMetadata $classMetadata, ClassGenerator $classGenerator)
+    protected function postProcess(ClassMetadataInterface $classMetadata, ClassGenerator $classGenerator)
     {
         $classGenerator->setExtendedClass(DbalBasePersister::class);
 
@@ -53,8 +53,8 @@ class DbalPersisterImplementor extends AbstractInterfaceImplementor
         ];
     }
 
-    public function implementMethodBody(MethodGenerator $methodGenerator, MethodMetadata $metadata,
-                                        ClassMetadata $classMetadata): string
+    public function implementMethodBody(MethodGenerator $methodGenerator, MethodMetadataInterface $metadata,
+                                        ClassMetadataInterface $classMetadata): string
     {
         $exprs = $this->parser->parse($metadata);
         $operation = array_shift($exprs)['operation'];

@@ -5,10 +5,9 @@ namespace Primavera\Framework\Processor;
 
 
 use Primavera\Framework\Stereotype\PreDispatch;
+use Primavera\Metadata\ClassMetadataInterface;
 use Primavera\Metadata\Factory\MetadataFactory;
-use Primavera\Container\Metadata\ClassMetadata;
 use Primavera\Container\Processor\AbstractStereotypeProcessor;
-use Psr\Http\Message\ResponseInterface;
 use Slim\App;
 use Slim\Interfaces\RouteInterface;
 use Primavera\Event\EventDispatcher;
@@ -41,7 +40,7 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
     private function processMiddleware(
         RouteInterface $route,
         MethodMetadata $methodMetadata,
-        ClassMetadata $classMetadata
+        ClassMetadataInterface $classMetadata
     ) {
         foreach (array_filter([...$classMetadata->getAnnotations(), ...$methodMetadata->getAnnotations()], fn($a) => $a instanceof UseMiddleware) as $annotation) {
             $route->add(
@@ -64,7 +63,7 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
         /* @var $app App */
         $app = $this->getContainer()->get(App::class);
 
-        /* @var $controllerMetadata ClassMetadata */
+        /* @var $controllerMetadata ClassMetadataInterface */
         $controllerMetadata = $this->metadataFactory->getMetadataForClass(get_class($stereotype));
 
         /* @var $config \Primavera\Framework\Stereotype\Controller */

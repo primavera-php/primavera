@@ -1,6 +1,7 @@
 <?php
 
 namespace Primavera\Metadata;
+use OutOfBoundsException;
 
 class ClassMetadata implements ClassMetadataInterface
 {
@@ -41,6 +42,8 @@ class ClassMetadata implements ClassMetadataInterface
 
     public int $createdAt;
 
+    public string $namespace;
+
     public function __construct(\ReflectionClass $class)
     {
         $this->name = $class->name;
@@ -48,6 +51,8 @@ class ClassMetadata implements ClassMetadataInterface
         $this->createdAt = time();
         $this->interfaces = $class->getInterfaceNames();
         $this->fileResources = [$class->getFileName()];
+        $this->namespace = $class->getNamespaceName();
+
         $this->resolveType();
     }
 
@@ -75,52 +80,7 @@ class ClassMetadata implements ClassMetadataInterface
     {
         $this->propertyMetadata[$propertyMetadata->name] = $propertyMetadata;
     }
-
-    public function __serialize(): array
-    {
-        return [
-            $this->name,
-            $this->methodMetadata,
-            $this->propertyMetadata,
-            $this->fileResources,
-            $this->createdAt,
-            $this->annotations,
-            $this->interfaces,
-            $this->hierarchy,
-            $this->type,
-            $this->typeInfo,
-        ];
-    }
-
-    public function __unserialize(array $data)
-    {
-        [
-            $this->name,
-            $this->methodMetadata,
-            $this->propertyMetadata,
-            $this->fileResources,
-            $this->createdAt,
-            $this->annotations,
-            $this->interfaces,
-            $this->hierarchy,
-            $this->type,
-            $this->typeInfo,
-        ] = $data;
-    }
  
-    public function merge(ClassMetadataInterface $object): void
-    {
-        $this->methodMetadata = array_merge($object->getMethodMetadata(), $this->methodMetadata);
-        $this->propertyMetadata = array_merge($object->getPropertyMetadata(), $this->propertyMetadata);
-        $this->fileResources = array_merge($object->getFileResources(), $this->fileResources);
-        $this->annotations = array_merge($object->getAnnotations(), $this->annotations);
-        $this->hierarchy = [...$object->getHierarchy(), $object->getName()];
-
-        if ($object->getCreatedAt() < $this->createdAt) {
-            $this->createdAt = $object->getCreatedAt();
-        }
-    }
-
     public function getName(): string
     {
         return $this->name;
@@ -129,8 +89,12 @@ class ClassMetadata implements ClassMetadataInterface
     /**
      * @return MethodMetadata[]
      */
-    public function getMethodMetadata(): array
+    public function getMethodMetadata(string $name = null): array | MethodMetadataInterface
     {
+        if ($name) {
+            return $this->methodMetadata[$name] ?? throw new OutOfBoundsException("method $name doesn't exists on {$this->name}");
+        }
+
         return $this->methodMetadata;
     }
 
@@ -201,4 +165,67 @@ class ClassMetadata implements ClassMetadataInterface
     {
         return $this->typeInfo;
     }
+
+    public function getNamespace(): string
+    {
+        return $this->namespace;
+    }
+
+    public function getAnnotatedMethodsMetadata(string $annotation): array
+    {
+        return array_filter($this->methodMetadata, fn($m) => $m->hasAnnotation($annotation));
+    }
+
+    public function getAnnotatedPropertiesMetadata(string $annotation): array
+    {
+        return array_filter($this->propertyMetadata, fn($p) => $p->hasAnnotation($annotation));
+    }
+
+    public function merge(ClassMetadataInterface $object): void
+    {
+        $this->methodMetadata = array_merge($object->getMethodMetadata(), $this->methodMetadata);
+        $this->propertyMetadata = array_merge($object->getPropertyMetadata(), $this->propertyMetadata);
+        $this->fileResources = array_merge($object->getFileResources(), $this->fileResources);
+        $this->annotations = array_merge($object->getAnnotations(), $this->annotations);
+        $this->hierarchy = [...$object->getHierarchy(), $object->getName()];
+
+        if ($object->getCreatedAt() < $this->createdAt) {
+            $this->createdAt = $object->getCreatedAt();
+        }
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            $this->name,
+            $this->methodMetadata,
+            $this->propertyMetadata,
+            $this->fileResources,
+            $this->createdAt,
+            $this->annotations,
+            $this->interfaces,
+            $this->hierarchy,
+            $this->type,
+            $this->typeInfo,
+            $this->namespace,
+        ];
+    }
+
+    public function __unserialize(array $data)
+    {
+        [
+            $this->name,
+            $this->methodMetadata,
+            $this->propertyMetadata,
+            $this->fileResources,
+            $this->createdAt,
+            $this->annotations,
+            $this->interfaces,
+            $this->hierarchy,
+            $this->type,
+            $this->typeInfo,
+            $this->namespace,
+        ] = $data;
+    }
+
 }

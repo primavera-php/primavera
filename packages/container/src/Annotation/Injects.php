@@ -5,10 +5,10 @@ namespace Primavera\Container\Annotation;
 #[\Attribute(\Attribute::TARGET_PARAMETER)]
 class Injects
 {
-    public string $beanId;
+    public string $id;
 
-    public function __construct(string $beanId)
+    public function __construct(string $id)
     {
-        $this->beanId = $beanId;
+        $this->id = $id;
     }
 }

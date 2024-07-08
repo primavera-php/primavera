@@ -5,7 +5,7 @@ namespace Primavera\Framework\Test;
 
 
 use Primavera\Container\Annotation\Autowired;
-use Primavera\Container\Metadata\ClassMetadata;
+use Primavera\Metadata\ClassMetadataInterface;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestSuite;
@@ -23,7 +23,7 @@ use Primavera\Container\Metadata\ParamMetadata;
 class TestListener implements \PHPUnit\Framework\TestListener
 {
     /**
-     * @var ?MetadataFactory<ClassMetadata<PropertyMetadata, MethodMetadata<ParamMetadata>>>
+     * @var ?MetadataFactory<ClassMetadataInterface<PropertyMetadata, MethodMetadata<ParamMetadata>>>
      */
     private ?MetadataFactory $metadataFactory = null;
     private ?Prophet $prophet = null;
@@ -62,7 +62,7 @@ class TestListener implements \PHPUnit\Framework\TestListener
     public function startTestSuite(TestSuite $suite): void
     {
         $this->metadataFactory = (new MetadataFactoryFactory)
-            ->createAnnotationMetadataFactory(ClassMetadata::class);
+            ->createAnnotationMetadataFactory();
         $this->prophet = new Prophet();
     }
 

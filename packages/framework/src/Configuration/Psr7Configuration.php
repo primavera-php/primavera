@@ -2,7 +2,7 @@
 
 namespace Primavera\Framework\Configuration;
 
-use Primavera\Container\Annotation\Bean;
+use Primavera\Container\Annotation\Factory;
 use Primavera\Container\Annotation\Configuration;
 use Slim\App;
 use Slim\Factory\AppFactory;
@@ -13,26 +13,26 @@ use Slim\Psr7\Factory\StreamFactory;
 #[Configuration]
 class Psr7Configuration
 {
-    #[Bean]
+    #[Factory]
     public function app(): App
     {
         return AppFactory::create();
     }
 
 
-    #[Bean]
+    #[Factory]
     public function responseFactory(): ResponseFactory
     {
         return new ResponseFactory();
     }
 
-    #[Bean]
+    #[Factory]
     public function requestFactory(): RequestFactory
     {
         return new RequestFactory();
     }
 
-    #[Bean]
+    #[Factory]
     public function streamFactory(): StreamFactory
     {
         return new StreamFactory();

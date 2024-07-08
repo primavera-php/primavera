@@ -6,3 +6,4 @@ build
 *.log
 *.db
 *_test.php
+*_old

@@ -4,12 +4,12 @@
 namespace Primavera\Framework\Stereotype;
 
 
-use Primavera\Container\Metadata\ClassMetadata;
+use Primavera\Metadata\ClassMetadataInterface;
+use Primavera\Metadata\MethodMetadataInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Primavera\Metadata\MethodMetadata;
 
 interface ParamResolverInterface
 {
-    public function resolve(ClassMetadata $controllerMetadata, MethodMetadata $methodMetadata,
+    public function resolve(ClassMetadataInterface $controllerMetadata, MethodMetadataInterface $methodMetadata,
                             ServerRequestInterface $request, array $args): array;
 }

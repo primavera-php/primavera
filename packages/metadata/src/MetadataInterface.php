@@ -4,7 +4,6 @@ namespace Primavera\Metadata;
 
 interface MetadataInterface
 {
-    #[\ReturnTypeWillChange]
     public function getReflection(): \ReflectionClass | \ReflectionProperty | \ReflectionMethod | \ReflectionParameter | \ReflectionFunction;
 
     public function getAnnotations(): array;

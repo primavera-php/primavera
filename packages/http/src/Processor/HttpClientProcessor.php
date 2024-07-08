@@ -7,7 +7,6 @@ use Laminas\Code\Generator\MethodGenerator;
 use Laminas\Code\Generator\ParameterGenerator;
 use Laminas\Code\Generator\PropertyGenerator;
 use Primavera\Container\Bean\AbstractInterfaceImplementor;
-use Primavera\Container\Metadata\ClassMetadata;
 use Primavera\Data\SerializerInterface;
 use Primavera\Http\HttpClientInterface;
 use Primavera\Http\Stereotype\Async;
@@ -21,7 +20,7 @@ use Primavera\Http\Stereotype\Put;
 use Primavera\Http\Stereotype\Query;
 use Primavera\Http\Stereotype\RemoteFormat;
 use Primavera\Http\Stereotype\RequestBody;
-use Primavera\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Metadata\ClassMetadataInterface;
 use Primavera\Metadata\MethodMetadata;
 use Psr\Http\Message\ResponseInterface;
 
@@ -32,7 +31,7 @@ class HttpClientProcessor extends AbstractInterfaceImplementor
         return HttpClient::class;
     }
 
-    public function implementMethodBody(MethodGenerator $methodGenerator, MethodMetadata $metadata, ClassMetadata $classMetadata): string
+    public function implementMethodBody(MethodGenerator $methodGenerator, MethodMetadata $metadata, ClassMetadataInterface $classMetadata): string
     {
         $codeLines = ['$args = get_defined_vars();', '$query = [];', '$headers = [];', '$data = null;'];
         $paramType = $metadata->getType();
@@ -91,7 +90,7 @@ class HttpClientProcessor extends AbstractInterfaceImplementor
         return implode("\n", $codeLines);
     }
 
-    public function postProcess(ClassMetadata $classMetadata, ClassGenerator $classGenerator)
+    public function postProcess(ClassMetadataInterface $classMetadata, ClassGenerator $classGenerator)
     {
         $uri = $classMetadata->getAnnotation(HttpClient::class)->uri;
 

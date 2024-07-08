@@ -51,6 +51,15 @@ class MetadataFactoryTest extends TestCase
         $this->doAssertions(unserialize($serialized), 'my name');
     }
 
+    public function testShouldLoadFolderMetadata()
+    {
+        $factory = (new MetadataFactoryFactory())->createAnnotationMetadataFactory();
+
+        foreach ($factory->loadFromFolder(__DIR__ . '/../') as $metadata) {
+            $this->assertRegExp('/(Primavera\\\Metadata\\\Test)|(PHPUnit\\\)/', $metadata->getNamespace());
+        }
+    }
+
     public function doAssertions(ClassMetadata $metadata, $name = 'default') {
         $this->assertInstanceOf(ClassMetadata::class, $metadata);
         $this->assertTrue($metadata->hasAnnotation(TestAnnotation::class));

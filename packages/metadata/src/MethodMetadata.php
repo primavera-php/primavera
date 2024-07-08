@@ -54,6 +54,11 @@ class MethodMetadata implements MethodMetadataInterface
         return $this->getReflection()->invoke(...$args);
     }
 
+    public function isStatic(): bool
+    {
+        return $this->getReflection()->isStatic();
+    }
+
     public function __serialize(): array
     {
         return [

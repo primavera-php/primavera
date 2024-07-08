@@ -2,343 +2,223 @@
 
 namespace Primavera\Container;
 
-use Primavera\Container\Annotation\Configuration;
-use Primavera\Container\Annotation\Imports;
-use Primavera\Container\Annotation\Transient;
-use Primavera\Container\Event\AfterInstanceBeanEvent;
-use Primavera\Container\Event\BeforeInstanceBeanEvent;
-use Primavera\Container\Factory\StereotypeFactoryInterface;
-use Primavera\Container\Metadata\ClassMetadata;
-use Psr\Container\ContainerInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Log\LoggerInterface;
+use IteratorAggregate;
+use Primavera\Commons\Collection\Collection;
+use Primavera\Commons\Collection\CollectionInterface;
+use Primavera\Commons\Collection\TreeCollection;
+use Primavera\Commons\Collection\UniqueCollection;
+use Primavera\Container\Annotation\Injects;
+use Primavera\Container\Event\AfterComponentRegisterEvent;
+use Primavera\Container\Event\AfterInstanceComponentEvent;
+use Primavera\Container\Event\BeforeComponentRegisterEvent;
+use Primavera\Container\Event\BeforeInstanceComponentEvent;
+use Primavera\Container\Exception\ContainerException;
+use Primavera\Container\Exception\NotFoundContainerException;
 use Primavera\Event\EventDispatcher;
-use Primavera\Log\Logger;
-use Primavera\Metadata\ClassMetadataInterface;
+use Primavera\Event\EventDispatcherInterface;
 use Primavera\Metadata\Factory\MetadataFactoryInterface;
-use Primavera\Metadata\MethodMetadata;
 use Primavera\Metadata\MethodMetadataInterface;
-use Primavera\Container\Metadata\ParamMetadata;
 
-class Container implements ContainerInterface, \IteratorAggregate
+class Container implements WritableContainerInterface, TransientContainerInterface, ScopedContainerInterface, IteratorAggregate
 {
-    /** 
-     * @var IdentifiedDataBag<ClassMetadata>
-     */
-    private IdentifiedDataBag $metadatas;
+    private AliasMapper $components;
 
     /**
-     *  @var IdentifiedDataBag<mixed> 
+     * @var class-string[]
      */
-    private IdentifiedDataBag $beans;
+    private UniqueCollection $transient;
 
     /**
-     *  @var IdentifiedDataBag<MethodMetadata>
+     * @var class-string[]
      */
-    private IdentifiedDataBag $methodMetadatas;
-
-    private array $interfaces = [];
+    private UniqueCollection $scoped;
 
     private array $statuses = [];
 
-    /**
-     * @var ClassMetadata[]
-     */
-    private array $stereotypeFactories = [];
+    private TreeCollection $stack;
 
-    /**
-     * @var ParamResolverInterceptorInterface[]
-     */
-    private array $paramResolverInterceptors = [];
+    private CollectionInterface $values;
 
-    private LoggerInterface $logger;
+    private const INSTANCING = 1;
 
-    private const INSTANTIATING = 1;
-    private const INSTANTIATED = 2;
-    private const ERROR = 3;
+    private const INSTANCED = 2;
 
     public function __construct(
-        /** @var MetadataFactoryInterface<\Primavera\Container\Metadata\ClassMetadata> */
         private MetadataFactoryInterface $metadataFactory,
         private EventDispatcherInterface $eventDispatcher = new EventDispatcher(),
-        private bool $debug = false,
     ) {
-        $this->initialize();
-    }
-
-    private function initialize()
-    {
-        $this->logger = Logger::getLogger(__CLASS__);
-
-        $this->metadatas ??= new IdentifiedDataBag($this->metadataFactory);
-        $this->beans ??= new IdentifiedDataBag($this->metadataFactory);
-        $this->methodMetadatas ??= new IdentifiedDataBag($this->metadataFactory);
-        
-        $this->set('container', $this);
-        $this->set(MetadataFactoryInterface::class, $this->metadataFactory);
-        $this->set(EventDispatcherInterface::class, $this->eventDispatcher);
-    }
-
-    public function set(mixed $id, mixed $value)
-    {
-        if ($value instanceof ClassMetadataInterface && $value->getReflection()->isInterface()) {
-            $this->interfaces[$id] = $value;
-        } elseif ($value instanceof ClassMetadataInterface) {
-            $this->metadatas[$id] = $value;
-
-            $annotations = $value->getAnnotations();
-
-            foreach ($annotations as $annotation) {
-                $annotMetadata = $this->metadataFactory->getMetadataForClass($annotation::class);
-
-                if ($annotMetadata->hasAnnotation(Imports::class) || $annotMetadata->getName() === Imports::class) {
-                    $imports = $annotMetadata->getName() === Imports::class 
-                        ? $annotation 
-                        : $annotMetadata->getAnnotation(Imports::class);
-
-                    foreach ($imports->configurations as $config) {
-                        $configMetadata = $this->metadataFactory->getMetadataForClass($config);
-                        $configMetadata->annotations[Configuration::class] = new Configuration();
-                        $this->set($configMetadata->name, $configMetadata);
-                    }
-                }
-            }
-
-            if ($value->instanceOf(StereotypeFactoryInterface::class)) {
-                if (!$value->hasGenerics()) {
-                    throw new ContainerException(
-                        "the Stereotype factory {$value->getName()} must have generics info using the @extends docblock, so the code can know what this builds"
-                    );
-                }
-
-                $this->stereotypeFactories[$value->getGenericsInfo()['decoration']] = $value;
-            }
-
-            if ($value->instanceOf(ParamResolverInterceptorInterface::class)) {
-                $this->paramResolverInterceptors[] = $this->get($value->getName());
-            }
-        } elseif ($value instanceof MethodMetadataInterface) {
-            $this->methodMetadatas[$id] = $value;
-
-            $this->metadatas[$id] = $this->metadataFactory->getMetadataForClass($value->getType());
-        } elseif (is_string($value) && interface_exists($value)) {
-            $this->interfaces[$id] = $this->metadataFactory->getMetadataForClass($value);
-        } else {
-            $this->beans[$id] = $value;
-            
-            if (is_object($value) && !$value instanceof self)
-                $this->metadatas[$id] = $this->metadataFactory->getMetadataForClass(get_class($value));
-        }
+        $this->components = new AliasMapper($metadataFactory);
+        $this->transient = new UniqueCollection();
+        $this->scoped = new UniqueCollection();
+        $this->values = new Collection();
+        $this->stack = new TreeCollection();
+        $this->set('metadata-factory', $metadataFactory);
+        $this->set('event-dispatcher', $eventDispatcher);
     }
 
     /**
      * @template T
      * 
-     * @param class-string<T> $id
+     * @param class-string<T> | string $id
      * 
      * @return T
      */
-    public function get(string $id) 
+    public function get(string $id)
     {
-        $isTransitent = (isset($this->methodMetadatas[$id]) && $this->methodMetadatas[$id]->hasAnnotation(Transient::class)) 
-            || (isset($this->metadatas[$id]) && $this->metadatas[$id]->hasAnnotation(Transient::class));
+        if ($this->values->has($id))
+            return $this->values->get($id);
 
-        if (isset($this->beans[$id]) && !$isTransitent) {
-            return $this->beans[$id];
-        }
-
-        if ($isTransitent) {
+        if (class_exists($id, true) && !$this->components->has($id))
             return $this->newInstance($id);
-        }
 
-        $this->beans[$id] = $bean = $this->newInstance($id);
+        $item = $this->components->get($id)[0] ?? throw new NotFoundContainerException($id);
 
-        if ($bean instanceof ContainerAwareInterface) {
-            $bean->setContainer($this);
-        }
+        if (is_string($item))
+            return $this->newInstance($item);
 
-        return $this->beans[$id];
+        return $item;
     }
 
-    public function has(string $id)
+    public function set(string $id, $value): self
     {
-        return isset($this->beans[$id])
-            || isset($this->metadatas[$id])
-            || isset($this->methodMetadatas[$id]);
-    }
+        if ($value instanceof MethodMetadataInterface) {
+            $this->addFactory($id, $value->getType(), $value);
 
-    private function newInstance(string $id)
-    {
-        if ($this->isIstantiating($id)) {
-            throw new CircularReferenceException($id);
+            return $this;
         }
 
-        $this->statuses[$id] = self::INSTANTIATING;
+        if ((is_object($value) || (is_string($value)) && class_exists($value, true))) {
+            if (is_object($value))
+                $this->eventDispatcher->dispatch(new BeforeComponentRegisterEvent($this, $value));
+            
+            $this->components->set($id, $value);
 
-        $this->eventDispatcher
-            ->dispatch(new BeforeInstanceBeanEvent($this->metadatas[$id] ?? $this->methodMetadatas[$id], $id));
+            if ($value instanceof ContainerAwareInterface)
+                $value->setContainer($this);
 
-        if (isset($this->methodMetadatas[$id])) {
-            $bean = $this->newIntanceFromMethodMetadata($id);
-        } elseif (isset($this->metadatas[$id])) {
-            $bean = $this->newIntanceFromMetadata($id);
+            if (is_object($value))
+                $this->eventDispatcher->dispatch(new AfterComponentRegisterEvent($this, $value));
+
+            return $this;
         }
 
-        $this->statuses[$id] = self::INSTANTIATED;
+        if (is_string($value) && interface_exists($value, true)) {
+            throw new ContainerException("cannot add interfaces to the container: {$value}");
+        }
 
-        $this->eventDispatcher->dispatch(new AfterInstanceBeanEvent($bean, $id));
+        $this->values->add($value, $id);
 
-        return $this->beans[$id] = $bean;
+        return $this;
     }
 
-    /**
-     * @param ParamMetadata[] $params
-     */
-    protected function resolveParams(array $params)
+    public function has(string $id): bool
     {
-        return array_map(
-            function (ParamMetadata $p) {
-                try {
-                    foreach ($this->paramResolverInterceptors as $paramInterceptor) {
-                        if ($paramInterceptor->canIntercept($p)) {
-                            return $paramInterceptor->resolve($p, $this);
-                        }
-                    }
-                    
-                    return $this->get($p->getId());
-                } catch (NotFoundContainerException $e) {
-                    $this->statuses[$p->getId()] = self::ERROR;
-                    
-                    if ($p->getReflection()->isOptional()) {
-                        return $p->getReflection()->getDefaultValue();
-                    }
+        return $this->values->has($id)
+            || $this->components->has($id)
+            || $this->transient->has($id);
+    }
 
+    private function addFactory(string $id, $className, MethodMetadataInterface $factory = null): array
+    {
+        $aliases = $this->components->set($id, $className);
+
+        if ($factory) {
+            $this->components->addFactory($id, $factory);
+        }
+
+        return $aliases;
+    }
+
+    public function addTransient(string $id, $className, MethodMetadataInterface $factory = null): self
+    {
+        $aliases = $this->addFactory($id, $className, $factory);
+
+        foreach ($aliases as $alias) {
+            $this->transient->add($alias);
+        }
+
+        return $this;
+    }
+
+    public function addScoped(string $id, $className, MethodMetadataInterface $factory = null): self
+    {
+        $aliases = $this->addFactory($id, $className, $factory);
+
+        foreach ($aliases as $alias) {
+            $this->scoped->add($alias);
+        }
+
+        return $this;
+    }
+
+    private function newInstance(string $classname)
+    {
+        if (isset($this->statuses[$classname]) && $this->statuses[$classname] == self::INSTANCING) {
+            throw new ContainerException("circular reference found for {$classname} on ");
+        }
+
+        $this->eventDispatcher->dispatch($beforeEvent = new BeforeInstanceComponentEvent($this, $classname));
+
+        if ($beforeEvent->result) {
+            return $beforeEvent->result;
+        }
+
+        $this->statuses[$classname] ??= [];
+        $this->statuses[$classname] = self::INSTANCING;
+
+        $metadata = $this->metadataFactory->getMetadataForClass($classname);
+        $ctor = $metadata->getMethodMetadata()['__construct'] ?? null;
+        $depends = $ctor?->getParams() ?? [];
+
+        foreach ($depends as &$depend) {
+            $type = $depend->getType();
+            $alias = $depend->getAnnotation(Injects::class)?->id;
+
+            if (is_array($type) && !$alias) {
+                throw new ContainerException("composed types isn't supported by the container, try use an alias");
+            }
+
+            $id = $alias ?? $type ?? $depend->getName();
+
+            if ($id === $type && $depend->isNativeType()) {
+                $id = $depend->getName();
+            }
+
+            try {
+                $depend = $this->get($id);
+            } catch (NotFoundContainerException $e) {
+                if ($depend->getReflection()->isOptional()) {
+                    $depend = $depend->getReflection()->getDefaultValue();
+                } else {
                     throw $e;
                 }
-            },
-            $params
-        );
-    }
-
-    private function newIntanceFromMetadata(string $id)
-    {
-        $params = ($metadata = $this->metadatas[$id])->getConstructorParams();
-
-        $stereotypes = [
-            ...array_map(fn($a) => $a::class, $metadata->getAnnotations()),
-            ...$metadata->getInterfaces(),
-            ...$metadata->getHierarchy()
-        ];
-
-        foreach ($stereotypes as $stereotype) {
-            if (isset($this->stereotypeFactories[$stereotype])) {
-                return $this->get(($this->stereotypeFactories[$stereotype])->getName())
-                    ->create($this, $metadata, $params);
             }
         }
 
-        return $metadata->getReflection()
-            ->newInstanceArgs($this->resolveParams($params));
-    }
+        $instance = $this->components->hasFactory($metadata->getName())
+            ? ($factory = $this->components->getFactory($metadata->getName()))
+                ->invoke($this->get($factory->getClass()), ...$depends)
+            : $metadata->getReflection()->newInstanceArgs($depends);
+        
+        $this->eventDispatcher->dispatch(new AfterInstanceComponentEvent($this, $instance));
 
-    private function newIntanceFromMethodMetadata(string $id)
-    {
-        $params = ($metadata = $this->methodMetadatas[$id])->getParams();
-
-        return $metadata->invoke(
-            $this->get($metadata->getClass()),
-            ...$this->resolveParams($params)
-        );
-    }
-
-    private function isIstantiating($id)
-    {
-        return ($this->statuses[$id] ?? null) === self::INSTANTIATING;
-    }
-
-    private function isIstantiated($id)
-    {
-        return ($this->statuses[$id] ?? null) === self::INSTANTIATED;
-    }
-
-    /**
-     * @return ClassMetadata[]
-     */
-    public function getMetadadasByStereotype(string $stereotype): array
-    {
-        return $this->metadatas->filter(
-            fn(ClassMetadata $m) => $m->hasAnnotation($stereotype) 
-                || in_array($stereotype, $m->getHierarchy())
-                || $m->isInstanceOf($stereotype)
-        );
-    }
-
-    public function getComponentsByStereotype(string $stereotype): array
-    {
-        $data = [];
-
-        foreach ($this->getMetadadasByStereotype($stereotype) as $id => $metadata) {
-            if ($metadata->hasAnnotation(Transient::class) 
-                || (isset($this->methodMetadatas[$id]) && $this->methodMetadatas[$id]->hasAnnotation(Transient::class))) {
-                continue;
-            }
-
-            $data[$id] = $this->get($id);
+        if (!$this->transient->has($classname)) {
+            $this->set($classname, $instance);
         }
 
-        return $data;
-    }
+        $this->statuses[$classname] = self::INSTANCED;
 
-	/**
-	 * @return ClassMetadata[]
-	 */
-	public function getInterfaces(): array {
-		return $this->interfaces;
-	}
-
-    public function hasMetadata(string $id)
-    {
-        return isset($this->metadatas[$id]);
-    }
-    
-    public function getMetadata(string $id)
-    {
-        return $this->metadatas[$id];
-    }
-
-    public function getEvemtDispatcher(): EventDispatcherInterface
-    {
-        return $this->eventDispatcher;
-    }
-
-    public function __serialize()
-    {
-        return [
-            $this->metadatas,
-            $this->methodMetadatas,
-            $this->metadataFactory,
-            $this->eventDispatcher,
-            $this->stereotypeFactories,
-        ];
-    }
-
-    public function __unserialize(array $data)
-    {
-        [
-            $this->metadatas,
-            $this->methodMetadatas,
-            $this->metadataFactory,
-            $this->eventDispatcher,
-            $this->stereotypeFactories,
-        ] = $data;
-
-        $this->initialize();
+        return $instance;
     }
 
     public function getIterator(): \Traversable
     {
-        foreach ($this->metadatas->keys() as $id) {
-            yield $id => $this->get($id);
+        foreach ($this->components as $id => $item) {
+            if (!is_object($item)) {
+                $item = $this->get($item);
+            }
+
+            yield $id => $item;
         }
     }
 }

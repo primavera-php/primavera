@@ -2,10 +2,7 @@
 
 /* @var $loader \Composer\Autoload\ClassLoader */
 $loader = require 'vendor/autoload.php';
-$loader->addPsr4('PhpBeansTest\\', __DIR__);
-$loader->addPsr4('ScannedTest\\', __DIR__ . '/example/scanned');
-$loader->addPsr4('StaticTest\\', __DIR__ . '/example/static');
-$loader->addPsr4('Shared\\', __DIR__ . '/example/shared');
+$loader->addPsr4('Primavera\Container\\Test\\', __DIR__);
 
 // \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 
