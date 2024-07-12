@@ -15,9 +15,10 @@
     ],
     "require": {
         "php": ">=8.2",
-        "primavera/container": "1.0",
+        "primavera/implementor": "1.0",
         "guzzlehttp/guzzle": "^7.3",
-        "slim/psr7": "^1.4"
+        "slim/psr7": "^1.4",
+        "primavera/serializer": "1.0"
     },
     "require-dev": {
         "phpspec/prophecy": "^1.13",

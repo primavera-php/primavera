@@ -25,7 +25,9 @@
             "Primavera\\Doctrine\\": "packages/doctrine/src\\",
             "Primavera\\Swoole\\": "packages/swoole/src\\",
             "Primavera\\Process\\": "packages/process/src\\",
-            "Primavera\\Commons\\": "packages/commons/src\\"
+            "Primavera\\Commons\\": "packages/commons/src\\",
+            "Primavera\\Implementor\\": "packages/implementor/src\\",
+            "Primavera\\Serializer\\": "packages/serializer/src\\"
         }
     },
     "require": {
@@ -80,6 +82,8 @@
         "primavera/doctrine": "self.version",
         "primavera/swoole": "self.version",
         "primavera/process": "self.version",
-        "primavera/commons": "self.version"
+        "primavera/commons": "self.version",
+        "primavera/implementor": "self.version",
+        "primavera/serializer": "self.version"
     }
 }

@@ -1,22 +1,22 @@
 <?php
 
-namespace Primavera\Http\Tests\Processor;
+namespace Primavera\Http\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Predis\Response\ResponseInterface;
-use Primavera\Cache\Factory;
-use Primavera\Container\Bean\AbstractInterfaceImplementor;
 use Primavera\Container\Container;
-use Primavera\Container\Factory\ContainerBuilder;
+use Primavera\Container\ContainerBuilder;
 use Primavera\Http\HttpClientInterface;
 use Primavera\Http\Stereotype\Get;
 use Primavera\Http\Stereotype\HttpClient;
 use Prophecy\Prophet;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class HttpClientProcessorTest extends TestCase
 {
     private Container $container;
+
+    private ContainerBuilder $cb;
 
     private $httpClientProfecy;
 
@@ -32,40 +32,35 @@ class HttpClientProcessorTest extends TestCase
     {
         $this->mocker = $mocker = new Prophet();
         
-        $cb = new ContainerBuilder();
+        $this->cb = $cb = new ContainerBuilder();
 
-        $cb->withAppNamespaces()
-            ->withNamespaces('Primavera\\Http\\Tests\\')
-            ->withStereotypes(HttpClient::class, AbstractInterfaceImplementor::class)
-            ->withCache(
-                (new Factory)
-                    ->createSimpleCache(Factory::PROVIDER_SYMFONY, Factory::TYPE_FILE, '', 0, 'build/cache')
-            );
+        $cb->withNamespaces('Primavera\\Http\\Tests\\');
 
         $this->httpClientProfecy = $mocker->prophesize(HttpClientInterface::class);
         $this->httpRequestProfecy = $mocker->prophesize(RequestInterface::class);
         $this->httpResponseProfecy = $mocker->prophesize(ResponseInterface::class);
         $this->httpClientMock = $this->httpClientProfecy->reveal();
 
-        $cb->withBeans([
+        $this->cb->withInstances([
             HttpClientInterface::class => $this->httpClientMock
         ]);
 
-        $this->container = $cb->build();
+        $this->container = $this->cb->build();
     }
 
     public function testShouldImplemtnClient()
     {
-        $httpClientMock = $this->httpClientMock;
+        $this->httpResponseProfecy->getBody()->willReturn(json_encode([['name' => 'john', 'age' => 60]]));
+
         $httpRequestMock = $this->httpRequestProfecy->reveal();
         $httpResponseMock = $this->httpResponseProfecy->reveal();
 
-        $this->httpClientProfecy->createRequest()->willReturn($httpRequestMock);
+        $this->httpClientProfecy->createRequest('GET', '/', [])->willReturn($httpRequestMock);
         $this->httpClientProfecy->send($httpRequestMock)->willReturn($httpResponseMock);
 
         $client = $this->container->get(UserClient::class);
 
-        $this->assertTrue(true);
+        $this->assertEquals([new User('john', 60)], $client->getUsers());
     }
 
     public function tearDown(): void
@@ -85,7 +80,8 @@ interface UserClient
 }
 
 class User {
-    public string $name;
-
-    public int $age;
+    public function __construct(
+        public string $name,
+        public int $age,
+    ) {}
 }

@@ -14,6 +14,7 @@ use Primavera\Container\ConfigurationData;
 use Primavera\Container\Container;
 use Primavera\Container\Processor\AutowirePostProcessor;
 use Primavera\Container\Processor\ComponentPostProcessorInterface;
+use Primavera\Container\Processor\ComponentPreProcessorInterface;
 use Primavera\Metadata\ClassMetadataInterface;
 use Primavera\Metadata\Factory\MetadataFactory;
 use Primavera\Metadata\Factory\MetadataFactoryInterface;
@@ -33,9 +34,9 @@ class ContainerBuilder implements ContainerBuilderInterface
     private array $namespaces = [];
 
     /**
-     * @var string[]
+     * @var ComponentPreProcessorInterface[]
      */
-    private array $stereotypes = [];
+    private array $preProcessors = [];
 
     private ClassLoader $loader;
 
@@ -105,9 +106,9 @@ class ContainerBuilder implements ContainerBuilderInterface
         return $this;
     }
 
-    public function withStereotypes(string ...$stereotypes): self
+    public function withPreProcessors(ComponentPreProcessorInterface ...$processors): self
     {
-        $this->stereotypes = [...$this->stereotypes, ...$stereotypes];
+        $this->preProcessors = [...$this->preProcessors, ...$processors];
 
         return $this;
     }
@@ -196,6 +197,13 @@ class ContainerBuilder implements ContainerBuilderInterface
                 $this->handleConfigurator($metadata, $container);
 
             $addMetadata($metadata);
+        }
+
+        foreach ($mf as $metadata) {
+            foreach ($this->preProcessors as $preProcessor) {
+                if ($preProcessor->canProcess($metadata))
+                    $preProcessor->process($metadata, $this);
+            }
         }
 
         foreach ($this->components as $component) {
@@ -293,9 +301,8 @@ class ContainerBuilder implements ContainerBuilderInterface
                     ? $annotation 
                     : $annotMetadata->getAnnotation(Imports::class);
 
-                foreach ($imports->configurations as $config) {
+                foreach ($imports->configurations as $config)
                     yield $mf->getMetadataForClass($config);
-                }
             }
         }
     }

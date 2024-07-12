@@ -7,6 +7,5 @@ use ReturnTypeWillChange;
 
 interface WritableContainerInterface extends ContainerInterface
 {
-    #[ReturnTypeWillChange]
     public function set(string $id, $value);
 }

@@ -54,6 +54,10 @@
         <testsuite name="commons">
             <directory>packages/commons/tests</directory>
         </testsuite>
+
+        <testsuite name="implementor">
+            <directory>packages/implementor/tests</directory>
+        </testsuite>
     </testsuites>
 
     <filter>

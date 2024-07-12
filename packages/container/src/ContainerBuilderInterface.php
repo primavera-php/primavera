@@ -2,6 +2,7 @@
 
 namespace Primavera\Container;
 
+use Primavera\Container\Processor\ComponentPreProcessorInterface;
 use Primavera\Event\EventDispatcherInterface;
 use Psr\Container\ContainerInterface;
 use Psr\SimpleCache\CacheInterface;
@@ -16,7 +17,7 @@ interface ContainerBuilderInterface
 
     public function withNamespaces(string ...$namespaces): ContainerBuilderInterface;
 
-    public function withStereotypes(string ...$stereotypes): ContainerBuilderInterface;
+    public function withPreProcessors(ComponentPreProcessorInterface ...$processors): ContainerBuilderInterface;
 
     public function withYamlMetadata(string $metadataPath): ContainerBuilderInterface;
 

@@ -7,9 +7,11 @@ use Primavera\Container\ContainerBuilder;
 use Primavera\Container\Test\Stub\BarStub;
 use Primavera\Container\Test\Stub\FromFactory;
 use Primavera\Container\Test\Stub\FromFactoryInterface;
+use Primavera\Container\Test\Stub\ImplementableInterface;
 use Primavera\Container\Test\Stub\ImportedStub;
 use Primavera\Container\Test\Stub\ImportedStubInterface;
 use Primavera\Container\Test\Stub\InjectableStubInterface;
+use Primavera\Container\Test\Stub\InterfaceImplementor;
 
 class ContainerBuilderTest extends TestCase
 {
@@ -17,7 +19,8 @@ class ContainerBuilderTest extends TestCase
     {
         $cb = new ContainerBuilder();
         $cb->withConfigFile(__DIR__ . '/Stub/config.yaml')
-            ->withNamespaces('Primavera\\Container\\Test\\');
+            ->withNamespaces('Primavera\\Container\\Test\\')
+            ->withPreProcessors(new InterfaceImplementor);
 
         $container = $cb->build();
 
@@ -29,5 +32,7 @@ class ContainerBuilderTest extends TestCase
         $this->assertInstanceOf(BarStub::class, $wired->barStub);
         $this->assertInstanceOf(FromFactory::class, $container->get(FromFactoryInterface::class));
         $this->assertInstanceOf(ImportedStub::class, $container->get(ImportedStubInterface::class));
+        $this->assertInstanceOf('Implemented', $container->get(ImplementableInterface::class));
+        $this->assertEquals(2, $container->get(ImplementableInterface::class)->sum(1, 1));
     }
 }
