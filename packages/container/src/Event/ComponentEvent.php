@@ -3,6 +3,7 @@
 namespace Primavera\Container\Event;
 
 use Primavera\Container\Container;
+use Primavera\Event\StopableEventTrait;
 use Psr\EventDispatcher\StoppableEventInterface;
 
 /**
@@ -10,8 +11,8 @@ use Psr\EventDispatcher\StoppableEventInterface;
  */
 class ComponentEvent implements StoppableEventInterface
 {
-    private bool $stoped = false;
-
+    use StopableEventTrait;
+    
     public $result = null;
 
     /**
@@ -21,14 +22,4 @@ class ComponentEvent implements StoppableEventInterface
         public Container $container,
         public object | string $component,
     ) {}
-
-    public function stopPropagation() 
-    {
-        $this->stoped = true;
-    }
-
-    public function isPropagationStopped(): bool 
-    {
-        return $this->stoped;
-    }
 }

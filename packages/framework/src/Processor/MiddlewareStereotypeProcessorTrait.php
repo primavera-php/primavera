@@ -2,14 +2,14 @@
 
 namespace Primavera\Framework\Processor;
 
+use Psr\Container\ContainerInterface;
 use Slim\App;
 
 trait MiddlewareStereotypeProcessorTrait
 {
-    public function process($stereotype)
+    public function process(object $stereotype, ContainerInterface $container)
     {
-        /* @var $app App */
-        $app = $this->getContainer()->get(App::class);
+        $app = $container->get(App::class);
 
         $app->add($stereotype);
     }

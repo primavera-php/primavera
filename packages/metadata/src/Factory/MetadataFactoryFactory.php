@@ -2,7 +2,6 @@
 
 namespace Primavera\Metadata\Factory;
 
-use Primavera\Metadata\Cache\PsrSimpleCacheAdapter;
 use Primavera\Metadata\ClassMetadata;
 use Primavera\Metadata\Driver\AnnotationDriver;
 use Primavera\Metadata\Driver\DriverInterface;

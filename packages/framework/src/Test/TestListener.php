@@ -87,22 +87,22 @@ class TestListener implements \PHPUnit\Framework\TestListener
 
         $app->configure([$test, 'configureBuilder']);
         $mocks = [];
-        $beans = ['debug' => true];
+        $components = ['debug' => true];
 
-        foreach ($metadata->getAnnotatedProperties(Mock::class) as $propertyMetadata) {
+        foreach ($metadata->getAnnotatedPropertiesMetadata(Mock::class) as $propertyMetadata) {
             $annotation = $propertyMetadata->getAnnotation(Mock::class);
             $type = $annotation->type;
             $serviceId = $annotation->serviceId ?? $type;
             $mocks[$serviceId] = $mock = $this->prophet->prophesize($type);
-            $beans[$serviceId] = $mock->reveal();
+            $components[$serviceId] = $mock->reveal();
             $propertyMetadata->setValue($test, $mock);
         }
 
-        $app->getBuilder()->withBeans($beans);
+        $app->getBuilder()->withInstances($components);
 
         $test->setApplication($app);
 
-        foreach ($metadata->getAnnotatedProperties(Autowired::class) as $propertyMetadata) {
+        foreach ($metadata->getAnnotatedPropertiesMetadata(Autowired::class) as $propertyMetadata) {
             $autowired = $propertyMetadata->getAnnotation(Autowired::class);
             $id = $autowired->beanId ?? $propertyMetadata->type;
             $propertyMetadata->setValue($test, $app->getContainer()->get($id));

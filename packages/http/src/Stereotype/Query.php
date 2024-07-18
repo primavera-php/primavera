@@ -6,6 +6,6 @@ namespace Primavera\Http\Stereotype;
 class Query
 {
     public function __construct(
-        public ?string $name = null,
+        public readonly ?string $name = null,
     ) {}
 }

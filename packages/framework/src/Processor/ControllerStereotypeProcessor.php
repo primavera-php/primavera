@@ -1,13 +1,13 @@
 <?php
 
-
 namespace Primavera\Framework\Processor;
 
-
+use Primavera\Container\Processor\ComponentPostProcessorInterface;
 use Primavera\Framework\Stereotype\PreDispatch;
 use Primavera\Metadata\ClassMetadataInterface;
 use Primavera\Metadata\Factory\MetadataFactory;
-use Primavera\Container\Processor\AbstractStereotypeProcessor;
+use Primavera\Metadata\MethodMetadataInterface;
+use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Interfaces\RouteInterface;
 use Primavera\Event\EventDispatcher;
@@ -15,7 +15,6 @@ use Primavera\Framework\Stereotype\Controller;
 use Primavera\Framework\Stereotype\Interceptor;
 use Primavera\Framework\Stereotype\ParamResolverInterface;
 use Primavera\Framework\Stereotype\UseMiddleware;
-use Primavera\Metadata\MethodMetadata;
 use Primavera\Http\Stereotype\Get;
 use Primavera\Http\Stereotype\Post;
 use Primavera\Http\Stereotype\Put;
@@ -23,7 +22,7 @@ use Primavera\Http\Stereotype\Patch;
 use Primavera\Http\Stereotype\Delete;
 
 
-class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
+class ControllerStereotypeProcessor implements ComponentPostProcessorInterface
 {
     use PrioritizedComponentsTrait;
     
@@ -32,25 +31,28 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
         private EventDispatcher $eventDispatcher,
     ) { }
 
-    public function getStereotypeName(): string 
+    public function canProcess(object $component): bool
     {
-        return Controller::class;
+        return $this->metadataFactory
+            ->getMetadataForClass($component::class)
+            ->hasAnnotation(Controller::class);
     }
 
     private function processMiddleware(
         RouteInterface $route,
-        MethodMetadata $methodMetadata,
-        ClassMetadataInterface $classMetadata
+        MethodMetadataInterface $methodMetadata,
+        ClassMetadataInterface $classMetadata,
+        ContainerInterface $container,
     ) {
         foreach (array_filter([...$classMetadata->getAnnotations(), ...$methodMetadata->getAnnotations()], fn($a) => $a instanceof UseMiddleware) as $annotation) {
             $route->add(
-                $this->getContainer()
-                    ->get($annotation->middlewareClass)
+                $container->get($annotation->middlewareClass)
             );
         }
     }
 
-    private function parsePath($controller, $method) {
+    private function parsePath($controller, $method)
+    {
         return '/' . implode(
             '/',
             array_filter(
@@ -59,9 +61,13 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
         );
     }
 
-    public function process($stereotype) {
+    /**
+     * @todo need to rethink how to get components by stereotype and improve getting prioritized components
+     */
+    public function process(object $stereotype, ContainerInterface $container)
+    {
         /* @var $app App */
-        $app = $this->getContainer()->get(App::class);
+        $app = $container->get(App::class);
 
         /* @var $controllerMetadata ClassMetadataInterface */
         $controllerMetadata = $this->metadataFactory->getMetadataForClass(get_class($stereotype));
@@ -96,33 +102,35 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
 
             $path = $this->parsePath($config, $method);
             $action = $methodMetadata->getReflection()->getClosure($stereotype);
-            $container = $this->getContainer();
 
             $routeAction = function ($request, $response, $args) use ($controllerMetadata, $methodMetadata, $action,
                                                                       $container) {
                 $params = $args;
 
                 /* @var $resolver ParamResolverInterface */
-                foreach ($container->getComponentsByStereotype(ParamResolverInterface::class) as $resolver) {
+                foreach ($container as $resolver) {
+                    if (!$resolver instanceof ParamResolverInterface)
+                        continue;
+
                     $params = array_merge(
                         $params,
                         $resolver->resolve($controllerMetadata, $methodMetadata, $request, $args)
                     );
                 }
 
-                foreach ($this->getPrioritizedComponents(PreDispatch::class) as $preDispatch) {
+                foreach ($this->getPrioritizedComponents(PreDispatch::class, $container) as $preDispatch) {
                     $params = array_merge($params, $preDispatch($request, $controllerMetadata, $methodMetadata));
                 }
 
                 $actionParams = [];
 
                 foreach ($methodMetadata->getParams() as $param) {
-                    $actionParams[$param->name] ??= $params[$param->name] ?? null;
+                    $actionParams[$param->getName()] ??= $params[$param->getName()] ?? null;
                 }
 
                 $responseData = call_user_func_array($action, array_values($actionParams));
 
-                foreach ($this->getPrioritizedComponents(Interceptor::class) as $interceptor) {
+                foreach ($this->getPrioritizedComponents(Interceptor::class, $container) as $interceptor) {
                     $response = $interceptor($responseData, $request, $response, $args);
                 }
 
@@ -130,7 +138,7 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
             };
 
             $route = call_user_func([$app, $methodName], $path, $routeAction);
-            $this->processMiddleware($route, $methodMetadata, $controllerMetadata);
+            $this->processMiddleware($route, $methodMetadata, $controllerMetadata, $container);
         }
     }
 }

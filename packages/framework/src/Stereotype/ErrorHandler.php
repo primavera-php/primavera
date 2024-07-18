@@ -2,15 +2,10 @@
 
 namespace Primavera\Framework\Stereotype;
 
-/**
- * @Annotation
- * @Target({"CLASS"})
- */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ErrorHandler {
-    
-    /**
-     * @var string
-     */
-    public $priotiry = 1;
+class ErrorHandler 
+{
+    public function __construct(
+        public readonly int $priority = 1,
+    ) {}
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Primavera\Framework\Stereotype;
 
 

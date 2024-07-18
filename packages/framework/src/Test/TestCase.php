@@ -4,7 +4,7 @@
 namespace Primavera\Framework\Test;
 
 
-use Primavera\Container\Factory\ContainerBuilder;
+use Primavera\Container\ContainerBuilder;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Prophecy\Prophet;
 use Psr\Http\Message\RequestInterface;

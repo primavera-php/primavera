@@ -6,6 +6,6 @@ namespace Primavera\Http\Stereotype;
 class RemoteFormat
 {
     public function __construct(
-        public string $format = 'json',
+        public readonly string $format = 'json',
     ) {}
 }

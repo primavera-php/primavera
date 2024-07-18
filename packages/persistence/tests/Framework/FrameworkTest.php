@@ -3,7 +3,6 @@
 namespace Primavera\PersistenceTests\Framework;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Schema;
 use Primavera\Cache\Factory;
 use Primavera\Container\Annotation\Autowired;

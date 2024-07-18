@@ -3,7 +3,7 @@
 
 namespace Primavera\Framework\Tests\Controller;
 
-use Primavera\Container\Factory\ContainerBuilder;
+use Primavera\Container\ContainerBuilder;
 use Prophecy\Prophecy\ObjectProphecy;
 use Primavera\Cache\Factory;
 use Primavera\Framework\Application;

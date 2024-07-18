@@ -1,18 +1,16 @@
 <?php
 
-namespace Primavera\Persistence\BeanProcessor;
+namespace Primavera\Persistence\Processor;
 
 use Laminas\Code\Generator\ClassGenerator;
 use Laminas\Code\Generator\MethodGenerator;
-use Primavera\Container\Annotation\IgnoreScanner;
-use Primavera\Container\Bean\AbstractInterfaceImplementor;
+use Primavera\Implementor\AbstractInterfaceImplementor;
 use Primavera\Metadata\ClassMetadataInterface;
 use Primavera\Metadata\MethodMetadataInterface;
 use Primavera\Persistence\Parser\ParserInterface;
 use Primavera\Persistence\Persister\DbalBasePersister;
 use Primavera\Persistence\Stereotype\Persister;
 
-#[IgnoreScanner]
 class DbalPersisterImplementor extends AbstractInterfaceImplementor
 {
     use TableImplementorTrait;

@@ -4,7 +4,7 @@ namespace Primavera\PersistenceTests\Repository;
 
 use Doctrine\DBAL\Connection;
 use Primavera\Container\Container;
-use Primavera\Container\Factory\ContainerBuilder;
+use Primavera\Container\ContainerBuilder;
 use Primavera\Data\ObjectHydrator;
 use Primavera\Persistence\Stereotype\Repository;
 use Primavera\PersistenceTests\DbTestCase;
@@ -26,7 +26,6 @@ class UsersRepositoryTest extends DbTestCase
 
         $builder->withAppNamespaces()
             ->withNamespaces('Primavera\\PersistenceTests\\')
-            ->withStereotypes(Repository::class)
             ->withConfigFile(__DIR__ . '/application.yaml')
             ->withComponents(ObjectHydrator::class)
         ;

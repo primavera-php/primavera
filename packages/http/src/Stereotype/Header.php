@@ -6,6 +6,6 @@ namespace Primavera\Http\Stereotype;
 class Header
 {
     public function __construct(
-        public string $name,
+        public readonly string $name,
     ) {}
 }

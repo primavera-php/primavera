@@ -13,7 +13,6 @@ class DbalConfiguration
     #[Factory]
     public function connection(#[Injects("database.connectionString")] string $connectionString): Connection
     {
-        // return DriverManager::getConnection(['url' => $connectionString]);
         return DriverManager::getConnection((new DsnParser())->parse($connectionString));
     }
 }

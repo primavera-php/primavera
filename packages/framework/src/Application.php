@@ -3,7 +3,19 @@
 namespace Primavera\Framework;
 
 use Primavera\Container\Container;
-use Primavera\Container\Factory\ContainerBuilder;
+use Primavera\Container\ContainerBuilder;
+use Primavera\Container\Processor\ComponentEnabler;
+use Primavera\Framework\Component\HttpErrorHandler;
+use Primavera\Framework\Component\Psr7Factory;
+use Primavera\Framework\Configuration\Psr7Configuration;
+use Primavera\Framework\Configuration\SerializerConfiguration;
+use Primavera\Framework\Middleware\RequestBodyResolver;
+use Primavera\Framework\Middleware\ResponseInterceptor;
+use Primavera\Framework\Processor\ControllerStereotypeProcessor;
+use Primavera\Framework\Processor\ErrorHandlerPostProcessor;
+use Primavera\Framework\Processor\MiddlewareInterfaceStereotypeProcessor;
+use Primavera\Framework\Processor\MiddlewareStereotypeProcessor;
+use Primavera\Framework\Stereotype\UseMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
@@ -44,18 +56,30 @@ class Application
         $builder = new ContainerBuilder();
 
         $builder
-            ->withStereotypes(
-                Controller::class,
-                Service::class,
-                Middleware::class,
-                PreDispatch::class,
-                Interceptor::class,
-                Formatter::class,
-                ParamResolverInterface::class,
-                ErrorHandler::class,
+            // ->withAppNamespaces()
+            ->withNamespaces(...$this->namespaces)
+            ->withPreProcessors(
+                new ComponentEnabler(Controller::class),
+                new ComponentEnabler(ErrorHandler::class),
+                new ComponentEnabler(Interceptor::class),
+                new ComponentEnabler(Middleware::class),
+                new ComponentEnabler(ParamResolverInterface::class),
+                new ComponentEnabler(PreDispatch::class),
+                new ComponentEnabler(Service::class),
+                new ComponentEnabler(UseMiddleware::class),
             )
-            ->withAppNamespaces()
-            ->withNamespaces(...$this->namespaces);
+            ->withComponents(
+                ControllerStereotypeProcessor::class,
+                ErrorHandlerPostProcessor::class,
+                MiddlewareStereotypeProcessor::class,
+                MiddlewareInterfaceStereotypeProcessor::class,
+                Psr7Configuration::class,
+                SerializerConfiguration::class,
+                Psr7Factory::class,
+                HttpErrorHandler::class,
+                RequestBodyResolver::class,
+                ResponseInterceptor::class,
+            );
         
         if ($this->appConfigFile)
             $builder->withConfigFile($this->appConfigFile);

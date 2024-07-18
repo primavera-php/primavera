@@ -33,21 +33,21 @@ class RequestBodyResolver implements ParamResolverInterface
         /* @var $paramsMetadata \Primavera\Metadata\ParamMetadata[] */
         $paramsMetadata = [];
 
-        foreach ($methodMetadata->params as $param) {
-            $paramsMetadata[$param->name] = $param;
+        foreach ($methodMetadata->getParams() as $param) {
+            $paramsMetadata[$param->getName()] = $param;
         }
 
         if (count($paramsMetadata) == 0) {
             return [];
         }
 
-        $argName = reset($paramsMetadata)->name;
+        $argName = reset($paramsMetadata)->getName();
 
         if ($requestBody = $methodMetadata->getAnnotation(RequestBody::class)) {
             $argName = $requestBody->argName ?? $argName;
         } elseif ($annotatedParams = array_filter($paramsMetadata, fn($p) => $p->getReflection()->getAttributes(RequestBody::class))) {
             if (count($annotatedParams) > 1) {
-                throw new \LogicException("only one RequestBody allowed for method {$controllerMetadata->name}::{$methodMetadata->name}");
+                throw new \LogicException("only one RequestBody allowed for method {$controllerMetadata->getName()}::{$methodMetadata->getName()}");
             }
 
             $argName = reset($annotatedParams)->name;
@@ -55,10 +55,10 @@ class RequestBodyResolver implements ParamResolverInterface
             return [];
         }
 
-        $type = $paramsMetadata[$argName]->type ?? $requestBody?->type;
+        $type = $paramsMetadata[$argName]->getType() ?? $requestBody?->type;
 
         if (!$type) {
-            throw new \LogicException("no type defined for param {$paramsMetadata[$argName]->name} on {$controllerMetadata->name}::{$methodMetadata->name}");
+            throw new \LogicException("no type defined for param {$paramsMetadata[$argName]->getName()} on {$controllerMetadata->getName()}::{$methodMetadata->getName()}");
         }
 
         if (class_exists($type)) {

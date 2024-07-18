@@ -3,16 +3,15 @@
 
 namespace Primavera\Framework\Processor;
 
-
-use Primavera\Container\Processor\AbstractStereotypeProcessor;
+use Primavera\Container\Processor\ComponentPostProcessorInterface;
 use Psr\Http\Server\MiddlewareInterface;
 
-class MiddlewareInterfaceStereotypeProcessor extends AbstractStereotypeProcessor
+class MiddlewareInterfaceStereotypeProcessor implements ComponentPostProcessorInterface
 {
     use MiddlewareStereotypeProcessorTrait;
 
-    public function getStereotypeName(): string
+    public function canProcess(object $component): bool
     {
-        return MiddlewareInterface::class;
+        return $component instanceof MiddlewareInterface;
     }
 }

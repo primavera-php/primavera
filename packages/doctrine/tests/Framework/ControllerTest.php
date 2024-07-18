@@ -6,7 +6,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\EntityManager;
 use Primavera\Cache\Factory;
 use Primavera\Container\Annotation\Autowired;
-use Primavera\Container\Factory\ContainerBuilder;
+use Primavera\Container\ContainerBuilder;
 use Primavera\Doctrine\Annotation\Merge;
 use Primavera\Doctrine\Test\Entity\Phone;
 use Primavera\Doctrine\Test\Entity\User;

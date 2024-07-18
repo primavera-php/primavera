@@ -12,6 +12,7 @@ use Primavera\Container\Annotation\Imports;
 use Primavera\Container\Annotation\Value;
 use Primavera\Container\ConfigurationData;
 use Primavera\Container\Container;
+use Primavera\Container\Event\AfterContainerBuiltEvent;
 use Primavera\Container\Processor\AutowirePostProcessor;
 use Primavera\Container\Processor\ComponentPostProcessorInterface;
 use Primavera\Container\Processor\ComponentPreProcessorInterface;
@@ -183,11 +184,15 @@ class ContainerBuilder implements ContainerBuilderInterface
 
         $addMetadata = function (ClassMetadataInterface $metadata) use (&$postProcessors, &$eventListeners) {
             if ($metadata->hasAnnotation(EventListener::class))
-                $eventListeners[] = $metadata;
+                $eventListeners[$metadata->getName()] = $metadata;
 
             if ($metadata->instanceof(ComponentPostProcessorInterface::class))
-                $postProcessors[] = $metadata;
+                $postProcessors[$metadata->getName()] = $metadata;
         };
+
+        foreach ($this->components as $component) {
+            $mf->getMetadataForClass($component);
+        }
 
         foreach ($mf as $metadata) {
             if ($metadata->hasAnnotation(Component::class))
@@ -226,6 +231,8 @@ class ContainerBuilder implements ContainerBuilderInterface
                     $postProcessor->process($item, $container);
             }
         }
+
+        $this->eventDispatcher->dispatch(new AfterContainerBuiltEvent($container));
 
         return $container;
     }

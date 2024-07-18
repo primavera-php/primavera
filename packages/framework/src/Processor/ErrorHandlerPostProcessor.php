@@ -2,21 +2,22 @@
 
 namespace Primavera\Framework\Processor;
 
-use Primavera\Container\Annotation\PostBeanProcessor;
-use Primavera\Container\Container;
+use Primavera\Container\Annotation\EventListener;
+use Primavera\Container\Event\AfterContainerBuiltEvent;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Throwable;
 use Primavera\Framework\Stereotype\ErrorHandler;
 
-/**
- * @PostBeanProcessor()
- */
-class ErrorHandlerPostProcessor {
+#[EventListener]
+class ErrorHandlerPostProcessor
+{
     use PrioritizedComponentsTrait;
+
+    public function __construct() {}
     
-    public function __invoke(Container $container) {
-        /* @var $app App */
+    public function __invoke(AfterContainerBuiltEvent $event) {
+        $container = $event->container;
         $app = $container->get(App::class);
         $errorMiddleware = $app->addErrorMiddleware(true, true, true);
         
