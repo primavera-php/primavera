@@ -2,6 +2,8 @@
 
 namespace Primavera\Framework\Processor;
 
+use Primavera\Container\ContainerAwareInterface;
+use Primavera\Container\ContainerAwareTrait;
 use Primavera\Container\Processor\ComponentPostProcessorInterface;
 use Primavera\Framework\Stereotype\PreDispatch;
 use Primavera\Metadata\ClassMetadataInterface;
@@ -22,9 +24,15 @@ use Primavera\Http\Stereotype\Patch;
 use Primavera\Http\Stereotype\Delete;
 
 
-class ControllerStereotypeProcessor implements ComponentPostProcessorInterface
+class ControllerStereotypeProcessor implements ComponentPostProcessorInterface, ContainerAwareInterface
 {
-    use PrioritizedComponentsTrait;
+    use PrioritizedComponentsTrait, ContainerAwareTrait;
+
+    private ?array $paramResolovers = null;
+
+    private ?array $interceptors = null;
+
+    private ?array $preDispatchers = null;
     
     public function __construct(
         private MetadataFactory $metadataFactory,
@@ -66,14 +74,12 @@ class ControllerStereotypeProcessor implements ComponentPostProcessorInterface
      */
     public function process(object $stereotype, ContainerInterface $container)
     {
-        /* @var $app App */
         $app = $container->get(App::class);
-
-        /* @var $controllerMetadata ClassMetadataInterface */
         $controllerMetadata = $this->metadataFactory->getMetadataForClass(get_class($stereotype));
-
-        /* @var $config \Primavera\Framework\Stereotype\Controller */
         $config = $controllerMetadata->getAnnotation(Controller::class);
+        $interceptors = $this->getInterceptors();
+        $preDispatchers = $this->getPreDispatchers();
+        $paramResolvers = $this->getParamResolovers();
 
         $methodMap = [
             Get::class => 'get',
@@ -83,7 +89,6 @@ class ControllerStereotypeProcessor implements ComponentPostProcessorInterface
             Delete::class => 'delete',
         ];
 
-        /* @var $methodMetadata MethodMetadata */
         foreach ($controllerMetadata->getMethodMetadata() as $methodMetadata) {
             $method = null;
             $methodName = null;
@@ -103,22 +108,18 @@ class ControllerStereotypeProcessor implements ComponentPostProcessorInterface
             $path = $this->parsePath($config, $method);
             $action = $methodMetadata->getReflection()->getClosure($stereotype);
 
-            $routeAction = function ($request, $response, $args) use ($controllerMetadata, $methodMetadata, $action,
-                                                                      $container) {
+            $routeAction = function ($request, $response, $args) 
+                use ($controllerMetadata, $methodMetadata, $action, $container, $interceptors, $paramResolvers, $preDispatchers) {
                 $params = $args;
 
-                /* @var $resolver ParamResolverInterface */
-                foreach ($container as $resolver) {
-                    if (!$resolver instanceof ParamResolverInterface)
-                        continue;
-
+                foreach ($paramResolvers as $resolver) {
                     $params = array_merge(
                         $params,
                         $resolver->resolve($controllerMetadata, $methodMetadata, $request, $args)
                     );
                 }
 
-                foreach ($this->getPrioritizedComponents(PreDispatch::class, $container) as $preDispatch) {
+                foreach ($preDispatchers as $preDispatch) {
                     $params = array_merge($params, $preDispatch($request, $controllerMetadata, $methodMetadata));
                 }
 
@@ -130,7 +131,7 @@ class ControllerStereotypeProcessor implements ComponentPostProcessorInterface
 
                 $responseData = call_user_func_array($action, array_values($actionParams));
 
-                foreach ($this->getPrioritizedComponents(Interceptor::class, $container) as $interceptor) {
+                foreach ($interceptors as $interceptor) {
                     $response = $interceptor($responseData, $request, $response, $args);
                 }
 
@@ -141,4 +142,22 @@ class ControllerStereotypeProcessor implements ComponentPostProcessorInterface
             $this->processMiddleware($route, $methodMetadata, $controllerMetadata, $container);
         }
     }
+
+	public function getInterceptors(): array
+    {
+		return $this->interceptors 
+            ??= $this->getPrioritizedComponents(Interceptor::class, $this->getContainer())->toArray();
+	}
+
+	public function getParamResolovers(): array
+    {
+		return $this->paramResolovers
+            ??= $this->getPrioritizedComponents(ParamResolverInterface::class, $this->getContainer())->toArray();
+	}
+
+	public function getPreDispatchers(): array
+    {
+		return $this->preDispatchers
+            ??= $this->getPrioritizedComponents(PreDispatch::class, $this->getContainer())->toArray();
+	}
 }

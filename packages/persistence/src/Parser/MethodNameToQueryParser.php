@@ -4,7 +4,6 @@ namespace Primavera\Persistence\Parser;
 
 use Doctrine\Common\Lexer\Token;
 use Primavera\Container\Annotation\Component;
-use Primavera\Container\Annotation\IgnoreScanner;
 use Primavera\Metadata\MethodMetadata;
 use Primavera\Persistence\Annotation\GroupBy;
 use Primavera\Persistence\Annotation\Limit;
@@ -13,7 +12,6 @@ use Primavera\Persistence\Annotation\Query;
 use Primavera\Persistence\Parser\MethodNameToQueryLexer as Lexer;
 
 #[Component]
-#[IgnoreScanner]
 class MethodNameToQueryParser implements ParserInterface
 {
     private ExpressionFactoryInterface $expressionFactory;

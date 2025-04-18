@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Primavera\Doctrine\Test\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -9,12 +7,14 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\UnitOfWork;
 use Primavera\Doctrine\Annotation\InjectRepository;
+use Primavera\Doctrine\Stereotype\DoctrineRepository;
 use Primavera\Doctrine\Test\Entity\Phone;
 use Primavera\Doctrine\Test\Entity\User;
 
 /**
  * @extends EntityRepository<User>
  */
+#[DoctrineRepository(User::class)]
 class UserRepository extends EntityRepository
 {
     /**

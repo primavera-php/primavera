@@ -3,6 +3,7 @@
 namespace Primavera\Commons\Collection;
 
 use ArrayIterator;
+use IteratorAggregate;
 use Traversable;
 
 /**
@@ -10,8 +11,10 @@ use Traversable;
  * 
  * @extends CollectionInterface<T, scalar>
  */
-class Collection implements CollectionInterface
+class Collection implements CollectionInterface, IteratorAggregate
 {
+    use ToArrayTrait;
+
     public function __construct(
         private array $data = [],
     ) {}

@@ -2,10 +2,12 @@
 
 namespace Primavera\Doctrine\Annotation;
 
-#[\Attribute(\Attribute::TARGET_PARAMETER | \Attribute::TARGET_PROPERTY)]
+use Attribute;
+
+#[Attribute(Attribute::TARGET_PARAMETER)]
 class InjectRepository
 {
     public function __construct(
-        public string $id,
+        public string $entityClassName,
     ) {}
 }

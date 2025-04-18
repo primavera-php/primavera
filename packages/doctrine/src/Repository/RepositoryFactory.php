@@ -3,74 +3,71 @@
 namespace Primavera\Doctrine\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Exception\InvalidEntityRepository;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Repository\DefaultRepositoryFactory;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Repository\RepositoryFactory as RepositoryFactoryInterface;
-use Primavera\Container\Annotation\IgnoreScanner;
-use Primavera\Container\Factory\StereotypeFactoryInterface;
-use Primavera\Doctrine\Container\RepositoryInjector;
-use Primavera\Metadata\ClassMetadataInterface;
-use Psr\Container\ContainerInterface;
+use Primavera\Container\Annotation\Autowired;
+use Primavera\Container\ContainerAwareInterface;
+use Primavera\Container\ContainerAwareTrait;
+use Primavera\Doctrine\Container\RepositoryPreProcessor;
+use Primavera\Metadata\Factory\MetadataFactory;
+use Primavera\Metadata\ParamMetadataInterface;
 
-/**
- * @extends StereotypeFactoryInterface<EntityRepository>
- */
-#[IgnoreScanner]
-class RepositoryFactory implements RepositoryFactoryInterface, StereotypeFactoryInterface
+class RepositoryFactory implements RepositoryFactoryInterface, ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+    
     /**
      * @var EntityRepository[]
      */
     private array $registeredRepositories = [];
 
+    private array $repositoryMap = [];
+
     public function __construct(
         private DefaultRepositoryFactory $defaultRepositoryFactory,
-        private RepositoryInjector $repositoryInjector,
+        private MetadataFactory $mf,
     ) {}
-
-    protected function addRegisteredRepository(EntityRepository $entityRepository)
-    {
-        return $this->registeredRepositories[$entityRepository->getClassName()] = $entityRepository;
-    }
 
     public function getRepository(EntityManagerInterface $entityManager, string $entityName): EntityRepository
     {
+        if ($mappedRepo = RepositoryPreProcessor::getMap($entityName)) {
+            return $this->registeredRepositories[$entityName] ??= $this->resolveRepository($mappedRepo, $entityName, $entityManager);
+        }
+
         return $this->registeredRepositories[$entityName] ??= $this->defaultRepositoryFactory->getRepository($entityManager, $entityName);
     }
 
-    /**
-     * @param ContainerInterface $container
-     * @param ClassMetadataInterface $metadata
-     * @param \Primavera\Metadata\ParamMetadata[] $params
-     */
-    public function create(ContainerInterface $container, ClassMetadataInterface $metadata, array $params): EntityRepository
+    protected function resolveRepository(string $mappedRepo, string $entityName, EntityManagerInterface $entityManager)
     {
-        if (!$metadata->instanceOf(EntityRepository::class)) {
-            throw new \InvalidArgumentException('This factory can only create EntityRepository instances');
+        $metadata = $this->mf->getMetadataForClass($mappedRepo);
+
+        $getParamType = fn(ParamMetadataInterface $paramMetadata) 
+            => $paramMetadata->getType() 
+                ? $this->mf->getMetadataForClass($paramMetadata->getType()) 
+                : null;
+
+        $params = [];
+
+        foreach ($metadata->getMethodMetadata('__construct')->getParams() as $paramMetadata) {
+            if ($getParamType($paramMetadata)?->instanceOf(ClassMetadata::class)) {
+                $params[] = $entityManager->getClassMetadata($entityName);
+            } elseif ($paramType = $paramMetadata->getType()) {
+                $params[] = $this->container->get($paramType, $paramMetadata);
+            } else {
+                $params[] = $this->container->get($paramMetadata->getName(), $paramMetadata);
+            }
         }
 
-        if (!$metadata->hasGenerics()) {
-            throw new InvalidEntityRepository("An repository should have the generics information eg: @extends EntityRepository<User> in order to be instantiated by this module");
+        $instance = $metadata->getReflection()->newInstanceArgs($params);
+
+        foreach ($metadata->getAnnotatedPropertiesMetadata(Autowired::class) as $autowired) {
+            $id = $autowired->getAnnotation(Autowired::class)->id ?? $autowired->getType() ?? $autowired->getName();
+            $autowired->setValue($instance, $this->container->get($id));
         }
 
-        $em = $container->get(EntityManagerInterface::class);
-        $entityName = $metadata->getGenericsInfo()['decoration'];
-        $doctrineMetadata = $em->getClassMetadata($entityName);
-
-        $params = [
-            ...[$em, $doctrineMetadata],
-            ...array_map(
-                function ($p) use ($container) {
-                    if ($this->repositoryInjector->canIntercept($p)) {
-                        return $this->repositoryInjector->resolve($p, $container);
-                    }
-
-                    return $container->get($p->getId());
-                },
-                array_slice($params, 2)),
-        ];
-
-        return $this->addRegisteredRepository($metadata->getReflection()->newInstanceArgs($params));
+        return $instance;
     }
 }
+

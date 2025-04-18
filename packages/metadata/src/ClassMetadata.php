@@ -1,6 +1,7 @@
 <?php
 
 namespace Primavera\Metadata;
+
 use OutOfBoundsException;
 
 class ClassMetadata implements ClassMetadataInterface

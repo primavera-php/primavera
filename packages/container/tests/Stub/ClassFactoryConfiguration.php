@@ -10,7 +10,7 @@ use Primavera\Container\Test\Stub\Annotation\ImportStubs;
 
 #[Configuration]
 #[ImportStubs]
-class ClassFactory
+class ClassFactoryConfiguration
 {
     public bool $called = false;
 

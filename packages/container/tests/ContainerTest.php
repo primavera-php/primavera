@@ -6,8 +6,9 @@ use PHPUnit\Framework\TestCase;
 use Primavera\Container\Container;
 use Primavera\Container\Event\BeforeInstanceComponentEvent;
 use Primavera\Container\Exception\ContainerException;
+use Primavera\Container\Exception\NotFoundContainerException;
 use Primavera\Container\Test\Stub\BarStub;
-use Primavera\Container\Test\Stub\ClassFactory;
+use Primavera\Container\Test\Stub\ClassFactoryConfiguration;
 use Primavera\Container\Test\Stub\FooInterface;
 use Primavera\Container\Test\Stub\FooStub;
 use Primavera\Container\Test\Stub\CircularAStub;
@@ -71,11 +72,11 @@ class ContainerTest extends TestCase
     {
         $factory = $this->container
             ->get(MetadataFactoryInterface::class)
-            ->getMetadataForClass(ClassFactory::class)
+            ->getMetadataForClass(ClassFactoryConfiguration::class)
             ->getMethodMetadata('factory');
         
         $this->container->set($factory->getType(), $factory);
-        $this->container->set(ClassFactory::class, $cf = new ClassFactory());
+        $this->container->set(ClassFactoryConfiguration::class, $cf = new ClassFactoryConfiguration());
 
         $this->assertInstanceOf(FromFactory::class, $this->container->get(FromFactory::class));
         $this->assertTrue($cf->called);
@@ -83,9 +84,26 @@ class ContainerTest extends TestCase
 
     public function testShouldInterceptInstance()
     {
-        $this->container->get(EventDispatcherInterface::class)
-            ->registerListener(fn(BeforeInstanceComponentEvent $e) => $e->result = new \stdClass);
+       $this->container->set('foo', 'foo');
+       $this->container->set('bar', 'bar');
 
-        $this->assertInstanceOf(\stdClass::class, $this->container->get(FooStub::class));
+       $this->container->get(EventDispatcherInterface::class)
+            ->registerListener(function (BeforeInstanceComponentEvent $e) {
+                $e->result = new class(...$e->dependencies) extends FooStub {
+                    public $extra = 'extra';
+                };
+            });
+
+        $this->assertInstanceOf(FooStub::class, $class = $this->container->get(FooStub::class));
+        $this->assertEquals('extra', $class->extra);
+        $this->assertEquals('foo', $class->foo);
+        $this->assertEquals('bar', $class->bar);
+    }
+
+    public function testShouldThrowExceptionWhenComponentNotFound()
+    {
+        $this->expectException(NotFoundContainerException::class);
+        
+        $this->container->get('BAR');
     }
 }

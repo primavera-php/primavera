@@ -33,7 +33,7 @@ class DbalExpressionFactory implements ExpressionFactoryInterface
     public function createAggregateExpression(Token $token, MethodMetadata $methodMetadata,
                                               ParamMetadata $paramMetadata)
     {
-        return $token['value'];
+        return $token->value;
     }
 
     public function createLimitExpression(Token $token, MethodMetadata $methodMetadata, ParamMetadata $paramMetadata)

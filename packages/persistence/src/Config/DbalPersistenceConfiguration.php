@@ -17,10 +17,9 @@ class DbalPersistenceConfiguration
     #[Configurator]
     public static function configure(ContainerBuilderInterface $cb)
     {
-        $cb->withComponents(
-            MethodNameToQueryParser::class,
-            DbalRepositoryImplementor::class,
-            DbalPersisterImplementor::class,
+        $cb->withPreProcessors(
+            new DbalRepositoryImplementor(),
+            new DbalPersisterImplementor(),
         );
     }
 

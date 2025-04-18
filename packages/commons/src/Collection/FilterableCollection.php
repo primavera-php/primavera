@@ -1,18 +1,18 @@
 <?php
 
 namespace Primavera\Commons\Collection;
-use ReturnTypeWillChange;
 
 /**
  * @template T
+ * 
+ * @extends CollectionInterface<T>
  */
-interface FilterableCollection
+interface FilterableCollection extends CollectionInterface
 {
     /**
      * @param callable(T) $filter
      * 
-     * @return T
+     * @return FilterableCollection<T>
      */
-    #[ReturnTypeWillChange]
     public function filter(callable $filter) : FilterableCollection;
 }

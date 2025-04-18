@@ -3,7 +3,7 @@
 namespace Primavera\Framework\Processor;
 
 use IteratorAggregate;
-use Primavera\Framework\Collection\CallbackPriorityQueue;
+use Primavera\Commons\Collection\CallbackPriorityQueue;
 use Primavera\Metadata\Factory\MetadataFactoryInterface;
 use Psr\Container\ContainerInterface;
 
@@ -18,7 +18,7 @@ trait PrioritizedComponentsTrait
             $metadata = $mf->getMetadataForClass($component::class);
 
             if ($metadata->hasAnnotation($className)
-                || $metadata->instanceof($className))
+                || $metadata->instanceOf($className))
                 $components[] = $component;
         }
 
@@ -26,6 +26,9 @@ trait PrioritizedComponentsTrait
             function ($bean1, $bean2) use ($className, $mf) {
                 $behavior1 = $mf->getMetadataForClass($bean1::class)->getAnnotation($className);
                 $behavior2 = $mf->getMetadataForClass($bean2::class)->getAnnotation($className);
+
+                if (!$behavior1 || !property_exists($behavior1, 'priority'))
+                    return 0;
 
                 return $behavior1->priority <=> $behavior2->priority;
             },

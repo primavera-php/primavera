@@ -2,13 +2,20 @@
 
 namespace Primavera\Container\Exception;
 
+use Primavera\Metadata\ParamMetadataInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 class NotFoundContainerException extends ContainerException implements NotFoundExceptionInterface
 {
-    public function __construct(string $id) 
+    public function __construct(string $id, ParamMetadataInterface $paramMetadata = null)
     {
-        parent::__construct("Component with id $id not registered");
+        $message = "Component with id $id not registered";
+
+        if ($paramMetadata) {
+            $message .= " for {$paramMetadata->getClass()}::{$paramMetadata->getName()}: {$paramMetadata->getType()}";
+        }
+
+        parent::__construct($message);
     }
     
     public static function trigger(string $name) 

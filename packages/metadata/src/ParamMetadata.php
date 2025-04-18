@@ -1,9 +1,10 @@
 <?php
 
 namespace Primavera\Metadata;
+
 use Error;
 
-class ParamMetadata implements TypedComponentMetadataInterface
+class ParamMetadata implements ParamMetadataInterface
 {
     use ResolveTypeTrait, AnnotationsTrait;
 

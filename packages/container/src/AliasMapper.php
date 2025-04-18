@@ -9,8 +9,10 @@ use Primavera\Container\Exception\NotFoundContainerException;
 use Primavera\Metadata\ClassMetadataInterface;
 use Primavera\Metadata\Factory\MetadataFactoryInterface;
 use Primavera\Metadata\MethodMetadataInterface;
+use Primavera\Metadata\ParamMetadataInterface;
+use Throwable;
 
-class AliasMapper implements WritableContainerInterface, ComponentFactoryStorageInterface, IteratorAggregate
+class AliasMapper implements DependencyResolverContainerInterface, WritableContainerInterface, ComponentFactoryStorageInterface, IteratorAggregate
 {
     private array $objects = [];
 
@@ -28,13 +30,18 @@ class AliasMapper implements WritableContainerInterface, ComponentFactoryStorage
         $this->addedClasses = new UniqueCollection();
     }
 
+    private function objectHash(object $object)
+    {
+        return spl_object_hash($object);
+    }
+
     public function set(string $id, $value): array
     {
         $objectHash = null;
         $class = null;
 
         if (is_object($value)) {
-            $objectHash = spl_object_hash($value);
+            $objectHash = $this->objectHash($value);
 
             if (!isset($this->objects[$objectHash])) {
                 $this->objects[$objectHash] = $value;
@@ -62,12 +69,12 @@ class AliasMapper implements WritableContainerInterface, ComponentFactoryStorage
         return $aliases;
     }
 
-    public function get(string $id)
+    public function get(string $id, ParamMetadataInterface $paramMetadata = null)
     {
         $alias = match(true) {
             !empty($this->aliases[$id] ?? []) => $this->aliases[$id],
             !empty($this->classes[$id] ?? []) => $this->classes[$id],
-            default => throw new NotFoundContainerException($id)
+            default => throw new NotFoundContainerException($id, $paramMetadata)
         };
 
         return array_map(fn($h) => $this->objects[$h] ?? $h, $alias);
@@ -118,17 +125,63 @@ class AliasMapper implements WritableContainerInterface, ComponentFactoryStorage
             $id
         ]);
     }
-    /**
-     * @inheritDoc
-     */
+
+    public function addAlias(string $alias, object $component)
+    {
+        $this->aliases[$alias] ??= [];
+        $this->aliases[$alias][] = $this->objectHash($component);
+    }
+
     public function getIterator(): \Traversable 
     {
+        $yielded = [];
+
         foreach ($this->objects as $object) {
             yield $object::class => $object;
+            $yielded[] = $object::class;
         }
 
         foreach ($this->addedClasses as $class) {
+            if (in_array($class, $yielded))
+                continue;
+
             yield $class => $class;
+        }
+    }
+
+    public function __serialize(): array
+    {
+        $serialized = [];
+
+        foreach ($this->objects as $hash => $object) {
+            try {
+                $serialized[$hash] = serialize($object);
+            } catch(Throwable) {
+                $this->set($object::class, $object::class);
+            }
+        }
+
+        return [
+            $serialized,
+            $this->classes,
+            $this->addedClasses,
+            $this->aliases,
+            $this->factories,
+        ];
+    }
+
+    public function __unserialize(array $data)
+    {
+        [
+            $this->objects,
+            $this->classes,
+            $this->addedClasses,
+            $this->aliases,
+            $this->factories,
+        ] = $data;
+
+        foreach ($this->objects as &$object) {
+            $object = unserialize($object);
         }
     }
 }

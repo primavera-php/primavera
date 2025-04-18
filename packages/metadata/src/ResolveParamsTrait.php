@@ -23,7 +23,6 @@ trait ResolveParamsTrait
         }
     }
 
-    #[\ReturnTypeWillChange]
     abstract public function getReflection(): \ReflectionMethod | \ReflectionFunction;
 
     /**

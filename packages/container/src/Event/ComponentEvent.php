@@ -19,7 +19,7 @@ class ComponentEvent implements StoppableEventInterface
      * @param T | class-string<T> $component
      */
     public function __construct(
-        public Container $container,
-        public object | string $component,
+        public readonly Container $container,
+        public readonly object | string $component,
     ) {}
 }

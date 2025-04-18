@@ -4,6 +4,7 @@ namespace Primavera\Metadata\Reader;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\IndexedReader;
+use Error;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
@@ -49,7 +50,11 @@ class AttributeReader implements ReaderInterface
         $attributes = [];
         
         foreach($reflection->getAttributes() as $attribute) {
-            $attributes[$attribute->getName()] = $attribute->newInstance();
+            try {
+                $attributes[$attribute->getName()] = $attribute->newInstance();
+            } catch (Error $e) {
+                continue;
+            }
         }
 
         return $attributes;

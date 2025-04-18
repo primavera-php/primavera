@@ -2,14 +2,13 @@
 
 namespace Primavera\Commons\Collection;
 
-use IteratorAggregate;
-use ReturnTypeWillChange;
+use Traversable;
 
 /**
  * @template T
  * @template I
  */
-interface CollectionInterface extends IteratorAggregate
+interface CollectionInterface extends Traversable
 {
     /**
      * @param T $item
@@ -26,6 +25,7 @@ interface CollectionInterface extends IteratorAggregate
      * @param I $index
      * @return T
      */
-    #[ReturnTypeWillChange]
     public function get($index): mixed;
+
+    public function toArray(): array;
 }

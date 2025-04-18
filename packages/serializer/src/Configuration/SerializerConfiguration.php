@@ -3,6 +3,7 @@
 namespace Primavera\Serializer\Configuration;
 
 use Primavera\Container\Annotation\Configurator;
+use Primavera\Container\Annotation\Factory;
 use Primavera\Container\ContainerBuilderInterface;
 use Primavera\Data\Formatter\JsonFormatter;
 use Primavera\Data\ObjectExtractor;
@@ -19,10 +20,15 @@ class SerializerConfiguration
         $cb->withComponents(
             ObjectHydrator::class,
             ObjectExtractor::class,
-            Serializer::class,
             HydratorProcessor::class,
             SerializerFormatterProcessor::class,
             JsonFormatter::class,
         );
+    }
+
+    #[Factory]
+    public function serializer(ObjectHydrator $oh, ObjectExtractor $oe): Serializer
+    {
+        return new Serializer($oe, $oh);
     }
 }

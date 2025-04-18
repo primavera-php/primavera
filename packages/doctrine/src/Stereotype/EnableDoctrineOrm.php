@@ -3,10 +3,10 @@
 namespace Primavera\Doctrine\Stereotype;
 
 use Primavera\Container\Annotation\Imports;
-use Primavera\Doctrine\Config\PrimaveraDoctrineConfiguration;
+use Primavera\Doctrine\Config\DoctrineConfiguration;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
-#[Imports([PrimaveraDoctrineConfiguration::class])]
+#[Imports([DoctrineConfiguration::class])]
 class EnableDoctrineOrm
 {
 

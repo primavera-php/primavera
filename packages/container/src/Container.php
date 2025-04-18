@@ -7,10 +7,12 @@ use Primavera\Commons\Collection\Collection;
 use Primavera\Commons\Collection\CollectionInterface;
 use Primavera\Commons\Collection\TreeCollection;
 use Primavera\Commons\Collection\UniqueCollection;
+use Primavera\Container\Annotation\Factory;
 use Primavera\Container\Annotation\Injects;
 use Primavera\Container\Event\AfterComponentRegisterEvent;
 use Primavera\Container\Event\AfterInstanceComponentEvent;
 use Primavera\Container\Event\BeforeComponentRegisterEvent;
+use Primavera\Container\Event\BeforeGetComponent;
 use Primavera\Container\Event\BeforeInstanceComponentEvent;
 use Primavera\Container\Exception\ContainerException;
 use Primavera\Container\Exception\NotFoundContainerException;
@@ -18,8 +20,10 @@ use Primavera\Event\EventDispatcher;
 use Primavera\Event\EventDispatcherInterface;
 use Primavera\Metadata\Factory\MetadataFactoryInterface;
 use Primavera\Metadata\MethodMetadataInterface;
+use Primavera\Metadata\ParamMetadata;
+use Primavera\Metadata\ParamMetadataInterface;
 
-class Container implements WritableContainerInterface, TransientContainerInterface, ScopedContainerInterface, IteratorAggregate
+class Container implements DependencyResolverContainerInterface, WritableContainerInterface, TransientContainerInterface, ScopedContainerInterface, IteratorAggregate
 {
     private AliasMapper $components;
 
@@ -63,18 +67,23 @@ class Container implements WritableContainerInterface, TransientContainerInterfa
      * 
      * @return T
      */
-    public function get(string $id)
+    public function get(string $id, ParamMetadataInterface $paramMetadata = null)
     {
+        $this->eventDispatcher->dispatch($event = new BeforeGetComponent($this, $id, $paramMetadata));
+
+        if ($event->result)
+            return $event->result;
+
         if ($this->values->has($id))
             return $this->values->get($id);
 
         if (class_exists($id, true) && !$this->components->has($id))
-            return $this->newInstance($id);
+            return $this->newInstance($id, $paramMetadata);
 
-        $item = $this->components->get($id)[0] ?? throw new NotFoundContainerException($id);
+        $item = $this->components->get($id, $paramMetadata)[0] ?? throw new NotFoundContainerException($id, $paramMetadata);
 
         if (is_string($item))
-            return $this->newInstance($item);
+            return $this->newInstance($item, $paramMetadata);
 
         return $item;
     }
@@ -151,16 +160,10 @@ class Container implements WritableContainerInterface, TransientContainerInterfa
         return $this;
     }
 
-    private function newInstance(string $classname)
+    private function newInstance(string $classname, ParamMetadata $paramMetadata = null)
     {
         if (isset($this->statuses[$classname]) && $this->statuses[$classname] == self::INSTANCING) {
-            throw new ContainerException("circular reference found for {$classname} on ");
-        }
-
-        $this->eventDispatcher->dispatch($beforeEvent = new BeforeInstanceComponentEvent($this, $classname));
-
-        if ($beforeEvent->result) {
-            return $beforeEvent->result;
+            throw new ContainerException("circular reference found for {$classname} on {$paramMetadata?->getClass()}");
         }
 
         $this->statuses[$classname] ??= [];
@@ -168,7 +171,11 @@ class Container implements WritableContainerInterface, TransientContainerInterfa
 
         $metadata = $this->metadataFactory->getMetadataForClass($classname);
         $ctor = $metadata->getMethodMetadata()['__construct'] ?? null;
-        $depends = $ctor?->getParams() ?? [];
+        $depends = (
+            $this->components->hasFactory($metadata->getName()) 
+                ? $this->components->getFactory($metadata->getName())->getParams() 
+                : $ctor?->getParams()
+            ) ?? [];
 
         foreach ($depends as &$depend) {
             $type = $depend->getType();
@@ -185,7 +192,7 @@ class Container implements WritableContainerInterface, TransientContainerInterfa
             }
 
             try {
-                $depend = $this->get($id);
+                $depend = $this->get($id, $depend);
             } catch (NotFoundContainerException $e) {
                 if ($depend->getReflection()->isOptional()) {
                     $depend = $depend->getReflection()->getDefaultValue();
@@ -195,15 +202,26 @@ class Container implements WritableContainerInterface, TransientContainerInterfa
             }
         }
 
-        $instance = $this->components->hasFactory($metadata->getName())
-            ? ($factory = $this->components->getFactory($metadata->getName()))
-                ->invoke($this->get($factory->getClass()), ...$depends)
-            : $metadata->getReflection()->newInstanceArgs($depends);
-        
+        $this->eventDispatcher->dispatch($beforeEvent = new BeforeInstanceComponentEvent($this, $classname, $depends, $paramMetadata));
+
+        $factory = null;
+        $instance = $beforeEvent->result 
+            ?? ($this->components->hasFactory($metadata->getName())
+                ? ($factory = $this->components->getFactory($metadata->getName()))
+                    ->invoke($this->get($factory->getClass()), ...$depends)
+                : $metadata->getReflection()->newInstanceArgs($depends));
+
         $this->eventDispatcher->dispatch(new AfterInstanceComponentEvent($this, $instance));
 
         if (!$this->transient->has($classname)) {
             $this->set($classname, $instance);
+
+            if ($factory)
+                $this->components->addAlias(
+                    $factory->getAnnotation(Factory::class)?->name
+                        ?? $factory->getName(),
+                    $instance
+                );
         }
 
         $this->statuses[$classname] = self::INSTANCED;

@@ -21,6 +21,6 @@ class ComponentEnabler implements ComponentPreProcessorInterface
     
     public function canProcess(object $component): bool 
     {
-        return $component->instanceof($this->componentClass) || $component->hasAnnotation($this->componentClass);
+        return $component->instanceOf($this->componentClass) || $component->hasAnnotation($this->componentClass);
     }
 }

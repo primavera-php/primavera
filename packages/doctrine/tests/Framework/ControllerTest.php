@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Primavera\Cache\Factory;
 use Primavera\Container\Annotation\Autowired;
 use Primavera\Container\ContainerBuilder;
+use Primavera\Doctrine\Annotation\InjectRepository;
 use Primavera\Doctrine\Annotation\Merge;
 use Primavera\Doctrine\Test\Entity\Phone;
 use Primavera\Doctrine\Test\Entity\User;
@@ -168,6 +169,7 @@ class ControllerTest extends TestCase
 class UserController
 {
     public function __construct(
+        #[InjectRepository(User::class)]
         private UserRepository $usersRepository,
         private Psr7Factory $psr7Factory,
     ) {}

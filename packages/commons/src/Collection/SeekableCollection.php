@@ -5,14 +5,15 @@ use ReturnTypeWillChange;
 
 /**
  * @template T
+ * 
+ * @extends CollectionInterface<T>
  */
-interface SeekableCollection
+interface SeekableCollection extends CollectionInterface
 {
     /**
      * @param callable(T) $filter
      * 
      * @return T
      */
-    #[ReturnTypeWillChange]
     public function seek(callable $filter) : mixed;
 }

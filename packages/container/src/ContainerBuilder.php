@@ -61,6 +61,8 @@ class ContainerBuilder implements ContainerBuilderInterface
 
     private bool $shouldScanComponents = true;
 
+    private array $imported = [];
+
     public function __construct($debug = false)
     {
         $this->loader = require 'vendor/autoload.php';
@@ -186,7 +188,7 @@ class ContainerBuilder implements ContainerBuilderInterface
             if ($metadata->hasAnnotation(EventListener::class))
                 $eventListeners[$metadata->getName()] = $metadata;
 
-            if ($metadata->instanceof(ComponentPostProcessorInterface::class))
+            if ($metadata->instanceOf(ComponentPostProcessorInterface::class))
                 $postProcessors[$metadata->getName()] = $metadata;
         };
 
@@ -215,7 +217,7 @@ class ContainerBuilder implements ContainerBuilderInterface
             $metadata = $mf->getMetadataForClass($component);
             $addMetadata($metadata);
 
-            $container->set($component, $component);
+            $container->set($metadata->getAnnotation(Component::class)?->name ?? $component, $component);
         }
 
         foreach ($eventListeners as $eventListener) {
@@ -245,8 +247,8 @@ class ContainerBuilder implements ContainerBuilderInterface
         $factory = new MetadataFactoryFactory();
 
         $mf = $this->withYamlMetadata 
-            ? $factory->createYmlMetadataFactory($this->withYamlMetadata, cache: $this->cache)
-            : $factory->createAnnotationMetadataFactory(cache: $this->cache);
+            ? $factory->createYmlMetadataFactory($this->withYamlMetadata)
+            : $factory->createAnnotationMetadataFactory();
 
         $this->scanComponents($mf);
 
@@ -308,8 +310,14 @@ class ContainerBuilder implements ContainerBuilderInterface
                     ? $annotation 
                     : $annotMetadata->getAnnotation(Imports::class);
 
-                foreach ($imports->configurations as $config)
+                foreach ($imports->configurations as $config) {
+                    if (in_array($config, $this->imported))
+                        continue;
+
+                    $this->imported[] = $config;
+
                     yield $mf->getMetadataForClass($config);
+                }
             }
         }
     }

@@ -4,22 +4,29 @@ namespace Primavera\Persistence\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Primavera\Container\Annotation\Injects;
 use Primavera\Data\ObjectHydratorInterface;
-use Primavera\Persistence\Persister\PersisterInterface;
+use Primavera\Metadata\ClassMetadataInterface;
+use Primavera\Metadata\Factory\MetadataFactoryInterface;
+use Primavera\Persistence\Parser\ParserInterface;
 
 /**
  * @template T
  */
 abstract class DbalBaseRepository implements RepositoryInterface
 {
-    protected $connection;
+    private ClassMetadataInterface $classMetadata;
 
-    protected $hydrator;
+    protected $interface;
 
-    public function __construct(Connection $connection, ObjectHydratorInterface $hydrator)
-    {
-        $this->connection = $connection;
-        $this->hydrator = $hydrator;
+    public function __construct(
+        protected Connection $connection,
+        protected ObjectHydratorInterface $hydrator,
+        protected MetadataFactoryInterface $metadataFactory,
+        #[Injects('methodNameToQueryParser')]
+        protected ParserInterface $parser,
+    ) {
+        $this->classMetadata = $metadataFactory->getMetadataForClass($this->interface);
     }
 
     /**
@@ -79,6 +86,16 @@ abstract class DbalBaseRepository implements RepositoryInterface
         $result = $this->fetchMany($qb);
 
         return $result->current() ?: null;
+    }
+
+    protected function findByMethodExpressions(string $methodName, array $params)
+    {
+        $mm = $this->classMetadata->getMethodMetadata($methodName);
+
+        $exprs = $this->parser->parse($mm);
+        $operation = array_shift($exprs)['operation'];
+
+        return $this->findByExpressions($operation, $exprs, $params);
     }
 
     /**

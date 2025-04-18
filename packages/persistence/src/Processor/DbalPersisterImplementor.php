@@ -15,13 +15,6 @@ class DbalPersisterImplementor extends AbstractInterfaceImplementor
 {
     use TableImplementorTrait;
 
-    private ParserInterface $parser;
-
-    public function __construct(ParserInterface $parser)
-    {
-        $this->parser = $parser;
-    }
-
     public function getStereotypeName(): string
     {
         return Persister::class;
@@ -54,10 +47,6 @@ class DbalPersisterImplementor extends AbstractInterfaceImplementor
     public function implementMethodBody(MethodGenerator $methodGenerator, MethodMetadataInterface $metadata,
                                         ClassMetadataInterface $classMetadata): string
     {
-        $exprs = $this->parser->parse($metadata);
-        $operation = array_shift($exprs)['operation'];
-        $exprs = var_export($exprs, true);
-
-        return "return \$this->findByExpressions('{$operation}', {$exprs}, get_defined_vars());";
+        return "return \$this->findByMethodExpressions('{$metadata->getName()}', get_defined_vars());";
     }
 }

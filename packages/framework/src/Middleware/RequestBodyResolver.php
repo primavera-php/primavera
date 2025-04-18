@@ -51,8 +51,6 @@ class RequestBodyResolver implements ParamResolverInterface
             }
 
             $argName = reset($annotatedParams)->name;
-        } else {
-            return [];
         }
 
         $type = $paramsMetadata[$argName]->getType() ?? $requestBody?->type;
